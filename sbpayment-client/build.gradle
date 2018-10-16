@@ -1,0 +1,37 @@
+plugins {
+    id 'java'
+}
+
+group 'com.vogle.sbpayment'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // local library files
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    // validation
+    compile group: 'org.hibernate.validator', name: 'hibernate-validator', version: '6.0.13.Final'
+    compile group: 'org.glassfish', name: 'javax.el', version: '3.0.1-b09'
+
+    // http
+    compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.6'
+    compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-xml', version: '2.9.7'
+
+    // lombok generator
+    compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.2'
+
+    // log
+    compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
+//    testCompile group: 'commons-logging', name: 'commons-logging', version: '1.2'
+
+    // test modules
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile group: 'org.assertj', name: 'assertj-core', version: '3.11.1'
+
+}
