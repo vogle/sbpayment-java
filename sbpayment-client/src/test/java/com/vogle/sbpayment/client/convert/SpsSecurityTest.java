@@ -21,8 +21,8 @@ public class SpsSecurityTest {
     public void init() {
         cipherSets = new SpsSettings.CipherSets();
         cipherSets.setEnabled(true);
-        cipherSets.setDesKey("a23c0ef05956b20f8013d73b");
-        cipherSets.setDesInitKey("978fd1e9");
+        cipherSets.setDesKey("abcdefghyjklmn1234567890");
+        cipherSets.setDesInitKey("12345678");
     }
 
     @Test
