@@ -81,7 +81,7 @@ public class SpsSecurity {
      *
      * @param cipherSets  Sps cipherSets settings
      * @param charsetName Character Set name
-     * @param source      the source
+     * @param source      The source
      * @return The decrypted data
      */
     public static String decrypt(SpsSettings.CipherSets cipherSets, String charsetName, String source) {
@@ -101,7 +101,7 @@ public class SpsSecurity {
      * @param desKey      The DES cipherSets key
      * @param initKey     The DES initialization key
      * @param charsetName Character Set name
-     * @param source      he source
+     * @param source      The source
      * @return The decrypted data
      */
     public static String decrypt(String desKey, String initKey, String charsetName, final String source) {

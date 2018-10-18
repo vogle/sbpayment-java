@@ -8,7 +8,7 @@ import org.junit.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Test by @{@link SpsSecurity}
+ * Tests by {@link SpsSecurity}
  *
  * @author Allan Im
  */

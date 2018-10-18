@@ -33,5 +33,6 @@ dependencies {
     // test modules
     testCompile group: 'junit', name: 'junit', version: '4.12'
     testCompile group: 'org.assertj', name: 'assertj-core', version: '3.11.1'
+    testCompileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.2'
 
 }
