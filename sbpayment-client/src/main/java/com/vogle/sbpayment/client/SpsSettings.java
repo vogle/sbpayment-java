@@ -50,7 +50,7 @@ public class SpsSettings {
      */
     private String hashKey;
 
-    private Cipher cipher = new Cipher();
+    private CipherSets cipherSets = new CipherSets();
 
     /**
      * Allowable time on request.(Second)<br/>
@@ -73,9 +73,9 @@ public class SpsSettings {
     private PayEasy payEasy = new PayEasy();
 
     @Data
-    public static class Cipher {
+    public static class CipherSets {
         /**
-         * Enable 3DES Algorithm.<br/>
+         * Enable Cipher.<br/>
          * 3DES 暗号化使用可否
          */
         private boolean enabled = true;
