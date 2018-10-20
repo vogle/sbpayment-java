@@ -8,7 +8,7 @@ import org.junit.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Tests by {@link SpsSecurity}
+ * Tests for {@link SpsSecurity}
  *
  * @author Allan Im
  */
@@ -27,10 +27,14 @@ public class SpsSecurityTest {
 
     @Test
     public void encryptAndDecrypt() {
+        // given
         String source = "Allan Im";
+
+        // when
         String decrypted = SpsSecurity.encrypt(cipherSets, charsetName, source);
         String encrypted = SpsSecurity.decrypt(cipherSets, charsetName, decrypted);
 
+        // then
         assertThat(decrypted).isNotEmpty();
         assertThat(encrypted).isNotEmpty();
         assertThat(encrypted).isEqualTo(source);

@@ -12,10 +12,15 @@ import lombok.Data;
 public class SpsSettings {
 
     /**
-     * Softbank data charset, Default is "Shift_JIS".  <br/>
+     * Softbank payment data charset, Default is "Shift_JIS".<br/>
      * 基本"Shift_JIS"で使用
      */
     private String charset = "Shift_JIS";
+
+    /**
+     * Softbank Payment TimeZone, Default is "JST".<br/>
+     */
+    private String timeZone = "JST";
 
     /**
      * API Service URL. <br/>
@@ -50,7 +55,6 @@ public class SpsSettings {
      */
     private String hashKey;
 
-    private CipherSets cipherSets = new CipherSets();
 
     /**
      * Allowable time on request.(Second)<br/>
@@ -70,10 +74,11 @@ public class SpsSettings {
      */
     private boolean returnCardBrand = false;
 
-    private PayEasy payEasy = new PayEasy();
+    private CipherSets cipherSets = new CipherSets();
 
     @Data
     public static class CipherSets {
+
         /**
          * Enable Cipher.<br/>
          * 3DES 暗号化使用可否
@@ -91,6 +96,8 @@ public class SpsSettings {
          */
         private String desInitKey;
     }
+
+    private PayEasy payEasy = new PayEasy();
 
     // TODO
     @Data

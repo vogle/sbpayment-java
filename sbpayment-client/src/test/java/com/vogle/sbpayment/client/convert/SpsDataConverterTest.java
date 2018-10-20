@@ -12,7 +12,7 @@ import org.junit.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Tests by {@link SpsDataConverter}
+ * Tests for {@link SpsDataConverter}
  *
  * @author Allan Im
  */
@@ -31,13 +31,17 @@ public class SpsDataConverterTest {
 
     @Test
     public void encode() {
+        // given
         String origin = "Allan Im";
         String encoded = "QWxsYW4gSW0=";
         SampleObject source = new SampleObject(origin, origin);
         source.setSubBasic64(origin);
         source.setSubCipherString(origin);
+
+        // when
         SpsDataConverter.encode(charsetName, source);
 
+        // then
         assertThat(source).isNotNull();
         assertThat(source.getBasic64()).isNotNull();
         assertThat(source.getCipherString()).isNotNull();
@@ -49,13 +53,17 @@ public class SpsDataConverterTest {
 
     @Test
     public void encodeWithoutCipherField() {
+        // given
         String origin = "Allan Im";
         String encoded = "QWxsYW4gSW0=";
         SampleObject source = new SampleObject(origin, origin);
         source.setSubBasic64(origin);
         source.setSubCipherString(origin);
+
+        // when
         SpsDataConverter.encodeWithoutCipherField(charsetName, source);
 
+        // then
         assertThat(source).isNotNull();
         assertThat(source.getBasic64()).isNotNull();
         assertThat(source.getCipherString()).isNotNull();
