@@ -20,7 +20,7 @@ public interface SpsClient {
      *
      * @param request The request object
      */
-    void setCommonElements(SpsRequest request);
+    void setCommonElementsTo(SpsRequest request);
 
 
     /**

@@ -138,7 +138,7 @@ public class AbstractSpsHttpClientTest {
 
         // when
         SpsRequest request = request();
-        client.setCommonElements(request);
+        client.setCommonElementsTo(request);
 
         // then
         assertThat(request.getMerchantId()).isEqualTo(merchantId);

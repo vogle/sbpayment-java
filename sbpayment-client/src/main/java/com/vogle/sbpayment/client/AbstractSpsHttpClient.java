@@ -69,7 +69,7 @@ public abstract class AbstractSpsHttpClient implements SpsClient {
      * {@inheritDoc}
      */
     @Override
-    public void setCommonElements(SpsRequest request) {
+    public void setCommonElementsTo(SpsRequest request) {
         request.setMerchantId(settings.getMerchantId());
         request.setServiceId(settings.getServiceId());
         request.setLimitSecond(settings.getAllowableSecondOnRequest());
