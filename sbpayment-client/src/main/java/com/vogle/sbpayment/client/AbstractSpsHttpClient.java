@@ -28,26 +28,27 @@ public abstract class AbstractSpsHttpClient implements SpsClient {
 
     protected AbstractSpsHttpClient(SpsSettings settings) {
         this.settings = settings;
-        this.httpClient = httpClient(settings.getBasicAuthId(), settings.getBasicAuthPassword(), settings.getCharset());
+        this.httpClient = httpClient(settings);
     }
 
     /**
      * Create HttpClient
      */
-    private HttpClient httpClient(String basicAuthId, String basicAuthPassword, String charset) {
+    private HttpClient httpClient(SpsSettings settings) {
         // http client
         HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
 
         // basic authorize information
-        if (basicAuthId != null && basicAuthPassword != null) {
+        if (isNotEmpty(settings.getBasicAuthId()) && isNotEmpty(settings.getBasicAuthPassword())) {
             CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
             credentialsProvider.setCredentials(AuthScope.ANY,
-                    new UsernamePasswordCredentials(basicAuthId, basicAuthPassword));
+                    new UsernamePasswordCredentials(settings.getBasicAuthId(), settings.getBasicAuthPassword()));
             httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
         }
 
         // headers
-        if (charset == null) {
+        String charset = settings.getCharset();
+        if (isEmpty(charset)) {
             charset = "Shift_JIS";
         }
         List<Header> headers = new ArrayList<>();
@@ -77,5 +78,13 @@ public abstract class AbstractSpsHttpClient implements SpsClient {
         DateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
         dateFormat.setTimeZone(TimeZone.getTimeZone(settings.getTimeZone()));
         request.setRequestDate(dateFormat.format(new Date()));
+    }
+
+    private boolean isEmpty(String str) {
+        return str == null || str.isEmpty();
+    }
+
+    private boolean isNotEmpty(String str) {
+        return !isEmpty(str);
     }
 }
