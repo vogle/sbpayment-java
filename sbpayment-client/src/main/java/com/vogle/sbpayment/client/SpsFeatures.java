@@ -15,7 +15,7 @@ class SpsFeatures {
     static {
 
         // Common features
-        featureMap.put("MG01-00101-101", "PayCard Lookup Transaction");
+        featureMap.put("MG01-00101-101", "Transaction Lookup");
 
         // Card payment features
         featureMap.put("ST01-00111-101", "PayCard Authorize");
