@@ -3,7 +3,7 @@ package com.vogle.sbpayment.client.request;
 import com.vogle.sbpayment.client.SpsRequest;
 import com.vogle.sbpayment.client.convert.CipherString;
 import com.vogle.sbpayment.client.convert.MultiByteString;
-import com.vogle.sbpayment.client.response.CardInfoSaveResponse;
+import com.vogle.sbpayment.client.response.LegacyCardInfoSaveResponse;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
@@ -22,7 +22,7 @@ import javax.validation.constraints.Size;
  **/
 @Data
 @JacksonXmlRootElement(localName = "sps-api-request")
-public class LegacyCardInfoSaveRequest implements SpsRequest<CardInfoSaveResponse> {
+public class LegacyCardInfoSaveRequest implements SpsRequest<LegacyCardInfoSaveResponse> {
 
     @JacksonXmlProperty(isAttribute = true)
     private final String id = "MG02-00101-101";
@@ -74,7 +74,7 @@ public class LegacyCardInfoSaveRequest implements SpsRequest<CardInfoSaveRespons
     private String spsHashcode;
 
     @Override
-    public Class<CardInfoSaveResponse> responseClass() {
-        return CardInfoSaveResponse.class;
+    public Class<LegacyCardInfoSaveResponse> responseClass() {
+        return LegacyCardInfoSaveResponse.class;
     }
 }
