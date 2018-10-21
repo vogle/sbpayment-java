@@ -9,37 +9,77 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.http.Header;
 import org.apache.http.HttpResponse;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 /**
  * Default Softbank payment client
  *
  * @author Allan Im
  **/
-public class DefaultSpsClient extends AbstractSpsHttpClient {
+public class DefaultSpsClient implements SpsClient {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    private final SpsSettings settings;
+    private final HttpClient httpClient;
     private final XmlMapper xmlMapper;
     private final ObjectMapper objectMapper;
 
     public DefaultSpsClient(SpsSettings settings) {
-        super(settings);
+        this.settings = settings;
+        this.httpClient = httpClient(settings);
         this.xmlMapper = new XmlMapper();
         this.xmlMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         this.xmlMapper.enable(SerializationFeature.INDENT_OUTPUT);
 
         this.objectMapper = new ObjectMapper();
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public SpsSettings getSettings() {
+        return this.settings;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setCommonElementsTo(SpsRequest request) {
+        request.setMerchantId(settings.getMerchantId());
+        request.setServiceId(settings.getServiceId());
+        request.setLimitSecond(settings.getAllowableSecondOnRequest());
+
+        DateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+        dateFormat.setTimeZone(TimeZone.getTimeZone(settings.getTimeZone()));
+        request.setRequestDate(dateFormat.format(new Date()));
     }
 
     /**
@@ -243,7 +283,43 @@ public class DefaultSpsClient extends AbstractSpsHttpClient {
         }
     }
 
-    private String textValue(JsonNode jsonNode) {
+    /**
+     * Create HttpClient
+     */
+    protected HttpClient httpClient(SpsSettings settings) {
+        // http client
+        HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
+
+        // basic authorize information
+        if (isNotEmpty(settings.getBasicAuthId()) && isNotEmpty(settings.getBasicAuthPassword())) {
+            CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+            credentialsProvider.setCredentials(AuthScope.ANY,
+                    new UsernamePasswordCredentials(settings.getBasicAuthId(), settings.getBasicAuthPassword()));
+            httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
+        }
+
+        // headers
+        String charset = settings.getCharset();
+        if (isEmpty(charset)) {
+            charset = "Shift_JIS";
+        }
+        List<Header> headers = new ArrayList<>();
+        headers.add(new BasicHeader("Content-Type", "text/xml; charset=".concat(charset)));
+        httpClientBuilder.setDefaultHeaders(headers);
+
+        return httpClientBuilder.build();
+    }
+
+
+    protected boolean isEmpty(String str) {
+        return str == null || str.isEmpty();
+    }
+
+    protected boolean isNotEmpty(String str) {
+        return !isEmpty(str);
+    }
+
+    protected String textValue(JsonNode jsonNode) {
         StringBuilder result = new StringBuilder();
 
         if (jsonNode.isObject() || jsonNode.isArray()) {

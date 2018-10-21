@@ -5,40 +5,20 @@ import org.junit.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Tests for {@link AbstractSpsHttpClient}
+ * Tests for {@link DefaultSpsClient}
  *
  * @author Allan Im
  */
-public class AbstractSpsHttpClientTest {
+public class SpsHttpClientTest {
 
 
-    private AbstractSpsHttpClient client(String merchantId, String serviceId, String timeZone) {
+    private DefaultSpsClient client(String merchantId, String serviceId, String timeZone) {
         SpsSettings settings = new SpsSettings();
         settings.setTimeZone(timeZone);
         settings.setMerchantId(merchantId);
         settings.setServiceId(serviceId);
 
-        return new AbstractSpsHttpClient(settings) {
-            @Override
-            public <T extends SpsResponse> SpsResponseEntity<T> execute(SpsRequest<T> request) {
-                return null;
-            }
-
-            @Override
-            public <T> T xmlToObject(String body, Class<T> objectClass) {
-                return null;
-            }
-
-            @Override
-            public <T> String objectToXml(T value) {
-                return null;
-            }
-
-            @Override
-            public String makeSpsHashCode(Object value) {
-                return null;
-            }
-        };
+        return new DefaultSpsClient(settings);
     }
 
     private SpsRequest request() {
@@ -118,7 +98,7 @@ public class AbstractSpsHttpClientTest {
         String timeZone = "JST";
 
         // when
-        AbstractSpsHttpClient client = client(merchantId, serviceId, timeZone);
+        DefaultSpsClient client = client(merchantId, serviceId, timeZone);
 
         // then
         assertThat(client).isNotNull();
@@ -134,7 +114,7 @@ public class AbstractSpsHttpClientTest {
         String merchantId = "VOGLE Labs";
         String serviceId = "Allan Im";
         String timeZone = "JST";
-        AbstractSpsHttpClient client = client(merchantId, serviceId, timeZone);
+        DefaultSpsClient client = client(merchantId, serviceId, timeZone);
 
         // when
         SpsRequest request = request();
