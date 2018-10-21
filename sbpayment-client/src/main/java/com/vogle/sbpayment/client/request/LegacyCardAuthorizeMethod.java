@@ -19,7 +19,7 @@ import javax.validation.constraints.Size;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class CreditCardPayInfo extends CreditCardInfo {
+public class LegacyCardAuthorizeMethod extends CreditCardElements {
 
     @Pattern(regexp = "10|21|61|80")
     @CipherString

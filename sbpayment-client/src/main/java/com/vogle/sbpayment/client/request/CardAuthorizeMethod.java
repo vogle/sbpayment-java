@@ -13,7 +13,7 @@ import javax.validation.constraints.Pattern;
  * @author Allan Im
  **/
 @Data
-public class CreditCardOptionsInfo {
+public class CardAuthorizeMethod {
 
     @Pattern(regexp = "10|21|61|80")
     @CipherString

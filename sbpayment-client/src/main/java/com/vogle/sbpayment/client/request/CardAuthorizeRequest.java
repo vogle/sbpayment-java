@@ -105,7 +105,7 @@ public class CardAuthorizeRequest implements SpsRequest<CardAuthorizeResponse> {
     @CipherString
     @MultiByteString
     @JacksonXmlProperty(localName = "pay_method_info")
-    private CreditCardOptionsInfo creditCardOptionsInfo;
+    private CardAuthorizeMethod cardAuthorizeMethod;
 
     @NotNull
     @JacksonXmlProperty(localName = "pay_option_manage")

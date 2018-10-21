@@ -106,7 +106,7 @@ public class LegacyCardAuthorizeRequest implements SpsRequest<CardAuthorizeRespo
     @CipherString
     @MultiByteString
     @JacksonXmlProperty(localName = "pay_method_info")
-    private CreditCardPayInfo creditCardPayInfo;
+    private LegacyCardAuthorizeMethod legacyCardAuthorizeMethod;
 
     @NotNull
     @JacksonXmlProperty(localName = "pay_option_manage")

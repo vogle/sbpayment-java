@@ -16,7 +16,7 @@ import javax.validation.constraints.Size;
  * @author Allan Im
  **/
 @Data
-public class CreditCardInfo {
+public class CreditCardElements {
 
     @NotEmpty
     @Pattern(regexp = "[0-9]{13,16}")
