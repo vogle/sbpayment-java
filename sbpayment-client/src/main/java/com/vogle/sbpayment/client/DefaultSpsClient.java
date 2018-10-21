@@ -44,10 +44,10 @@ public class DefaultSpsClient implements SpsClient {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private final SpsSettings settings;
-    private final HttpClient httpClient;
-    private final XmlMapper xmlMapper;
-    private final ObjectMapper objectMapper;
+    protected final SpsSettings settings;
+    protected final HttpClient httpClient;
+    protected final XmlMapper xmlMapper;
+    protected final ObjectMapper objectMapper;
 
     public DefaultSpsClient(SpsSettings settings) {
         this.settings = settings;
