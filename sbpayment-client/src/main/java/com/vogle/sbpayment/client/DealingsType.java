@@ -27,4 +27,13 @@ public enum DealingsType {
     public String code() {
         return code;
     }
+
+    public static DealingsType type(String code) {
+        for (DealingsType type : DealingsType.values()) {
+            if (code.equalsIgnoreCase(type.code())) {
+                return type;
+            }
+        }
+        return LUMP_SUM;
+    }
 }
