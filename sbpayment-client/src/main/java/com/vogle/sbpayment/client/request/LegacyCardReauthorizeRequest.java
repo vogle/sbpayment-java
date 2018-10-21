@@ -20,18 +20,18 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 /**
- * Credit card authorize request<br/>
+ * Credit card reauthorize request<br/>
  * Don't use in production environment, indeed it has been removed from sbpayment API.<br/>
- * 決済要求：本サビスは本番環境では使わないでください、実際sbpaymentのAPIから削除されました。
+ * 再与信要求：本サビスは本番環境では使わないでください、実際sbpaymentのAPIから削除されました。
  *
  * @author Allan Im
  **/
 @Data
 @JacksonXmlRootElement(localName = "sps-api-request")
-public class LegacyCardAuthorizeRequest implements SpsRequest<CardAuthorizeResponse> {
+public class LegacyCardReauthorizeRequest implements SpsRequest<CardAuthorizeResponse> {
 
     @JacksonXmlProperty(isAttribute = true)
-    private final String id = "ST01-00111-101";
+    private final String id = "ST01-00113-101";
 
     @NotEmpty
     @Pattern(regexp = "[0-9]{5}")
@@ -42,6 +42,12 @@ public class LegacyCardAuthorizeRequest implements SpsRequest<CardAuthorizeRespo
     @Pattern(regexp = "[0-9]{3}")
     @JacksonXmlProperty(localName = "service_id")
     private String serviceId;
+
+    @NotEmpty
+    @Size(max = 14)
+    @JacksonXmlProperty(localName = "tracking_id")
+    private String trackingId;
+
 
     @NotEmpty
     @Size(max = 64)
@@ -97,7 +103,7 @@ public class LegacyCardAuthorizeRequest implements SpsRequest<CardAuthorizeRespo
     @JacksonXmlProperty(localName = "sps_cust_info_return_flg")
     private String spsCustInfoReturnFlg;
 
-    @MultiByteString(isIterable = true)
+    @MultiByteString
     @JacksonXmlElementWrapper(localName = "dtls")
     @JacksonXmlProperty(localName = "dtl")
     private List<PayDetail> payDetails;
@@ -110,7 +116,7 @@ public class LegacyCardAuthorizeRequest implements SpsRequest<CardAuthorizeRespo
 
     @NotNull
     @JacksonXmlProperty(localName = "pay_option_manage")
-    private LegacyCardAuthorizeOptions cardAuthorizeOption;
+    private LegacyCardReauthorizeOptions cardReauthorizeOptions;
 
     @Pattern(regexp = "[01]")
     @JacksonXmlProperty(localName = "encrypted_flg")
