@@ -26,7 +26,7 @@ public class CreditCardPayInfo extends CreditCardInfo {
     @JacksonXmlProperty(localName = "dealings_type")
     private String dealingsType;
 
-    @Pattern(regexp = "[0-9]{3}")
+    @Pattern(regexp = "^\\d{1,3}")
     @CipherString
     @JacksonXmlProperty(localName = "divide_times")
     private String divideTimes;
