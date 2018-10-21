@@ -3,7 +3,7 @@ package com.vogle.sbpayment.client.request;
 import com.vogle.sbpayment.client.SpsRequest;
 import com.vogle.sbpayment.client.convert.CipherString;
 import com.vogle.sbpayment.client.convert.MultiByteString;
-import com.vogle.sbpayment.client.response.LegacyCardInfoSaveResponse;
+import com.vogle.sbpayment.client.response.LegacyCardInfoUpdateResponse;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
@@ -16,18 +16,18 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 /**
- * Card information save request <br/>
+ * Card information update request
  * Don't use in production environment, indeed it has been removed from sbpayment API.<br/>
- * クレジットカード情報登録要求：本サビスは本番環境では使わないでください、実際sbpaymentのAPIから削除されました。
+ * クレジットカード情報更新要：本サビスは本番環境では使わないでください、実際sbpaymentのAPIから削除されました。
  *
  * @author Allan Im
  **/
 @Data
 @JacksonXmlRootElement(localName = "sps-api-request")
-public class LegacyCardInfoSaveRequest implements SpsRequest<LegacyCardInfoSaveResponse> {
+public class LegacyCardInfoUpdateRequest implements SpsRequest<LegacyCardInfoUpdateResponse> {
 
     @JacksonXmlProperty(isAttribute = true)
-    private final String id = "MG02-00101-101";
+    private final String id = "MG02-00102-101";
 
     @NotEmpty
     @Pattern(regexp = "[0-9]{5}")
@@ -76,7 +76,7 @@ public class LegacyCardInfoSaveRequest implements SpsRequest<LegacyCardInfoSaveR
     private String spsHashcode;
 
     @Override
-    public Class<LegacyCardInfoSaveResponse> responseClass() {
-        return LegacyCardInfoSaveResponse.class;
+    public Class<LegacyCardInfoUpdateResponse> responseClass() {
+        return LegacyCardInfoUpdateResponse.class;
     }
 }
