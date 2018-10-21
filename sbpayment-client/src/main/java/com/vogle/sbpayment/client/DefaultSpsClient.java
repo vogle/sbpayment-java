@@ -36,7 +36,7 @@ public class DefaultSpsClient extends AbstractSpsHttpClient {
     public DefaultSpsClient(SpsSettings settings) {
         super(settings);
         this.xmlMapper = new XmlMapper();
-        this.xmlMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        this.xmlMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         this.xmlMapper.enable(SerializationFeature.INDENT_OUTPUT);
 
         this.objectMapper = new ObjectMapper();

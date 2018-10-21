@@ -83,7 +83,8 @@ public class SpsSettings {
          * Enable Cipher.<br/>
          * 3DES 暗号化使用可否
          */
-        private boolean enabled = true;
+        private boolean enabled = false;
+
         /**
          * 3DES cipher key.<br/>
          * 3DES 暗号化キー
