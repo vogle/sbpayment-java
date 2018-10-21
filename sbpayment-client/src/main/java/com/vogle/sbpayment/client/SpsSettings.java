@@ -18,7 +18,7 @@ public class SpsSettings {
     private String charset = "Shift_JIS";
 
     /**
-     * Softbank Payment TimeZone, Default is "JST".<br/>
+     * Softbank Payment Server TimeZone, Default is "JST".<br/>
      */
     private String timeZone = "JST";
 
