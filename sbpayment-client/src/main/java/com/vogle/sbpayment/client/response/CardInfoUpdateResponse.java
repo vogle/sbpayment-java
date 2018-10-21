@@ -10,7 +10,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * Card info save response
+ * Card info update response
  *
  * @author Allan Im
  **/
@@ -18,7 +18,7 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @JacksonXmlRootElement(localName = "sps-api-response")
-public class CardInfoSaveResponse extends CardInfoElements implements SpsResponse {
+public class CardInfoUpdateResponse extends CardInfoElements implements SpsResponse {
 
     @CipherString
     @JacksonXmlProperty(localName = "res_pay_method_info")
