@@ -25,7 +25,7 @@ public class CardAuthorizeResponse extends CommonElements implements SpsResponse
 
     @CipherString
     @JacksonXmlProperty(localName = "res_pay_method_info")
-    private AuthorizeCreditCardInfo authorizeCreditCardInfo;
+    private CardAuthorizeMethodInfo payMethodInfo;
 
     @JacksonXmlProperty(localName = "res_sps_info")
     private SpsInfo spsInfo;

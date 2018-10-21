@@ -111,11 +111,11 @@ public class CardReauthorizeRequest implements SpsRequest<CardAuthorizeResponse>
     @CipherString
     @MultiByteString
     @JacksonXmlProperty(localName = "pay_method_info")
-    private CardAuthorizeMethod cardAuthorizeMethod;
+    private CardAuthorizeMethod payMethod;
 
     @NotNull
     @JacksonXmlProperty(localName = "pay_option_manage")
-    private CardReauthorizeOptions cardReauthorizeOptions;
+    private CardReauthorizeOptions payOptions;
 
     @Pattern(regexp = "[01]")
     @JacksonXmlProperty(localName = "encrypted_flg")

@@ -13,7 +13,7 @@ import lombok.Data;
  * @author Allan Im
  **/
 @Data
-public class TranLookupCreditCardInfo {
+public class CardTranLookupMethodInfo {
 
     @CipherString
     @JacksonXmlProperty(localName = "cc_company_code")

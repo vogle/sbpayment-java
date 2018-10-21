@@ -7,12 +7,12 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
 /**
- * Card Payment Amount Options
+ * Card Capture Options
  *
  * @author Allan Im
  **/
 @Data
-public class CardAmountOptions {
+public class CardCaptureOptions {
 
     @Max(9999999)
     @Min(1)

@@ -49,7 +49,7 @@ public class CardTranLookupRequest implements SpsRequest<CardTranLookupResponse>
     private String responseInfoType;
 
     @JacksonXmlProperty(localName = "pay_option_manage")
-    private CardBrandOptions cardBrandOptions;
+    private CardTranLookupOptions payOptions;
 
     @Pattern(regexp = "[01]")
     @JacksonXmlProperty(localName = "encrypted_flg")

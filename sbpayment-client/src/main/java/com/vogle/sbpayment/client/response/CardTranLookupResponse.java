@@ -25,7 +25,7 @@ public class CardTranLookupResponse extends CommonElements implements SpsRespons
 
     @CipherString
     @JacksonXmlProperty(localName = "res_pay_method_info")
-    private TranLookupCreditCardInfo tranLookupCreditCardInfo;
+    private CardTranLookupMethodInfo payMethodInfo;
 
     public TransactionStatus mapTransactionStatus() {
         return TransactionStatus.status(resStatus);

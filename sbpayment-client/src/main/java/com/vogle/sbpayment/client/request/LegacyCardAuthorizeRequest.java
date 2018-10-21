@@ -106,11 +106,11 @@ public class LegacyCardAuthorizeRequest implements SpsRequest<CardAuthorizeRespo
     @CipherString
     @MultiByteString
     @JacksonXmlProperty(localName = "pay_method_info")
-    private LegacyCardAuthorizeMethod cardAuthorizeMethod;
+    private LegacyCardAuthorizeMethod payMethod;
 
     @NotNull
     @JacksonXmlProperty(localName = "pay_option_manage")
-    private LegacyCardAuthorizeOptions cardAuthorizeOption;
+    private LegacyCardAuthorizeOptions payOptions;
 
     @Pattern(regexp = "[01]")
     @JacksonXmlProperty(localName = "encrypted_flg")

@@ -12,7 +12,7 @@ import lombok.Data;
  * @author Allan Im
  **/
 @Data
-public class AuthorizeCreditCardInfo {
+public class CardAuthorizeMethodInfo {
 
     @CipherString
     @JacksonXmlProperty(localName = "cc_company_code")

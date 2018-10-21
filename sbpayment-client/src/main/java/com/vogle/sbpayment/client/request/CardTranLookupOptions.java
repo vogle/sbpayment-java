@@ -6,12 +6,12 @@ import lombok.Data;
 import javax.validation.constraints.Pattern;
 
 /**
- * Credit card brand options
+ * Card transaction lookup request options
  *
  * @author Allan Im
  **/
 @Data
-public class CardBrandOptions {
+public class CardTranLookupOptions {
 
     @Pattern(regexp = "[01]")
     @JacksonXmlProperty(localName = "cardbrand_return_flg")

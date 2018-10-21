@@ -50,10 +50,10 @@ public class LegacyCardInfoSaveRequest implements SpsRequest<CardInfoSaveRespons
     @CipherString
     @MultiByteString
     @JacksonXmlProperty(localName = "pay_method_info")
-    private LegacyCardInfoMethod cardInfoMethod;
+    private LegacyCardInfoMethod payMethod;
 
     @JacksonXmlProperty(localName = "pay_option_manage")
-    private CardBrandOptions cardBrandOptions;
+    private LegacyCardInfoOptions payOptions;
 
     @Pattern(regexp = "[01]")
     @JacksonXmlProperty(localName = "encrypted_flg")
