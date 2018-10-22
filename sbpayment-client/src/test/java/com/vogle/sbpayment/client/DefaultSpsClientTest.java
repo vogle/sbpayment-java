@@ -13,7 +13,7 @@ public class DefaultSpsClientTest {
 
     @Test
     public void client() {
-        SpsSettings settings = new SpsSettings();
+        SpsClientSettings settings = new SpsClientSettings();
         SpsClient client = new DefaultSpsClient(settings);
 
         assertThat(client).isNotNull();

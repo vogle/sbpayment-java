@@ -10,9 +10,9 @@ public interface SpsClient {
     /**
      * Gets Settings
      *
-     * @return SpsSettings
+     * @return SpsClientSettings
      */
-    SpsSettings getSettings();
+    SpsClientSettings getSettings();
 
     /**
      * Sets Common Elements when sending to SoftBank payment side<br/>

@@ -13,7 +13,7 @@ public class SpsHttpClientTest {
 
 
     private DefaultSpsClient client(String merchantId, String serviceId, String timeZone) {
-        SpsSettings settings = new SpsSettings();
+        SpsClientSettings settings = new SpsClientSettings();
         settings.setTimeZone(timeZone);
         settings.setMerchantId(merchantId);
         settings.setServiceId(serviceId);

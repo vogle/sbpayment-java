@@ -1,6 +1,6 @@
 package com.vogle.sbpayment.client.convert;
 
-import com.vogle.sbpayment.client.SpsSettings;
+import com.vogle.sbpayment.client.SpsClientSettings;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -18,12 +18,12 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class SpsDataConverterTest {
 
-    private SpsSettings.CipherSets cipherSets;
+    private SpsClientSettings.CipherSets cipherSets;
     private final String charsetName = "Shift_JIS";
 
     @Before
     public void init() {
-        cipherSets = new SpsSettings.CipherSets();
+        cipherSets = new SpsClientSettings.CipherSets();
         cipherSets.setEnabled(true);
         cipherSets.setDesKey("abcdefghyjklmn1234567890");
         cipherSets.setDesInitKey("12345678");

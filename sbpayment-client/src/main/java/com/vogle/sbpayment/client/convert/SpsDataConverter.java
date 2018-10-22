@@ -1,6 +1,6 @@
 package com.vogle.sbpayment.client.convert;
 
-import com.vogle.sbpayment.client.SpsSettings.CipherSets;
+import com.vogle.sbpayment.client.SpsClientSettings.CipherSets;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -134,20 +134,29 @@ public class SpsDataConverter {
             // for filed
             for (Field field : currentClass.getDeclaredFields()) {
                 try {
+                    String fieldName = field.getName();
+
+                    // Encrypted Flag set enable value that is "1"
+                    if (fieldName.equalsIgnoreCase("encryptedFlg")
+                            && field.getType().equals(String.class)) {
+                        currentClass.getMethod(setterName(fieldName), String.class)
+                                .invoke(source, "1");
+                    }
+
                     // Encrypt 3DES
                     if (field.isAnnotationPresent(CipherString.class) && field.getType().equals(String.class)) {
                         // Get value
-                        String value = (String) currentClass.getMethod(getterName(field.getName())).invoke(source);
+                        String value = (String) currentClass.getMethod(getterName(fieldName)).invoke(source);
 
                         // Encrypt 3DES and get value then setup
                         if (value != null) {
                             String encryptValue = SpsSecurity.encrypt(cipherSets, charsetName, value);
-                            currentClass.getMethod(setterName(field.getName()), String.class)
+                            currentClass.getMethod(setterName(fieldName), String.class)
                                     .invoke(source, encryptValue);
                         }
                     } else if (field.isAnnotationPresent(CipherString.class)) {
                         if (field.getAnnotation(CipherString.class).isIterable()) {
-                            Iterable iterable = (Iterable) currentClass.getMethod(getterName(field.getName()))
+                            Iterable iterable = (Iterable) currentClass.getMethod(getterName(fieldName))
                                     .invoke(source);
                             if (iterable != null) {
                                 Iterator iterator = (Iterator) field.getType().getMethod(ITERATOR).invoke(iterable);
@@ -157,7 +166,7 @@ public class SpsDataConverter {
                             }
                         } else {
                             encrypt(cipherSets, charsetName,
-                                    currentClass.getMethod(getterName(field.getName())).invoke(source));
+                                    currentClass.getMethod(getterName(fieldName)).invoke(source));
                         }
                     }
 

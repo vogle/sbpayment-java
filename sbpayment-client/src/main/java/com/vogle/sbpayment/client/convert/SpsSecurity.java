@@ -1,6 +1,6 @@
 package com.vogle.sbpayment.client.convert;
 
-import com.vogle.sbpayment.client.SpsSettings;
+import com.vogle.sbpayment.client.SpsClientSettings;
 
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidAlgorithmParameterException;
@@ -34,7 +34,7 @@ public class SpsSecurity {
      * @param source      the source
      * @return the encrypted data
      */
-    public static String encrypt(SpsSettings.CipherSets cipherSets, String charsetName, String source) {
+    public static String encrypt(SpsClientSettings.CipherSets cipherSets, String charsetName, String source) {
         if (cipherSets == null || !cipherSets.isEnabled() || isEmpty(cipherSets.getDesKey())
                 || isEmpty(cipherSets.getDesInitKey()) || isEmpty(source)) {
             return source;
@@ -84,7 +84,7 @@ public class SpsSecurity {
      * @param source      The source
      * @return The decrypted data
      */
-    public static String decrypt(SpsSettings.CipherSets cipherSets, String charsetName, String source) {
+    public static String decrypt(SpsClientSettings.CipherSets cipherSets, String charsetName, String source) {
 
         if (cipherSets == null || !cipherSets.isEnabled() || isEmpty(cipherSets.getDesKey())
                 || isEmpty(cipherSets.getDesInitKey()) || isEmpty(source)) {

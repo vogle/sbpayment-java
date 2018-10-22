@@ -44,14 +44,16 @@ public class DefaultSpsClient implements SpsClient {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    protected final SpsSettings settings;
+    protected final SpsClientSettings settings;
     protected final HttpClient httpClient;
     protected final XmlMapper xmlMapper;
     protected final ObjectMapper objectMapper;
 
-    public DefaultSpsClient(SpsSettings settings) {
+    public DefaultSpsClient(SpsClientSettings settings) {
         this.settings = settings;
+
         this.httpClient = httpClient(settings);
+
         this.xmlMapper = new XmlMapper();
         this.xmlMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         this.xmlMapper.enable(SerializationFeature.INDENT_OUTPUT);
@@ -59,12 +61,11 @@ public class DefaultSpsClient implements SpsClient {
         this.objectMapper = new ObjectMapper();
     }
 
-
     /**
      * {@inheritDoc}
      */
     @Override
-    public SpsSettings getSettings() {
+    public SpsClientSettings getSettings() {
         return this.settings;
     }
 
@@ -286,7 +287,7 @@ public class DefaultSpsClient implements SpsClient {
     /**
      * Create HttpClient
      */
-    protected HttpClient httpClient(SpsSettings settings) {
+    protected HttpClient httpClient(SpsClientSettings settings) {
         // http client
         HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
 
