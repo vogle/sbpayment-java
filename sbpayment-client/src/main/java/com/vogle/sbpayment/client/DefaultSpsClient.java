@@ -95,6 +95,11 @@ public class DefaultSpsClient implements SpsClient {
                 logger.debug("SPS Client request object : \n{}\n", request);
             }
 
+            // enable encrypted flag
+            if (settings.getCipherSets().isEnabled()) {
+                SpsDataConverter.enableEncryptedFlg(request, request.getClass());
+            }
+
             // Make hashcode from xml and setup
             request.setSpsHashcode(makeSpsHashCode(request));
 

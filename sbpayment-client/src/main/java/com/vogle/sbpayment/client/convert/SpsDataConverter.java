@@ -133,16 +133,9 @@ public class SpsDataConverter {
 
             // for filed
             for (Field field : currentClass.getDeclaredFields()) {
+                String fieldName = field.getName();
+
                 try {
-                    String fieldName = field.getName();
-
-                    // Encrypted Flag set enable value that is "1"
-                    if (fieldName.equalsIgnoreCase("encryptedFlg")
-                            && field.getType().equals(String.class)) {
-                        currentClass.getMethod(setterName(fieldName), String.class)
-                                .invoke(source, "1");
-                    }
-
                     // Encrypt 3DES
                     if (field.isAnnotationPresent(CipherString.class) && field.getType().equals(String.class)) {
                         // Get value
@@ -171,8 +164,8 @@ public class SpsDataConverter {
                     }
 
                 } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException ignored) {
-                    logger.warn("Check Getter, Setter by field name '{}', And you have to return type is String ",
-                            field.getName());
+                    logger.error("Check Getter, Setter by field name '{}', And you have to return type is String ",
+                            fieldName);
                 }
             }
         }
@@ -233,9 +226,33 @@ public class SpsDataConverter {
                     }
 
                 } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException ignored) {
-                    logger.warn("Check Getter, Setter by field name '{}' ", field.getName());
+                    logger.error("Check Getter, Setter by field name '{}' ", field.getName());
                 }
             }
+        }
+    }
+
+    public static <T> void enableEncryptedFlg(Object source, Class<T> clazz) {
+
+        // for supper class
+        for (Class<?> currentClass : getClassTree(clazz)) {
+
+            // for filed
+            try {
+                Field field = currentClass.getField("encryptedFlg");
+                if (field.getType().equals(String.class)) {
+
+                    // Encrypted Flag set enable value that is "1"
+                    try {
+                        currentClass.getMethod(setterName(field.getName()), String.class).invoke(source, "1");
+                    } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException ignored) {
+                        logger.error("Check Setter by field name '{}'", field.getName());
+                    }
+                }
+
+            } catch (NoSuchFieldException ignored) {
+            }
+
         }
     }
 
