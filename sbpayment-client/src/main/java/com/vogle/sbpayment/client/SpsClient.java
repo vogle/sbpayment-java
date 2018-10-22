@@ -15,12 +15,12 @@ public interface SpsClient {
     SpsClientSettings getSettings();
 
     /**
-     * Sets Common Elements when sending to SoftBank payment side<br/>
-     * ソフトバングペイメント側に送信する時の共通項目をセット
+     * Gets new request object and it has common elements
      *
-     * @param request The request object
+     * @param clazz request class
+     * @return new request
      */
-    void setCommonElementsTo(SpsRequest request);
+    <T extends SpsRequest> T newRequest(Class<T> clazz);
 
 
     /**

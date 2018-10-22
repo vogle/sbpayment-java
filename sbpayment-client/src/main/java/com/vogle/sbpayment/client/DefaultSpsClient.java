@@ -73,14 +73,22 @@ public class DefaultSpsClient implements SpsClient {
      * {@inheritDoc}
      */
     @Override
-    public void setCommonElementsTo(SpsRequest request) {
-        request.setMerchantId(settings.getMerchantId());
-        request.setServiceId(settings.getServiceId());
-        request.setLimitSecond(settings.getAllowableSecondOnRequest());
+    public <T extends SpsRequest> T newRequest(Class<T> clazz) {
+        try {
+            T request = clazz.newInstance();
 
-        DateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
-        dateFormat.setTimeZone(TimeZone.getTimeZone(settings.getTimeZone()));
-        request.setRequestDate(dateFormat.format(new Date()));
+            request.setMerchantId(settings.getMerchantId());
+            request.setServiceId(settings.getServiceId());
+            request.setLimitSecond(settings.getAllowableSecondOnRequest());
+
+            DateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+            dateFormat.setTimeZone(TimeZone.getTimeZone(settings.getTimeZone()));
+            request.setRequestDate(dateFormat.format(new Date()));
+            return request;
+        } catch (InstantiationException | IllegalAccessException ex) {
+            logger.error(ex.getMessage());
+        }
+        return null;
     }
 
     /**
