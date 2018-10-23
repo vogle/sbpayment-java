@@ -16,7 +16,7 @@ import javax.validation.ValidatorFactory;
  *
  * @author Allan Im
  **/
-class ParamValidator {
+public class ParamValidator {
 
     private static final Logger logger = LoggerFactory.getLogger(ParamValidator.class);
 
@@ -30,7 +30,7 @@ class ParamValidator {
     }
 
     @SafeVarargs
-    static <T> void beanValidate(final T... params) {
+    public static <T> void beanValidate(final T... params) {
         for (T param : params) {
 
             if (param == null) {
@@ -52,19 +52,19 @@ class ParamValidator {
         }
     }
 
-    static void assertNotEmpty(String keyName, String param) {
+    public static void assertNotEmpty(String keyName, String param) {
         if (param == null || param.isEmpty()) {
             throw new IllegalArgumentException(keyName + " is empty");
         }
     }
 
-    static void assertNotNull(String keyName, Object param) {
+    public static void assertNotNull(String keyName, Object param) {
         if (param == null) {
             throw new IllegalArgumentException(keyName + " is null");
         }
     }
 
-    static void assertAmount(Integer amount) {
+    public static void assertAmount(Integer amount) {
         if (amount == null || amount < 1) {
             throw new IllegalArgumentException("Wrong amount value");
         }
