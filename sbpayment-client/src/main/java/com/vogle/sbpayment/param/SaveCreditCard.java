@@ -2,7 +2,6 @@ package com.vogle.sbpayment.param;
 
 import lombok.Builder;
 import lombok.Data;
-import org.hibernate.validator.constraints.CreditCardNumber;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
@@ -18,7 +17,7 @@ import javax.validation.constraints.Size;
 public class SaveCreditCard {
 
     @NotEmpty
-    @CreditCardNumber
+    @Pattern(regexp = "[0-9]{12,19}")
     private String number;
 
     @NotEmpty
