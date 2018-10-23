@@ -1,2 +1,6 @@
 
+ext {
 
+    vJavaLang = 1.8
+    gradleDir = "${rootProject.rootDir}/gradle"
+}

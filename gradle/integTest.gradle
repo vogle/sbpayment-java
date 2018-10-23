@@ -1,0 +1,43 @@
+/**
+ * This script adds a dedicated integration testing source set (src/it) and task
+ * (integTest) when applied to any Java project.
+ *
+ * Configuration:
+ *     apply from: path/to/integTest.gradle
+ *
+ * Usage:
+ *     gradle integTest
+ *      - or -
+ *     gradle check
+ */
+
+sourceSets {
+    integTest {
+        java.srcDir 'src/it/java'
+        resources.srcDir 'src/it/resources'
+    }
+}
+
+task integTest(type: Test) {
+    description = "Runs integration tests."
+
+    testClassesDirs = sourceSets.integTest.output.classesDirs
+    classpath = sourceSets.integTest.runtimeClasspath
+
+    maxHeapSize = '1024m'
+
+    // always run integration tests after unit tests in order to fail fast
+    mustRunAfter test
+}
+
+dependencies {
+    integTestCompile sourceSets.main.output
+    integTestCompile sourceSets.test.output
+    integTestCompile configurations.compile
+    integTestCompile configurations.testCompile
+    integTestRuntime configurations.runtime
+    integTestRuntime configurations.testRuntime
+}
+
+// Run integration tests during the 'check' lifecycle (which already includes 'test')
+check.dependsOn integTest
