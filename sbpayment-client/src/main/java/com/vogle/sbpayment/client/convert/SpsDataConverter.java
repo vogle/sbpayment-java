@@ -153,8 +153,11 @@ public class SpsDataConverter {
                                 }
                             }
                         } else {
-                            encrypt(cipherSets, charsetName,
-                                    currentClass.getMethod(getterName(fieldName)).invoke(source));
+                            // get value
+                            Object value = currentClass.getMethod(getterName(fieldName)).invoke(source);
+                            if (value != null) {
+                                encrypt(cipherSets, charsetName, value);
+                            }
                         }
                     }
 
@@ -213,8 +216,12 @@ public class SpsDataConverter {
                                 }
                             }
                         } else {
-                            decrypt(cipherSets, charsetName,
-                                    currentClass.getMethod(getterName(field.getName())).invoke(source));
+                            // get value
+                            Object value = currentClass.getMethod(getterName(field.getName())).invoke(source);
+                            if (value != null) {
+                                decrypt(cipherSets, charsetName, value);
+                            }
+
                         }
                     }
 
