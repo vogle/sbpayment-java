@@ -47,21 +47,17 @@ public class SpsDataConverter {
      * @param source      Target source
      * @param charsetName charset name (Shift_JIS)
      */
-    public static <T> void encodeWithoutCipherField(String charsetName, T source) {
+    public static <T> void encodeWithoutCipherString(String charsetName, T source) {
         base64Encode(charsetName, true, source);
     }
 
     private static <T> void base64Encode(String charsetName, boolean enableCipher, T source) {
-        if (source == null) {
-            return;
-        }
+        assert source != null;
         base64Encode(charsetName, enableCipher, source, source.getClass());
     }
 
     private static <T> void base64Encode(String charsetName, boolean enableCipher, Object source, Class<T> clazz) {
-        if (source == null) {
-            return;
-        }
+        assert source != null;
 
         // for supper class
         for (Class<?> currentClass : getClassTree(clazz)) {
@@ -99,10 +95,11 @@ public class SpsDataConverter {
                                     currentClass.getMethod(getterName(field.getName())).invoke(source));
                         }
                     }
-                } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException ignored) {
-                    logger.warn("Check Getter, Setter by field name '{}' ", field.getName());
+                } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException ex) {
+                    logger.error("Check Getter, Setter by field name '{}' ", field.getName());
+                    throw new InvalidRequestException(ex);
                 } catch (UnsupportedEncodingException ignored) {
-                    logger.warn("Unsupported encoding '{}' ", charsetName);
+                    logger.error("Do not encode, because Unsupported encoding '{}' ", charsetName);
                 }
             }
         }
@@ -117,16 +114,14 @@ public class SpsDataConverter {
      * @param <T>         String or Iterable object
      */
     public static <T> void encrypt(CipherSets cipherSets, String charsetName, T source) {
-        if (source == null || !cipherSets.isEnabled()) {
+        assert source != null;
+        if (!cipherSets.isEnabled()) {
             return;
         }
         encrypt(cipherSets, charsetName, source, source.getClass());
     }
 
     private static <T> void encrypt(CipherSets cipherSets, String charsetName, Object source, Class<T> clazz) {
-        if (source == null || !cipherSets.isEnabled()) {
-            return;
-        }
 
         // for supper class
         for (Class<?> currentClass : getClassTree(clazz)) {
@@ -163,9 +158,10 @@ public class SpsDataConverter {
                         }
                     }
 
-                } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException ignored) {
+                } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException ex) {
                     logger.error("Check Getter, Setter by field name '{}', And you have to return type is String ",
                             fieldName);
+                    throw new InvalidRequestException(ex);
                 }
             }
         }
@@ -180,17 +176,14 @@ public class SpsDataConverter {
      * @param <T>         String or Iterable object
      */
     public static <T> void decrypt(CipherSets cipherSets, String charsetName, T source) {
-        if (source == null || !cipherSets.isEnabled()) {
+        assert source != null;
+        if (!cipherSets.isEnabled()) {
             return;
         }
         decrypt(cipherSets, charsetName, source, source.getClass());
     }
 
     private static <T> void decrypt(CipherSets cipherSets, String charsetName, Object source, Class<T> clazz) {
-
-        if (source == null || !cipherSets.isEnabled()) {
-            return;
-        }
 
         // for supper class
         for (Class<?> currentClass : getClassTree(clazz)) {
@@ -225,13 +218,21 @@ public class SpsDataConverter {
                         }
                     }
 
-                } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException ignored) {
+                } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException ex) {
                     logger.error("Check Getter, Setter by field name '{}' ", field.getName());
+                    throw new InvalidRequestException(ex);
                 }
             }
         }
     }
 
+    /**
+     * The encryptedFlg of source sets "1", this mean that enable the cipher<br/>
+     * Sourceオブジェクトで「encryptedFlg」フィールドを探して、”1”を登録する。暗号化をする場合、実行する。
+     *
+     * @param source check object source
+     * @param clazz  source type
+     */
     public static <T> void enableEncryptedFlg(Object source, Class<T> clazz) {
 
         // for supper class
@@ -239,17 +240,17 @@ public class SpsDataConverter {
 
             // for filed
             try {
-                Field field = currentClass.getField("encryptedFlg");
+                Field field = currentClass.getDeclaredField("encryptedFlg");
                 if (field.getType().equals(String.class)) {
 
                     // Encrypted Flag set enable value that is "1"
                     try {
                         currentClass.getMethod(setterName(field.getName()), String.class).invoke(source, "1");
-                    } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException ignored) {
+                    } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException ex) {
                         logger.error("Check Setter by field name '{}'", field.getName());
+                        throw new InvalidRequestException(ex);
                     }
                 }
-
             } catch (NoSuchFieldException ignored) {
             }
 
