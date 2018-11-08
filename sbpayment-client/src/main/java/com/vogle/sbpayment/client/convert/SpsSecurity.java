@@ -127,6 +127,9 @@ public class SpsSecurity {
     }
 
     private static SecretKey toSecretKey(String key) {
+        if (key == null || key.length() > 24) {
+            throw new IllegalArgumentException("Invalid DES-Key");
+        }
         byte[] kyeByte = key.getBytes();
         byte[] keyByte24 = new byte[24];
         System.arraycopy(kyeByte, 0, keyByte24, 0, kyeByte.length);
@@ -134,6 +137,9 @@ public class SpsSecurity {
     }
 
     private static AlgorithmParameterSpec toAlgorithmParameterSpec(String initKey) {
+        if (initKey == null || initKey.length() > 8) {
+            throw new IllegalArgumentException("Invalid DES-InitKey");
+        }
         byte[] kyeByte = initKey.getBytes();
         byte[] keyByte8 = new byte[8];
         System.arraycopy(kyeByte, 0, keyByte8, 0, kyeByte.length);
