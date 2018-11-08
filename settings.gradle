@@ -1,3 +1,4 @@
+rootProject.name = 'sbpayment'
 
 include "sbpayment-client"
-include "sbpayment-autoconfiguration"
+include "sbpayment-spring-boot-autoconfigure"

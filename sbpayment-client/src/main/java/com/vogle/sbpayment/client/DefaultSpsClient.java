@@ -103,27 +103,27 @@ public class DefaultSpsClient implements SpsClient {
                 logger.debug("SPS Client request object : \n{}\n", request);
             }
 
-            // enable encrypted flag
+            // 1. enable encrypted flag by settings
             if (settings.getCipherSets().isEnabled()) {
                 SpsDataConverter.enableEncryptedFlg(request, request.getClass());
             }
 
-            // Make hashcode from xml and setup
+            // 2. Insert a hashcode from request
             request.setSpsHashcode(makeSpsHashCode(request));
 
-            // DES Encrypt & base64 encode
+            // 3. DES Encrypt & base64 encode
             String xmlRequest = objectToXml(request);
 
             if (logger.isDebugEnabled()) {
                 logger.debug("SPS Client request XML : \n{}\n", xmlRequest);
             }
 
-            // execute
+            // 4. HTTP Execute
             HttpPost method = new HttpPost(settings.getApiUrl());
             method.setEntity(new StringEntity(xmlRequest, charset));
             HttpResponse response = httpClient.execute(method);
 
-            // response status
+            // Gets response status
             int statusCode = response.getStatusLine().getStatusCode();
 
             // success
@@ -182,9 +182,9 @@ public class DefaultSpsClient implements SpsClient {
                 return new SpsResponseEntity<>(statusCode);
             }
 
-        } catch (IOException ignored) {
+        } catch (IOException ex) {
             logger.error("SPS Client Internal Error : {}({})",
-                    ignored.getClass().getSimpleName(), ignored.getMessage());
+                    ex.getClass().getSimpleName(), ex.getMessage());
         }
         return new SpsResponseEntity<>();
     }
@@ -226,7 +226,7 @@ public class DefaultSpsClient implements SpsClient {
             if (settings.getCipherSets().isEnabled()) {
                 // DES Encrypt & base64 encode
                 SpsDataConverter.encrypt(settings.getCipherSets(), charset, value);
-                SpsDataConverter.encodeWithoutCipherField(charset, value);
+                SpsDataConverter.encodeWithoutCipherString(charset, value);
             } else {
                 // base64 encode
                 SpsDataConverter.encode(charset, value);
