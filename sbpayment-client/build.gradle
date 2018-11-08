@@ -13,7 +13,7 @@ repositories {
 }
 
 // Integration test
-apply from: "$gradleDir/integtest.gradle"
+apply from: "$gradleDir/integration-test.gradle"
 
 dependencies {
 

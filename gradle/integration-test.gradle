@@ -1,0 +1,43 @@
+/**
+ * This script adds a dedicated integration testing source set (src/it) and task
+ * (iTest) when applied to any Java project.
+ *
+ * Configuration:
+ *     apply from: path/to/integration-test.gradle
+ *
+ * Usage:
+ *     gradle iTest
+ *      - or -
+ *     gradle check
+ */
+
+sourceSets {
+    iTest {
+        java.srcDir 'src/i-test/java'
+        resources.srcDir 'src/i-test/resources'
+    }
+}
+
+dependencies {
+    iTestCompile sourceSets.main.output
+    iTestCompile sourceSets.test.output
+    iTestCompile configurations.compile
+    iTestCompile configurations.testCompile
+    iTestRuntime configurations.runtime
+    iTestRuntime configurations.testRuntime
+}
+
+task iTest(type: Test, group: "verification") {
+    description = "Runs integration tests."
+
+    testClassesDirs = sourceSets.iTest.output.classesDirs
+    classpath = sourceSets.iTest.runtimeClasspath
+
+    maxHeapSize = '1024m'
+
+    // always run integration tests after unit tests in order to fail fast
+    mustRunAfter test
+}
+
+// Run integration tests during the 'check' lifecycle (which already includes 'test')
+check.dependsOn iTest
