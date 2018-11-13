@@ -201,7 +201,10 @@ public class DefaultSpsClient implements SpsClient {
 
             // DES Decrypt
             if (settings.getCipherSets().isEnabled()) {
-                SpsDataConverter.decrypt(settings.getCipherSets(), settings.getCharset(), bodyObject);
+                SpsDataConverter.decrypt(
+                        settings.getCipherSets().getDesKey(),
+                        settings.getCipherSets().getDesInitKey(),
+                        settings.getCharset(), bodyObject);
             }
 
             return bodyObject;
@@ -225,7 +228,10 @@ public class DefaultSpsClient implements SpsClient {
         try {
             if (settings.getCipherSets().isEnabled()) {
                 // DES Encrypt & base64 encode
-                SpsDataConverter.encrypt(settings.getCipherSets(), charset, value);
+                SpsDataConverter.encrypt(
+                        settings.getCipherSets().getDesKey(),
+                        settings.getCipherSets().getDesInitKey(),
+                        charset, value);
                 SpsDataConverter.encodeWithoutCipherString(charset, value);
             } else {
                 // base64 encode

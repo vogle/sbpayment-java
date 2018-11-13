@@ -1,7 +1,5 @@
 package com.vogle.sbpayment.client.convert;
 
-import com.vogle.sbpayment.client.SpsClientSettings;
-
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -9,7 +7,6 @@ import lombok.ToString;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -21,16 +18,9 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class SpsDataConverterTest {
 
-    private SpsClientSettings.CipherSets cipherSets;
     private final String charsetName = "Shift_JIS";
-
-    @Before
-    public void init() {
-        cipherSets = new SpsClientSettings.CipherSets();
-        cipherSets.setEnabled(true);
-        cipherSets.setDesKey("abcdefghyjklmn1234567890");
-        cipherSets.setDesInitKey("12345678");
-    }
+    private final String desKey = "abcdefghyjklmn1234567890";
+    private final String desInitKey = "12345678";
 
     @Test
     public void encode() {
@@ -121,7 +111,7 @@ public class SpsDataConverterTest {
         source.setSubCipherString(origin);
 
         // encrypt
-        SpsDataConverter.encrypt(cipherSets, charsetName, source);
+        SpsDataConverter.encrypt(desKey, desInitKey, charsetName, source);
 
         assertThat(source).isNotNull();
         assertThat(source.getBasic64()).isNotNull();
@@ -137,50 +127,7 @@ public class SpsDataConverterTest {
         assertThat(source.getItem().getCipherName()).isEqualTo(encrypted);
 
         // decrypt
-        SpsDataConverter.decrypt(cipherSets, charsetName, source);
-
-        assertThat(source).isNotNull();
-        assertThat(source.getBasic64()).isNotNull();
-        assertThat(source.getCipherString()).isNotNull();
-        assertThat(source.getBasic64()).isEqualTo(origin);
-        assertThat(source.getSubBasic64()).isEqualTo(origin);
-        assertThat(source.getItems().get(0).getName()).isEqualTo(origin);
-        assertThat(source.getItem().getName()).isEqualTo(origin);
-
-        assertThat(source.getCipherString()).isEqualTo(origin);
-        assertThat(source.getSubCipherString()).isEqualTo(origin);
-        assertThat(source.getItems().get(0).getCipherName()).isEqualTo(origin);
-        assertThat(source.getItem().getCipherName()).isEqualTo(origin);
-    }
-
-    @Test
-    public void encryptAndDecryptWithDisableCipherSet() {
-        SpsClientSettings.CipherSets disableCipherSets = new SpsClientSettings.CipherSets();
-        cipherSets.setEnabled(false);
-
-        String origin = "Allan Im";
-        SampleObject source = new SampleObject(origin, origin, origin);
-        source.setSubBasic64(origin);
-        source.setSubCipherString(origin);
-
-        // encrypt
-        SpsDataConverter.encrypt(disableCipherSets, charsetName, source);
-
-        assertThat(source).isNotNull();
-        assertThat(source.getBasic64()).isNotNull();
-        assertThat(source.getCipherString()).isNotNull();
-        assertThat(source.getBasic64()).isEqualTo(origin);
-        assertThat(source.getSubBasic64()).isEqualTo(origin);
-        assertThat(source.getItems().get(0).getName()).isEqualTo(origin);
-        assertThat(source.getItem().getName()).isEqualTo(origin);
-
-        assertThat(source.getCipherString()).isEqualTo(origin);
-        assertThat(source.getSubCipherString()).isEqualTo(origin);
-        assertThat(source.getItems().get(0).getCipherName()).isEqualTo(origin);
-        assertThat(source.getItem().getCipherName()).isEqualTo(origin);
-
-        // decrypt
-        SpsDataConverter.decrypt(disableCipherSets, charsetName, source);
+        SpsDataConverter.decrypt(desKey, desInitKey, charsetName, source);
 
         assertThat(source).isNotNull();
         assertThat(source.getBasic64()).isNotNull();
@@ -202,7 +149,7 @@ public class SpsDataConverterTest {
         NoGetterObject source = new NoGetterObject();
 
         // when
-        SpsDataConverter.encrypt(cipherSets, charsetName, source);
+        SpsDataConverter.encrypt(desKey, desInitKey, charsetName, source);
     }
 
     @Test(expected = InvalidRequestException.class)
@@ -211,7 +158,7 @@ public class SpsDataConverterTest {
         NoGetterObject source = new NoGetterObject();
 
         // when
-        SpsDataConverter.decrypt(cipherSets, charsetName, source);
+        SpsDataConverter.decrypt(desKey, desInitKey, charsetName, source);
     }
 
     @Test

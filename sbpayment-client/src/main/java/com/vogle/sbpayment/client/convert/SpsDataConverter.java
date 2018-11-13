@@ -1,7 +1,5 @@
 package com.vogle.sbpayment.client.convert;
 
-import com.vogle.sbpayment.client.SpsClientSettings.CipherSets;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -108,20 +106,18 @@ public class SpsDataConverter {
     /**
      * Encrypt the source
      *
-     * @param cipherSets  Sps cipherSets settings
+     * @param desKey      The DES cipherSets key
+     * @param initKey     The DES initialization key
      * @param charsetName Character Set name
      * @param source      The source
      * @param <T>         String or Iterable object
      */
-    public static <T> void encrypt(CipherSets cipherSets, String charsetName, T source) {
+    public static <T> void encrypt(String desKey, String initKey, String charsetName, T source) {
         assert source != null;
-        if (!cipherSets.isEnabled()) {
-            return;
-        }
-        encrypt(cipherSets, charsetName, source, source.getClass());
+        encrypt(desKey, initKey, charsetName, source, source.getClass());
     }
 
-    private static <T> void encrypt(CipherSets cipherSets, String charsetName, Object source, Class<T> clazz) {
+    private static <T> void encrypt(String desKey, String initKey, String charsetName, Object source, Class<T> clazz) {
 
         // for supper class
         for (Class<?> currentClass : getClassTree(clazz)) {
@@ -138,7 +134,7 @@ public class SpsDataConverter {
 
                         // Encrypt 3DES and get value then setup
                         if (value != null) {
-                            String encryptValue = SpsSecurity.encrypt(cipherSets, charsetName, value);
+                            String encryptValue = SpsSecurity.encrypt(desKey, initKey, charsetName, value);
                             currentClass.getMethod(setterName(fieldName), String.class)
                                     .invoke(source, encryptValue);
                         }
@@ -149,14 +145,14 @@ public class SpsDataConverter {
                             if (iterable != null) {
                                 Iterator iterator = (Iterator) field.getType().getMethod(ITERATOR).invoke(iterable);
                                 while (iterator.hasNext()) {
-                                    encrypt(cipherSets, charsetName, iterator.next());
+                                    encrypt(desKey, initKey, charsetName, iterator.next());
                                 }
                             }
                         } else {
                             // get value
                             Object value = currentClass.getMethod(getterName(fieldName)).invoke(source);
                             if (value != null) {
-                                encrypt(cipherSets, charsetName, value);
+                                encrypt(desKey, initKey, charsetName, value);
                             }
                         }
                     }
@@ -173,20 +169,18 @@ public class SpsDataConverter {
     /**
      * Decrypt the source
      *
-     * @param cipherSets  Sps cipherSets settings
+     * @param desKey      The DES cipherSets key
+     * @param initKey     The DES initialization key
      * @param charsetName Character Set name
      * @param source      The source
      * @param <T>         String or Iterable object
      */
-    public static <T> void decrypt(CipherSets cipherSets, String charsetName, T source) {
+    public static <T> void decrypt(String desKey, String initKey, String charsetName, T source) {
         assert source != null;
-        if (!cipherSets.isEnabled()) {
-            return;
-        }
-        decrypt(cipherSets, charsetName, source, source.getClass());
+        decrypt(desKey, initKey, charsetName, source, source.getClass());
     }
 
-    private static <T> void decrypt(CipherSets cipherSets, String charsetName, Object source, Class<T> clazz) {
+    private static <T> void decrypt(String desKey, String initKey, String charsetName, Object source, Class<T> clazz) {
 
         // for supper class
         for (Class<?> currentClass : getClassTree(clazz)) {
@@ -201,7 +195,7 @@ public class SpsDataConverter {
 
                         // Decrypt 3DES and get value then setup
                         if (value != null) {
-                            String decryptValue = SpsSecurity.decrypt(cipherSets, charsetName, value);
+                            String decryptValue = SpsSecurity.decrypt(desKey, initKey, charsetName, value);
                             currentClass.getMethod(setterName(field.getName()), String.class)
                                     .invoke(source, decryptValue);
                         }
@@ -212,14 +206,14 @@ public class SpsDataConverter {
                             if (iterable != null) {
                                 Iterator iterator = (Iterator) field.getType().getMethod(ITERATOR).invoke(iterable);
                                 while (iterator.hasNext()) {
-                                    decrypt(cipherSets, charsetName, iterator.next());
+                                    decrypt(desKey, initKey, charsetName, iterator.next());
                                 }
                             }
                         } else {
                             // get value
                             Object value = currentClass.getMethod(getterName(field.getName())).invoke(source);
                             if (value != null) {
-                                decrypt(cipherSets, charsetName, value);
+                                decrypt(desKey, initKey, charsetName, value);
                             }
 
                         }
@@ -264,7 +258,7 @@ public class SpsDataConverter {
         }
     }
 
-    private static List<Class<?>> getClassTree(final Class<?> clazz) {
+    private static List<Class<?>> getClassTree(Class<?> clazz) {
         // check supper class
         List<Class<?>> classList = new ArrayList<>();
         Class<?> checkClass = clazz;

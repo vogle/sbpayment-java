@@ -1,7 +1,5 @@
 package com.vogle.sbpayment.client.convert;
 
-import com.vogle.sbpayment.client.SpsClientSettings;
-
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -27,24 +25,6 @@ public class SpsSecurity {
     private static final char SPACE = ' ';
 
     /**
-     * Encrypt the source using CipherSets
-     *
-     * @param cipherSets  Sps cipherSets settings
-     * @param charsetName Character Set name
-     * @param source      the source
-     * @return the encrypted data
-     */
-    public static String encrypt(SpsClientSettings.CipherSets cipherSets, String charsetName, String source) {
-        if (cipherSets == null || !cipherSets.isEnabled() || isEmpty(cipherSets.getDesKey())
-                || isEmpty(cipherSets.getDesInitKey()) || isEmpty(source)) {
-            return source;
-        } else {
-            return encrypt(cipherSets.getDesKey(), cipherSets.getDesInitKey(), charsetName, source);
-        }
-
-    }
-
-    /**
      * Encrypt the source.
      *
      * @param desKey      The DES cipherSets key
@@ -53,7 +33,8 @@ public class SpsSecurity {
      * @param source      he source
      * @return the encrypted data
      */
-    public static String encrypt(String desKey, String initKey, String charsetName, final String source) {
+    public static String encrypt(final String desKey, final String initKey,
+                                 final String charsetName, final String source) {
 
         try {
             // アルゴリズム：3DES-CBC（Padding なし）
@@ -77,25 +58,6 @@ public class SpsSecurity {
     }
 
     /**
-     * Decrypt the source using CipherSets
-     *
-     * @param cipherSets  Sps cipherSets settings
-     * @param charsetName Character Set name
-     * @param source      The source
-     * @return The decrypted data
-     */
-    public static String decrypt(SpsClientSettings.CipherSets cipherSets, String charsetName, String source) {
-
-        if (cipherSets == null || !cipherSets.isEnabled() || isEmpty(cipherSets.getDesKey())
-                || isEmpty(cipherSets.getDesInitKey()) || isEmpty(source)) {
-            return source;
-        } else {
-            return decrypt(cipherSets.getDesKey(), cipherSets.getDesInitKey(), charsetName, source);
-        }
-
-    }
-
-    /**
      * Decrypt the source
      *
      * @param desKey      The DES cipherSets key
@@ -104,7 +66,8 @@ public class SpsSecurity {
      * @param source      The source
      * @return The decrypted data
      */
-    public static String decrypt(String desKey, String initKey, String charsetName, final String source) {
+    public static String decrypt(final String desKey, final String initKey,
+                                 final String charsetName, final String source) {
 
         try {
             // アルゴリズム：3DES-CBC（Padding なし）
@@ -163,8 +126,8 @@ public class SpsSecurity {
         }
     }
 
-    private static boolean isEmpty(final CharSequence cs) {
-        return cs == null || cs.length() == 0;
-    }
+    //    private static boolean isEmpty(final CharSequence cs) {
+    //        return cs == null || cs.length() == 0;
+    //    }
 
 }
