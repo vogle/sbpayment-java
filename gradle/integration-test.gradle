@@ -27,7 +27,7 @@ dependencies {
     iTestRuntime configurations.testRuntime
 }
 
-task iTest(type: Test, group: "verification") {
+task integrationTest(type: Test, group: "verification") {
     description = "Runs integration tests."
 
     testClassesDirs = sourceSets.iTest.output.classesDirs
@@ -40,4 +40,4 @@ task iTest(type: Test, group: "verification") {
 }
 
 // Run integration tests during the 'check' lifecycle (which already includes 'test')
-check.dependsOn iTest
+check.dependsOn integrationTest
