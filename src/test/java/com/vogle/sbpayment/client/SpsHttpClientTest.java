@@ -102,9 +102,6 @@ public class SpsHttpClientTest {
 
         // then
         assertThat(client).isNotNull();
-        assertThat(client.getSettings()).isNotNull();
-        assertThat(client.getSettings().getMerchantId()).isEqualTo(merchantId);
-        assertThat(client.getSettings().getTimeZone()).isEqualTo(timeZone);
     }
 
     @Test

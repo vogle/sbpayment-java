@@ -4,11 +4,9 @@ import com.vogle.sbpayment.client.convert.SpsDataConverter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.auth.AuthScope;
@@ -30,7 +28,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
@@ -44,10 +41,10 @@ public class DefaultSpsClient implements SpsClient {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    protected final SpsClientSettings settings;
-    protected final HttpClient httpClient;
-    protected final XmlMapper xmlMapper;
-    protected final ObjectMapper objectMapper;
+    private final SpsClientSettings settings;
+    private final HttpClient httpClient;
+    private final XmlMapper xmlMapper;
+    private final ObjectMapper objectMapper;
 
     public DefaultSpsClient(SpsClientSettings settings) {
         this.settings = settings;
@@ -59,14 +56,6 @@ public class DefaultSpsClient implements SpsClient {
         this.xmlMapper.enable(SerializationFeature.INDENT_OUTPUT);
 
         this.objectMapper = new ObjectMapper();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public SpsClientSettings getSettings() {
-        return this.settings;
     }
 
     /**
@@ -100,7 +89,7 @@ public class DefaultSpsClient implements SpsClient {
         String charset = settings.getCharset();
         try {
             if (logger.isDebugEnabled()) {
-                logger.debug("SPS Client request object : \n{}\n", request);
+                logger.debug("SPS Client request object : {}", request);
             }
 
             // 1. enable encrypted flag by settings
@@ -109,13 +98,14 @@ public class DefaultSpsClient implements SpsClient {
             }
 
             // 2. Insert a hashcode from request
-            request.setSpsHashcode(makeSpsHashCode(request));
+            request.setSpsHashcode(SpsDataConverter.makeSpsHashCode(request, settings.getHashKey(),
+                    settings.getCharset()));
 
             // 3. DES Encrypt & base64 encode
             String xmlRequest = objectToXml(request);
 
-            if (logger.isDebugEnabled()) {
-                logger.debug("SPS Client request XML : \n{}\n", xmlRequest);
+            if (logger.isTraceEnabled()) {
+                logger.trace("SPS Client request XML : \n{}\n", xmlRequest);
             }
 
             // 4. HTTP Execute
@@ -133,9 +123,9 @@ public class DefaultSpsClient implements SpsClient {
 
                 // response body
                 String body = EntityUtils.toString(response.getEntity(), settings.getCharset());
-                if (logger.isDebugEnabled()) {
-                    logger.debug("SPS Client response header :\n{}\n", headerMap);
-                    logger.debug("SPS Client response xml :\n{}\n", body);
+                if (logger.isTraceEnabled()) {
+                    logger.trace("SPS Client response header :{}", headerMap);
+                    logger.trace("SPS Client response xml :\n{}\n", body);
                 }
 
                 // xml mapping
@@ -151,7 +141,7 @@ public class DefaultSpsClient implements SpsClient {
                 }
 
                 if (logger.isDebugEnabled()) {
-                    logger.debug("SPS Client response object : \n{}\n", bodyObject);
+                    logger.debug("SPS Client response object : {}", bodyObject);
                 }
 
                 return new SpsResponseEntity<>(statusCode, headerMap, bodyObject);
@@ -190,10 +180,13 @@ public class DefaultSpsClient implements SpsClient {
     }
 
     /**
-     * {@inheritDoc}
+     * XML convert to Object
+     *
+     * @param body        The receiving response body
+     * @param objectClass The Converting object
+     * @return The converted Object
      */
-    @Override
-    public <T> T xmlToObject(String body, Class<T> objectClass) {
+    private <T> T xmlToObject(String body, Class<T> objectClass) {
 
         try {
             // xml mapping
@@ -216,10 +209,12 @@ public class DefaultSpsClient implements SpsClient {
     }
 
     /**
-     * {@inheritDoc}
+     * Object convert to Xml
+     *
+     * @param value The Source object
+     * @return The converted XML
      */
-    @Override
-    public <T> String objectToXml(T value) {
+    private <T> String objectToXml(T value) {
         String charset = settings.getCharset();
 
         // make xml
@@ -248,65 +243,9 @@ public class DefaultSpsClient implements SpsClient {
     }
 
     /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String makeSpsHashCode(Object value) {
-        try {
-            byte[] json = objectMapper.writeValueAsBytes(value);
-
-            // hash code
-            StringBuilder spsHashCode = new StringBuilder();
-
-            // log data
-            String featureId = "";
-            StringBuilder logString = new StringBuilder();
-
-            // data
-            JsonNode jsonNode = objectMapper.readTree(json);
-            Iterator<String> nodeNames = jsonNode.fieldNames();
-            while (nodeNames.hasNext()) {
-                String filed = nodeNames.next();
-                // hash code
-                if (!"id".equals(filed) && !"spsHashcode".equals(filed)) {
-                    spsHashCode.append(textValue(jsonNode.findValue(filed)));
-                }
-
-                // log
-                if (logger.isInfoEnabled()) {
-                    if ("id".equals(filed) || "custCode".equals(filed) || "orderId".equals(filed)
-                            || "trackingId".equals(filed)) {
-                        if (logString.length() != 0) {
-                            logString.append(", ");
-                        }
-                        if ("id".equals(filed)) {
-                            featureId = SpsFeatures.getFeatureName(textValue(jsonNode.findValue(filed)));
-                        } else {
-                            logString.append(filed).append(" = ").append(textValue(jsonNode.findValue(filed)));
-                        }
-                    }
-                }
-            }
-
-            // sps hash key
-            spsHashCode.append(settings.getHashKey());
-
-            // info log
-            if (logger.isInfoEnabled()) {
-                logger.info("SPS Client ({}) request : {}", featureId, logString);
-            }
-
-            return DigestUtils.sha1Hex(spsHashCode.toString().getBytes(settings.getCharset()));
-
-        } catch (IOException ex) {
-            throw new MakeHashCodeException(ex);
-        }
-    }
-
-    /**
      * Create HttpClient
      */
-    protected HttpClient httpClient(SpsClientSettings settings) {
+    private HttpClient httpClient(SpsClientSettings settings) {
         // http client
         HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
 
@@ -331,27 +270,12 @@ public class DefaultSpsClient implements SpsClient {
     }
 
 
-    protected boolean isEmpty(String str) {
+    private boolean isEmpty(String str) {
         return str == null || str.isEmpty();
     }
 
-    protected boolean isNotEmpty(String str) {
+    private boolean isNotEmpty(String str) {
         return !isEmpty(str);
     }
 
-    protected String textValue(JsonNode jsonNode) {
-        StringBuilder result = new StringBuilder();
-
-        if (jsonNode.isObject() || jsonNode.isArray()) {
-            Iterator<JsonNode> subNode = jsonNode.elements();
-            while (subNode.hasNext()) {
-                result.append(textValue(subNode.next()));
-            }
-        } else if (jsonNode.isTextual()) {
-            result.append(jsonNode.textValue().trim());
-        } else if (jsonNode.isNumber()) {
-            result.append(jsonNode.numberValue());
-        }
-        return result.toString();
-    }
 }

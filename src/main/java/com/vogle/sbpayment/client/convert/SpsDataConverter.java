@@ -1,8 +1,14 @@
 package com.vogle.sbpayment.client.convert;
 
+import com.vogle.sbpayment.client.MakeHashCodeException;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -22,6 +28,8 @@ public class SpsDataConverter {
     private static final String PREFIX_GET = "get";
     private static final String PREFIX_SET = "set";
     private static final String ITERATOR = "iterator";
+
+    private static final ObjectMapper objectMapper = new ObjectMapper();
 
     private static Logger logger = LoggerFactory.getLogger(SpsDataConverter.class);
 
@@ -258,6 +266,42 @@ public class SpsDataConverter {
         }
     }
 
+    /**
+     * Make hash-code by Softbank payment rules
+     *
+     * @param value   Request object
+     * @param hashKey Sbpayment Hash-Key
+     * @param charset Sbpayment charset
+     */
+    public static String makeSpsHashCode(Object value, String hashKey, String charset) {
+        try {
+            byte[] json = objectMapper.writeValueAsBytes(value);
+
+            // hash code
+            StringBuilder spsHashCode = new StringBuilder();
+
+            // data
+            JsonNode jsonNode = objectMapper.readTree(json);
+            Iterator<String> nodeNames = jsonNode.fieldNames();
+            while (nodeNames.hasNext()) {
+                String filed = nodeNames.next();
+                // hash code
+                if (!"id".equals(filed) && !"spsHashcode".equals(filed)) {
+                    spsHashCode.append(textValue(jsonNode.findValue(filed)));
+                }
+            }
+
+            // sps hash key
+            spsHashCode.append(hashKey);
+
+            return DigestUtils.sha1Hex(spsHashCode.toString().getBytes(charset));
+
+        } catch (IOException ex) {
+            throw new MakeHashCodeException(ex);
+        }
+    }
+
+
     private static List<Class<?>> getClassTree(Class<?> clazz) {
         // check supper class
         List<Class<?>> classList = new ArrayList<>();
@@ -280,6 +324,22 @@ public class SpsDataConverter {
 
     private static String setterName(String fieldName) {
         return PREFIX_SET + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
+    }
+
+    private static String textValue(JsonNode jsonNode) {
+        StringBuilder result = new StringBuilder();
+
+        if (jsonNode.isObject() || jsonNode.isArray()) {
+            Iterator<JsonNode> subNode = jsonNode.elements();
+            while (subNode.hasNext()) {
+                result.append(textValue(subNode.next()));
+            }
+        } else if (jsonNode.isTextual()) {
+            result.append(jsonNode.textValue().trim());
+        } else if (jsonNode.isNumber()) {
+            result.append(jsonNode.numberValue());
+        }
+        return result.toString();
     }
 
 }

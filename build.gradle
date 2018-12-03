@@ -1,6 +1,65 @@
+plugins {
+    id 'java'
+    id 'net.ltgt.apt' version '0.10'
+}
 
 ext {
-
     vJavaLang = 1.8
     gradleDir = "${rootProject.rootDir}/gradle"
+}
+
+group 'com.vogle.sbpayment'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = "$vJavaLang"
+
+repositories {
+    mavenCentral()
+}
+
+// Integration test
+apply from: "$gradleDir/integration-test.gradle"
+
+dependencies {
+
+    // http connect
+    compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.6'
+    compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-xml', version: '2.9.7'
+
+    // validation
+    compile group: 'org.hibernate.validator', name: 'hibernate-validator', version: '6.0.13.Final'
+    runtime group: 'org.glassfish', name: 'javax.el', version: '3.0.1-b09'
+
+    // log
+    compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
+
+    // test modules
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile group: 'org.assertj', name: 'assertj-core', version: '3.11.1'
+    testCompile group: 'org.mockito', name: 'mockito-core', version: '2.23.0'
+
+    // lombok generator
+    compileOnly 'org.projectlombok:lombok:1.18.2'
+    testCompileOnly 'org.projectlombok:lombok:1.18.2'
+    apt 'org.projectlombok:lombok:1.18.2'
+}
+
+javadoc {
+    source = sourceSets.main.allJava
+
+    options.locale = "en"
+    options.charSet = "UTF-8"
+    options.encoding = "UTF-8"
+
+    options.use = true
+    options.author = true
+    options.version = false
+
+    options.bottom = "Copyright 2018, Allan Im"
+
+    options.stylesheetFile = new File(projectDir, "javadoc-stylesheet.css")
+    options.addStringOption('Xdoclint:none', '-quiet')
+
+//    options.doclet = "com.google.doclava.Doclava"
+//    options.docletpath = [file("libs/doclava-1.0.5.jar")]
 }
