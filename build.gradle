@@ -57,7 +57,7 @@ javadoc {
 
     options.bottom = "Copyright 2018, Allan Im"
 
-    options.stylesheetFile = new File(projectDir, "javadoc-stylesheet.css")
+    options.stylesheetFile = new File(projectDir, "config/javadoc-stylesheet.css")
     options.addStringOption('Xdoclint:none', '-quiet')
 
 //    options.doclet = "com.google.doclava.Doclava"
