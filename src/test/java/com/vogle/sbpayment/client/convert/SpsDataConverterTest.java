@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.junit.Test;
@@ -182,6 +183,24 @@ public class SpsDataConverterTest {
         SpsDataConverter.enableEncryptedFlg(source, NoGetterObject.class);
     }
 
+    @Test
+    public void makeSpsHashCode(){
+        // given
+        SampleObject source = new SampleObject();
+        Item item = new Item();
+        item.setText("TEXT");
+        item.setNumber(9);
+        source.setItem(item);
+        source.setItems(new ArrayList<>());
+        String hashKey = "HASH_KEY";
+
+        // when
+        String result = SpsDataConverter.makeSpsHashCode(source, hashKey, charsetName);
+
+        // then
+        assertThat(result).isEqualTo("2004fd019ce9e4bec52e7e5b74a4adad09dbed7d");
+    }
+
 
     @Data
     @EqualsAndHashCode(callSuper = true)
@@ -251,6 +270,10 @@ public class SpsDataConverterTest {
 
         @CipherString
         private String cipherName;
+
+        private String text;
+
+        private int number;
     }
 
     public class NoGetterObject {

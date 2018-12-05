@@ -1,7 +1,6 @@
 package com.vogle.sbpayment.client.convert;
 
-import com.vogle.sbpayment.client.MakeHashCodeException;
-
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.codec.digest.DigestUtils;

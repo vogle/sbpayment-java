@@ -98,8 +98,8 @@ public class DefaultSpsClient implements SpsClient {
             }
 
             // 2. Insert a hashcode from request
-            request.setSpsHashcode(SpsDataConverter.makeSpsHashCode(request, settings.getHashKey(),
-                    settings.getCharset()));
+            String hashCode = SpsDataConverter.makeSpsHashCode(request, settings.getHashKey(), settings.getCharset());
+            request.setSpsHashcode(hashCode);
 
             // 3. DES Encrypt & base64 encode
             String xmlRequest = objectToXml(request);
