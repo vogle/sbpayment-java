@@ -1,65 +1,85 @@
 plugins {
-    id 'java'
-    id 'net.ltgt.apt' version '0.10'
+    id "io.spring.dependency-management" version "1.0.6.RELEASE" apply false
+    id 'io.franzbecker.gradle-lombok' version '1.14' apply false
 }
 
+group "com.vogle.sbpayment"
+version "0.0.1-SNAPSHOT"
+
 ext {
-    vJavaLang = 1.8
     gradleDir = "${rootProject.rootDir}/gradle"
 }
 
-group 'com.vogle.sbpayment'
-version '1.0-SNAPSHOT'
+subprojects {
 
-sourceCompatibility = "$vJavaLang"
+    // Sets JAVA
+    apply plugin: 'java-library'
+    sourceCompatibility = 1.8
 
-repositories {
-    mavenCentral()
+    repositories {
+        jcenter()
+    }
+
+    // Sets dependency manager
+    apply plugin: 'io.spring.dependency-management'
+    dependencyManagement {
+        dependencies {
+            dependency 'org.apache.httpcomponents:httpclient:4.5.6'
+            dependency 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.9.8'
+            dependency 'org.hibernate.validator:hibernate-validator:6.0.14.Final'
+            dependency 'org.glassfish:javax.el:3.0.1-b11'
+            dependency 'ch.qos.logback:logback-classic:1.2.3'
+
+            dependency 'junit:junit:4.12'
+            dependency 'org.assertj:assertj-core:3.11.1'
+            dependency 'org.mockito:mockito-core:2.23.4'
+            dependency 'org.powermock:powermock-api-mockito2:2.0.0'
+
+            dependency 'org.springframework.boot:spring-boot-autoconfigure:2.1.2.RELEASE'
+            dependency 'org.springframework.boot:spring-boot-configuration-processor:2.1.2.RELEASE'
+            dependency 'org.springframework.boot:spring-boot-starter-test:2.1.2.RELEASE'
+        }
+    }
+
+    // Sets common dependencies
+    dependencies {
+        // log
+        implementation('ch.qos.logback:logback-classic')
+
+        // test modules
+        testImplementation('junit:junit')
+        testImplementation('org.assertj:assertj-core')
+        testImplementation('org.mockito:mockito-core')
+        testImplementation('org.powermock:powermock-api-mockito2')
+    }
+
+
+    // Sets lombok
+    apply plugin: 'io.franzbecker.gradle-lombok'
+    lombok {
+        version = '1.18.4'
+    }
+
+    // Sets JavaDoc options
+    javadoc {
+        source = sourceSets.main.allJava
+
+        options.locale = "en"
+        options.charSet = "UTF-8"
+        options.encoding = "UTF-8"
+
+        options.use = true
+        options.author = true
+        options.version = false
+
+        options.bottom = "©${new Date().format('yyyy')}, vogle.com"
+
+        options.stylesheetFile = new File(projectDir, "config/javadoc-stylesheet.css")
+        options.addStringOption('Xdoclint:none', '-quiet')
+
+    }
+
 }
 
-// Integration test
-apply from: "$gradleDir/integration-test.gradle"
 
-dependencies {
 
-    // http connect
-    compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.6'
-    compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-xml', version: '2.9.7'
-
-    // validation
-    compile group: 'org.hibernate.validator', name: 'hibernate-validator', version: '6.0.13.Final'
-    runtime group: 'org.glassfish', name: 'javax.el', version: '3.0.1-b09'
-
-    // log
-    compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
-
-    // test modules
-    testCompile group: 'junit', name: 'junit', version: '4.12'
-    testCompile group: 'org.assertj', name: 'assertj-core', version: '3.11.1'
-    testCompile group: 'org.mockito', name: 'mockito-core', version: '2.23.0'
-
-    // lombok generator
-    compileOnly 'org.projectlombok:lombok:1.18.2'
-    testCompileOnly 'org.projectlombok:lombok:1.18.2'
-    apt 'org.projectlombok:lombok:1.18.2'
-}
-
-javadoc {
-    source = sourceSets.main.allJava
-
-    options.locale = "en"
-    options.charSet = "UTF-8"
-    options.encoding = "UTF-8"
-
-    options.use = true
-    options.author = true
-    options.version = false
-
-    options.bottom = "Copyright 2018, Allan Im"
-
-    options.stylesheetFile = new File(projectDir, "config/javadoc-stylesheet.css")
-    options.addStringOption('Xdoclint:none', '-quiet')
-
-//    options.doclet = "com.google.doclava.Doclava"
-//    options.docletpath = [file("libs/doclava-1.0.5.jar")]
-}

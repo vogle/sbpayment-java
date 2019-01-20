@@ -1,1 +1,5 @@
 rootProject.name = 'sbpayment-java'
+
+include "sbpayment-client"
+include "sbpayment-autoconfigre"
+include "sbpayment-creditcard"

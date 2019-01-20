@@ -1,37 +1,36 @@
 /**
- * This script adds a dedicated integration testing source set (src/it) and task
- * (iTest) when applied to any Java project.
+ * This script adds a dedicated integration testing source set (src/integTest) and task
+ * (integTest) when applied to any Java project.
  *
  * Configuration:
  *     apply from: path/to/integration-test.gradle
  *
  * Usage:
- *     gradle iTest
+ *     gradle integTest
  *      - or -
  *     gradle check
  */
 
 sourceSets {
-    iTest {
-        java.srcDir 'src/i-test/java'
-        resources.srcDir 'src/i-test/resources'
-    }
+    integTest
 }
 
 dependencies {
-    iTestCompile sourceSets.main.output
-    iTestCompile sourceSets.test.output
-    iTestCompile configurations.compile
-    iTestCompile configurations.testCompile
-    iTestRuntime configurations.runtime
-    iTestRuntime configurations.testRuntime
+    integTestCompile sourceSets.main.output
+    integTestCompile sourceSets.test.output
+    integTestCompile configurations.compile
+    integTestCompile configurations.testCompile
+    integTestRuntime configurations.runtime
+    integTestRuntime configurations.testRuntime
+    integTestImplementation configurations.implementation
+    integTestImplementation configurations.testImplementation
 }
 
 task integrationTest(type: Test, group: "verification") {
     description = "Runs integration tests."
 
-    testClassesDirs = sourceSets.iTest.output.classesDirs
-    classpath = sourceSets.iTest.runtimeClasspath
+    testClassesDirs = sourceSets.integTest.output.classesDirs
+    classpath = sourceSets.integTest.runtimeClasspath
 
     maxHeapSize = '1024m'
 
