@@ -8,7 +8,8 @@ package com.vogle.sbpayment.client;
 public interface SpsClient {
 
     /**
-     * Gets new request object and it has common elements
+     * Gets new request object and it has common elements, Those are merchant_id, service_id, limit_second
+     * and request_date
      *
      * @param clazz request class
      * @return new request
