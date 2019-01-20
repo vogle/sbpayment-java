@@ -6,12 +6,12 @@ import lombok.ToString;
 import java.util.Map;
 
 /**
- * Receiving data from Softbank Payment
+ * Received data from Softbank Payment
  *
  * @author Allan Im
  **/
 @ToString
-public class SpsResponseEntity<T extends SpsResponse> {
+public class SpsResult<T extends SpsResponse> {
 
     /**
      * HTTP Status Code
@@ -31,11 +31,11 @@ public class SpsResponseEntity<T extends SpsResponse> {
     @Getter
     private final T body;
 
-    public SpsResponseEntity() {
+    public SpsResult() {
         this(999);
     }
 
-    public SpsResponseEntity(int status) {
+    public SpsResult(int status) {
         this(status, null, null);
     }
 
@@ -46,7 +46,7 @@ public class SpsResponseEntity<T extends SpsResponse> {
      * @param body    the entity body
      * @param headers the entity headers
      */
-    public SpsResponseEntity(int status, Map<String, String> headers, T body) {
+    public SpsResult(int status, Map<String, String> headers, T body) {
         this.status = status;
         this.headers = headers;
         this.body = body;

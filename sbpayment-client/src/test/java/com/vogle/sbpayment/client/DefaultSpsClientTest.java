@@ -1,16 +1,8 @@
 package com.vogle.sbpayment.client;
 
-import org.apache.http.client.HttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.reflect.Whitebox;
-
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 /**
  * Tests for {@link DefaultSpsClient}
@@ -75,7 +67,7 @@ public class DefaultSpsClientTest {
 
         // when
         TestRequest request = client.newRequest(TestRequest.class);
-        SpsResponseEntity responseEntity = client.execute(request);
+        SpsResult responseEntity = client.execute(request);
 
         // then
         assertThat(responseEntity.getStatus()).isEqualTo(405);
@@ -93,6 +85,7 @@ public class DefaultSpsClientTest {
 
         return settings;
     }
+
     private DefaultSpsClient client(String merchantId, String serviceId) {
         return new DefaultSpsClient(settings(merchantId, serviceId));
     }

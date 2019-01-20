@@ -23,7 +23,7 @@ public interface SpsClient {
      * @param request The sending request object
      * @return The receiving response entity
      */
-    <T extends SpsResponse> SpsResponseEntity<T> execute(SpsRequest<T> request);
+    <T extends SpsResponse> SpsResult<T> execute(SpsRequest<T> request);
 
 
 }

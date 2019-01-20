@@ -87,7 +87,7 @@ public class DefaultSpsClient implements SpsClient {
      * {@inheritDoc}
      */
     @Override
-    public <T extends SpsResponse> SpsResponseEntity<T> execute(SpsRequest<T> request) {
+    public <T extends SpsResponse> SpsResult<T> execute(SpsRequest<T> request) {
         Asserts.notNull(request, "The request");
 
         String charset = settings.getCharset();
@@ -148,39 +148,39 @@ public class DefaultSpsClient implements SpsClient {
                     logger.debug("SPS Client response object : {}", bodyObject);
                 }
 
-                return new SpsResponseEntity<>(statusCode, headerMap, bodyObject);
+                return new SpsResult<>(statusCode, headerMap, bodyObject);
 
             } else if (statusCode == 401) {
                 logger.error("SPS Client connect fail : Either you supplied the wrong credentials,"
                                 + " authId : {}, authPw : {} ",
                         settings.getBasicAuthId(), settings.getBasicAuthPassword());
-                return new SpsResponseEntity<>(statusCode);
+                return new SpsResult<>(statusCode);
             } else if (statusCode == 403) {
                 logger.error("SPS Client connect fail : You don't have permission to access {} on this server",
                         settings.getApiUrl());
-                return new SpsResponseEntity<>(statusCode);
+                return new SpsResult<>(statusCode);
             } else if (statusCode == 404) {
                 logger.error("SPS Client connect fail : The requested URL {} was not found on this server",
                         settings.getApiUrl());
-                return new SpsResponseEntity<>(statusCode);
+                return new SpsResult<>(statusCode);
             } else if (statusCode == 500) {
                 logger.error("SPS Client connect fail : Internal server error from {}",
                         settings.getApiUrl());
-                return new SpsResponseEntity<>(statusCode);
+                return new SpsResult<>(statusCode);
             } else if (statusCode == 503) {
                 logger.error("SPS Client connect fail : The server is temporarily unable to service your request"
                         + " due to maintenance downtime");
-                return new SpsResponseEntity<>(statusCode);
+                return new SpsResult<>(statusCode);
             } else {
                 logger.error("SPS Client connect fail : HTTP Status {}", statusCode);
-                return new SpsResponseEntity<>(statusCode);
+                return new SpsResult<>(statusCode);
             }
 
         } catch (IOException ex) {
             logger.error("SPS Client Internal Error : {}({})",
                     ex.getClass().getSimpleName(), ex.getMessage());
         }
-        return new SpsResponseEntity<>();
+        return new SpsResult<>();
     }
 
     /**
