@@ -1,0 +1,6 @@
+apply from: "$gradleDir/integration-test.gradle"
+
+dependencies {
+    implementation project(':sbpayment-client')
+}
+
