@@ -86,7 +86,10 @@ public class SpsDataConverter {
                             base64Encode(charsetName, enableCipher, iterator.next());
                         }
                     } else {
-                        base64Encode(charsetName, enableCipher, getObjectFrom(source, field));
+                        Object filedValue = getObjectFrom(source, field);
+                        if (filedValue != null) {
+                            base64Encode(charsetName, enableCipher, getObjectFrom(source, field));
+                        }
                     }
                 }
             }
