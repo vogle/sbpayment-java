@@ -17,7 +17,7 @@ import javax.validation.constraints.Size;
  **/
 @Data
 @Builder
-public class PayCreditCard {
+public class ByCreditCard {
 
     @NotEmpty
     @Pattern(regexp = "[0-9]{12,19}")
@@ -38,9 +38,9 @@ public class PayCreditCard {
     private String divideTimes;
 
     @NotNull
-    private boolean toSaveCreditCard;
+    private boolean savingCreditCard;
 
-    public String getToSaveCreditCard() {
-        return toSaveCreditCard ? "1" : "0";
+    public String getSavingCreditCard() {
+        return savingCreditCard ? "1" : "0";
     }
 }

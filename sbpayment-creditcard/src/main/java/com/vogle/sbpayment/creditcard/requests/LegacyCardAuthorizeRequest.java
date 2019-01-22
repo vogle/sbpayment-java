@@ -3,6 +3,7 @@ package com.vogle.sbpayment.creditcard.requests;
 import com.vogle.sbpayment.client.SpsRequest;
 import com.vogle.sbpayment.client.convert.CipherString;
 import com.vogle.sbpayment.client.convert.MultiByteString;
+import com.vogle.sbpayment.creditcard.params.PaymentInfo;
 import com.vogle.sbpayment.creditcard.responses.CardAuthorizeResponse;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
@@ -18,6 +19,8 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+
+import static com.vogle.sbpayment.creditcard.RequestMapper.mapItem;
 
 /**
  * Credit card authorize request<br/>
@@ -133,5 +136,22 @@ public class LegacyCardAuthorizeRequest implements SpsRequest<CardAuthorizeRespo
     @Override
     public Class<CardAuthorizeResponse> responseClass() {
         return CardAuthorizeResponse.class;
+    }
+
+    public void setPaymentInfo(PaymentInfo paymentInfo) {
+        // payment info
+        this.setCustCode(paymentInfo.getCustomerCode());
+        this.setOrderId(paymentInfo.getOrderId());
+        this.setItemId(paymentInfo.getItemId());
+        this.setItemName(paymentInfo.getItemName());
+        this.setTax(paymentInfo.getTax());
+        this.setAmount(paymentInfo.getAmount());
+        this.setFree1(paymentInfo.getFree1());
+        this.setFree2(paymentInfo.getFree2());
+        this.setFree3(paymentInfo.getFree3());
+        this.setOrderRowno(paymentInfo.getOrderRowNo());
+
+        // item details
+        this.setPayDetails(mapItem(paymentInfo.getItems()));
     }
 }

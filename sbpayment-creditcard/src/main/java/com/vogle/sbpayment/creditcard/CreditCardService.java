@@ -11,10 +11,10 @@ import com.vogle.sbpayment.creditcard.responses.DefaultResponse;
 import com.vogle.sbpayment.creditcard.responses.LegacyCardInfoSaveResponse;
 import com.vogle.sbpayment.creditcard.responses.LegacyCardInfoUpdateResponse;
 import com.vogle.sbpayment.creditcard.params.CardInfoResponseType;
-import com.vogle.sbpayment.creditcard.params.PayCreditCard;
-import com.vogle.sbpayment.creditcard.params.PaySavedCard;
-import com.vogle.sbpayment.creditcard.params.PayToken;
-import com.vogle.sbpayment.creditcard.params.PayTrackingInfo;
+import com.vogle.sbpayment.creditcard.params.ByCreditCard;
+import com.vogle.sbpayment.creditcard.params.BySavedCard;
+import com.vogle.sbpayment.creditcard.params.ByToken;
+import com.vogle.sbpayment.creditcard.params.ByTrackingInfo;
 import com.vogle.sbpayment.creditcard.params.PaymentInfo;
 import com.vogle.sbpayment.creditcard.params.SaveCardByToken;
 import com.vogle.sbpayment.creditcard.params.SaveCreditCard;
@@ -35,7 +35,7 @@ public interface CreditCardService {
      * @param token       The SaveCardByToken information
      * @return The responses
      */
-    SpsResult<CardAuthorizeResponse> authorize(PaymentInfo paymentInfo, PayToken token);
+    SpsResult<CardAuthorizeResponse> authorize(PaymentInfo paymentInfo, ByToken token);
 
     /**
      * ST01-00131-101: Authorize with saved card<br/>
@@ -45,7 +45,7 @@ public interface CreditCardService {
      * @param savedCard   The saved card information
      * @return The responses
      */
-    SpsResult<CardAuthorizeResponse> authorize(PaymentInfo paymentInfo, PaySavedCard savedCard);
+    SpsResult<CardAuthorizeResponse> authorize(PaymentInfo paymentInfo, BySavedCard savedCard);
 
     /**
      * ST01-00111-101: Authorize with credit card<br/>
@@ -56,7 +56,7 @@ public interface CreditCardService {
      * @param creditCard  The credit card information
      * @return The responses
      */
-    SpsResult<CardAuthorizeResponse> authorize(PaymentInfo paymentInfo, PayCreditCard creditCard);
+    SpsResult<CardAuthorizeResponse> authorize(PaymentInfo paymentInfo, ByCreditCard creditCard);
 
     /**
      * ST01-00133-101: Reauthorize<br/>
@@ -66,7 +66,7 @@ public interface CreditCardService {
      * @param trackingInfo The tracking information
      * @return The responses
      */
-    SpsResult<CardAuthorizeResponse> reauthorize(PaymentInfo paymentInfo, PayTrackingInfo trackingInfo);
+    SpsResult<CardAuthorizeResponse> reauthorize(PaymentInfo paymentInfo, ByTrackingInfo trackingInfo);
 
     /**
      * ST02-00101-101: Commit<br/>

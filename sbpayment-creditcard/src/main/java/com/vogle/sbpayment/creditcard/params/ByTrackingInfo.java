@@ -16,7 +16,7 @@ import javax.validation.constraints.Size;
  **/
 @Data
 @Builder
-public class PayTrackingInfo {
+public class ByTrackingInfo {
 
     @NotEmpty
     @Size(max = 14)

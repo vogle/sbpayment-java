@@ -11,13 +11,13 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 /**
- * SaveCardByToken information
+ * Token information
  *
  * @author Allan Im
  **/
 @Data
 @Builder
-public class PayToken {
+public class ByToken {
 
     @NotEmpty
     private String token;
@@ -32,9 +32,9 @@ public class PayToken {
     private String divideTimes;
 
     @NotNull
-    private boolean saveCreditCard;
+    private boolean savingCreditCard;
 
-    public String getSaveCreditCard() {
-        return saveCreditCard ? "1" : "0";
+    public String getSavingCreditCard() {
+        return savingCreditCard ? "1" : "0";
     }
 }

@@ -2,6 +2,7 @@ package com.vogle.sbpayment.creditcard.requests;
 
 import com.vogle.sbpayment.client.convert.CipherString;
 import com.vogle.sbpayment.client.convert.MultiByteString;
+import com.vogle.sbpayment.creditcard.DealingsType;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import lombok.Data;
@@ -16,6 +17,18 @@ import javax.validation.constraints.Size;
  **/
 @Data
 public class CardAuthorizeMethod {
+
+    public CardAuthorizeMethod() {
+    }
+
+    public CardAuthorizeMethod(DealingsType dealingsType, String divideTimes) {
+        if (dealingsType != null) {
+            this.dealingsType =dealingsType.code();
+            if (DealingsType.INSTALLMENT.equals(dealingsType)) {
+                this.divideTimes = divideTimes;
+            }
+        }
+    }
 
     @Pattern(regexp = "10|21|61|80")
     @CipherString
@@ -44,4 +57,5 @@ public class CardAuthorizeMethod {
     @MultiByteString
     @JacksonXmlProperty(localName = "resrv3")
     private String resrv3;
+
 }

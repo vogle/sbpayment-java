@@ -15,7 +15,7 @@ import javax.validation.constraints.Size;
  **/
 @Data
 @Builder
-public class PaySavedCard {
+public class BySavedCard {
 
     private DealingsType dealingsType;
 

@@ -222,7 +222,7 @@ public class DefaultSpsClient implements SpsClient {
         String charset = settings.getCharset();
 
         // make xml
-        String xml = "<?xml version=\"1.0\" encoding=\"" + charset + "\"?>\n";
+        StringBuilder xml = new StringBuilder("<?xml version=\"1.0\" encoding=\"" + charset + "\"?>\n");
 
         try {
             if (settings.getCipherSets().isEnabled()) {
@@ -236,9 +236,9 @@ public class DefaultSpsClient implements SpsClient {
                 // base64 encode
                 SpsDataConverter.encode(charset, value);
             }
-            xml = xml.concat(xmlMapper.writeValueAsString(value));
+            xml.append(xmlMapper.writeValueAsString(value));
 
-            return xml;
+            return xml.toString();
 
         } catch (JsonProcessingException ex) {
             logger.error("SPS objectToXml Error : {}({})", ex.getClass().getSimpleName(), ex.getMessage());
@@ -267,7 +267,7 @@ public class DefaultSpsClient implements SpsClient {
             charset = "Shift_JIS";
         }
         List<Header> headers = new ArrayList<>();
-        headers.add(new BasicHeader("Content-Type", "text/xml; charset=".concat(charset)));
+        headers.add(new BasicHeader("Content-Type", "text/xml; charset=" + charset));
         httpClientBuilder.setDefaultHeaders(headers);
 
         return httpClientBuilder.build();

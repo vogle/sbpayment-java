@@ -16,6 +16,15 @@ import javax.validation.constraints.Size;
 @Data
 public class CardInfoMethod {
 
+    public CardInfoMethod() {
+    }
+
+    public CardInfoMethod(String resrv1, String resrv2, String resrv3) {
+        this.resrv1 = resrv1;
+        this.resrv2 = resrv2;
+        this.resrv3 = resrv3;
+    }
+
     @Size(max = 20)
     @CipherString
     @MultiByteString

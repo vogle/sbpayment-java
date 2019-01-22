@@ -1,7 +1,7 @@
 package com.vogle.sbpayment.creditcard.params;
 
 /**
- * The type of return card informationT
+ * The type of return card information
  *
  * @author Allan Im
  **/

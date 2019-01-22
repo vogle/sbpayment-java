@@ -2,6 +2,8 @@ package com.vogle.sbpayment.creditcard.requests;
 
 import com.vogle.sbpayment.client.convert.CipherString;
 import com.vogle.sbpayment.client.convert.MultiByteString;
+import com.vogle.sbpayment.creditcard.DealingsType;
+import com.vogle.sbpayment.creditcard.params.ByCreditCard;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import lombok.Data;
@@ -48,5 +50,17 @@ public class LegacyCardAuthorizeMethod extends CreditCardElements {
     @MultiByteString
     @JacksonXmlProperty(localName = "resrv3")
     private String resrv3;
+
+    public void setCreditCard(ByCreditCard creditCard) {
+        this.setCcNumber(creditCard.getNumber());
+        this.setCcExpiration(creditCard.getExpiration());
+        this.setSecurityCode(creditCard.getSecurityCode());
+        if (creditCard.getDealingsType() != null) {
+            this.setDealingsType(creditCard.getDealingsType().code());
+            if (DealingsType.INSTALLMENT.equals(creditCard.getDealingsType())) {
+                this.setDivideTimes(creditCard.getDivideTimes());
+            }
+        }
+    }
 
 }

@@ -3,11 +3,11 @@ package com.vogle.sbpayment.creditcard;
 import com.vogle.sbpayment.client.SpsClient;
 import com.vogle.sbpayment.client.SpsResult;
 import com.vogle.sbpayment.client.SpsValidator;
+import com.vogle.sbpayment.creditcard.params.BySavedCard;
 import com.vogle.sbpayment.creditcard.params.CardInfoResponseType;
-import com.vogle.sbpayment.creditcard.params.PayCreditCard;
-import com.vogle.sbpayment.creditcard.params.PaySavedCard;
-import com.vogle.sbpayment.creditcard.params.PayToken;
-import com.vogle.sbpayment.creditcard.params.PayTrackingInfo;
+import com.vogle.sbpayment.creditcard.params.ByCreditCard;
+import com.vogle.sbpayment.creditcard.params.ByToken;
+import com.vogle.sbpayment.creditcard.params.ByTrackingInfo;
 import com.vogle.sbpayment.creditcard.params.PaymentInfo;
 import com.vogle.sbpayment.creditcard.params.SaveCardByToken;
 import com.vogle.sbpayment.creditcard.params.SaveCreditCard;
@@ -48,8 +48,6 @@ import com.vogle.sbpayment.creditcard.responses.DefaultResponse;
 import com.vogle.sbpayment.creditcard.responses.LegacyCardInfoSaveResponse;
 import com.vogle.sbpayment.creditcard.responses.LegacyCardInfoUpdateResponse;
 
-import static com.vogle.sbpayment.creditcard.RequestMapper.mapItem;
-
 /**
  * Credit Card service implements
  *
@@ -65,60 +63,57 @@ public class DefaultCreditCardService implements CreditCardService {
         this.client = client;
     }
 
-    /**
-     * When sending customer information, return it from Softbank payment.<br/>
-     * 顧客コードを送るとき、ソフトバングペイメントから顧客情報を返却する。
-     */
-    public DefaultCreditCardService enabledReturnCustomerInfo(boolean enabled) {
-        this.returnCustomerInfo = enabled ? "1" : "0";
+    public DefaultCreditCardService enable(Feature... features) {
+        for (Feature feature : features) {
+            if (Feature.RETURN_CUSTOMER_INFO.equals(feature)) {
+                this.returnCustomerInfo = "1";
+            } else if (Feature.RETURN_CARD_BRAND.equals(feature)) {
+                this.returnCardBrand = "1";
+            }
+        }
         return this;
     }
 
-    /**
-     * When sending credit-card information, return credit-card brand.<br/>
-     * カード情報を送るとき、カードブランド情報を返却する。
-     */
-    public DefaultCreditCardService enabledReturnCardBrand(boolean enabled) {
-        this.returnCardBrand = enabled ? "1" : "0";
-        return this;
+    public enum Feature {
+        /**
+         * When sending customer information, return it from Softbank payment.<br/>
+         * 顧客コードを送るとき、ソフトバングペイメントから顧客情報を返却する。
+         */
+        RETURN_CUSTOMER_INFO,
+
+        /**
+         * When sending credit-card information, return credit-card brand.<br/>
+         * カード情報を送るとき、カードブランド情報を返却する。
+         */
+        RETURN_CARD_BRAND
     }
 
-    @Override
-    public SpsResult<CardAuthorizeResponse> authorize(PaymentInfo paymentInfo, PayToken token) {
-        SpsValidator.beanValidate(paymentInfo, token);
+
+    private CardAuthorizeRequest newCardAuthorizeRequest(PaymentInfo paymentInfo, DealingsType dealingsType,
+                                                         String divideTimes) {
         CardAuthorizeRequest request = client.newRequest(CardAuthorizeRequest.class);
 
         // authorizeExecute info
-        request.setCustCode(paymentInfo.getCustomerCode());
-        request.setOrderId(paymentInfo.getOrderId());
-        request.setItemId(paymentInfo.getItemId());
-        request.setItemName(paymentInfo.getItemName());
-        request.setTax(paymentInfo.getTax());
-        request.setAmount(paymentInfo.getAmount());
-        request.setFree1(paymentInfo.getFree1());
-        request.setFree2(paymentInfo.getFree2());
-        request.setFree3(paymentInfo.getFree3());
-        request.setOrderRowno(paymentInfo.getOrderRowNo());
+        request.setPaymentInfo(paymentInfo);
         request.setSpsCustInfoReturnFlg(returnCustomerInfo);
 
-        // item details
-        request.setPayDetails(mapItem(paymentInfo.getItems()));
-
         // method
-        CardAuthorizeMethod method = new CardAuthorizeMethod();
-        if (token.getDealingsType() != null) {
-            method.setDealingsType(token.getDealingsType().code());
-            if (DealingsType.INSTALLMENT.equals(token.getDealingsType())) {
-                method.setDivideTimes(token.getDivideTimes());
-            }
-        }
-        request.setPayMethod(method);
+        request.setPayMethod(new CardAuthorizeMethod(dealingsType, divideTimes));
+
+        return request;
+    }
+
+    @Override
+    public SpsResult<CardAuthorizeResponse> authorize(PaymentInfo paymentInfo, ByToken token) {
+        SpsValidator.beanValidate(paymentInfo, token);
+        CardAuthorizeRequest request = newCardAuthorizeRequest(paymentInfo, token.getDealingsType(),
+                token.getDivideTimes());
 
         // options
         CardAuthorizeOptions options = new CardAuthorizeOptions();
         options.setToken(token.getToken());
         options.setTokenKey(token.getTokenKey());
-        options.setCustManageFlg(token.getSaveCreditCard());
+        options.setCustManageFlg(token.getSavingCreditCard());
         options.setCardbrandReturnFlg(returnCardBrand);
         request.setPayOptions(options);
 
@@ -126,35 +121,10 @@ public class DefaultCreditCardService implements CreditCardService {
     }
 
     @Override
-    public SpsResult<CardAuthorizeResponse> authorize(PaymentInfo paymentInfo, PaySavedCard savedCard) {
+    public SpsResult<CardAuthorizeResponse> authorize(PaymentInfo paymentInfo, BySavedCard savedCard) {
         SpsValidator.beanValidate(paymentInfo, savedCard);
-        CardAuthorizeRequest request = client.newRequest(CardAuthorizeRequest.class);
-
-        // authorizeExecute info
-        request.setCustCode(paymentInfo.getCustomerCode());
-        request.setOrderId(paymentInfo.getOrderId());
-        request.setItemId(paymentInfo.getItemId());
-        request.setItemName(paymentInfo.getItemName());
-        request.setTax(paymentInfo.getTax());
-        request.setAmount(paymentInfo.getAmount());
-        request.setFree1(paymentInfo.getFree1());
-        request.setFree2(paymentInfo.getFree2());
-        request.setFree3(paymentInfo.getFree3());
-        request.setOrderRowno(paymentInfo.getOrderRowNo());
-        request.setSpsCustInfoReturnFlg(returnCustomerInfo);
-
-        // item details
-        request.setPayDetails(mapItem(paymentInfo.getItems()));
-
-        // method
-        CardAuthorizeMethod method = new CardAuthorizeMethod();
-        if (savedCard.getDealingsType() != null) {
-            method.setDealingsType(savedCard.getDealingsType().code());
-            if (DealingsType.INSTALLMENT.equals(savedCard.getDealingsType())) {
-                method.setDivideTimes(savedCard.getDivideTimes());
-            }
-        }
-        request.setPayMethod(method);
+        CardAuthorizeRequest request = newCardAuthorizeRequest(paymentInfo, savedCard.getDealingsType(),
+                savedCard.getDivideTimes());
 
         // options
         CardAuthorizeOptions options = new CardAuthorizeOptions();
@@ -165,46 +135,23 @@ public class DefaultCreditCardService implements CreditCardService {
         return client.execute(request);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public SpsResult<CardAuthorizeResponse> authorize(PaymentInfo paymentInfo, PayCreditCard creditCard) {
+    public SpsResult<CardAuthorizeResponse> authorize(PaymentInfo paymentInfo, ByCreditCard creditCard) {
         SpsValidator.beanValidate(paymentInfo, creditCard);
         LegacyCardAuthorizeRequest request = client.newRequest(LegacyCardAuthorizeRequest.class);
 
         // authorizeExecute info
-        request.setCustCode(paymentInfo.getCustomerCode());
-        request.setOrderId(paymentInfo.getOrderId());
-        request.setItemId(paymentInfo.getItemId());
-        request.setItemName(paymentInfo.getItemName());
-        request.setTax(paymentInfo.getTax());
-        request.setAmount(paymentInfo.getAmount());
-        request.setFree1(paymentInfo.getFree1());
-        request.setFree2(paymentInfo.getFree2());
-        request.setFree3(paymentInfo.getFree3());
-        request.setOrderRowno(paymentInfo.getOrderRowNo());
+        request.setPaymentInfo(paymentInfo);
         request.setSpsCustInfoReturnFlg(returnCustomerInfo);
-
-        // item details
-        request.setPayDetails(mapItem(paymentInfo.getItems()));
 
         // method
         LegacyCardAuthorizeMethod method = new LegacyCardAuthorizeMethod();
-        method.setCcNumber(creditCard.getNumber());
-        method.setCcExpiration(creditCard.getExpiration());
-        method.setSecurityCode(creditCard.getSecurityCode());
-        if (creditCard.getDealingsType() != null) {
-            method.setDealingsType(creditCard.getDealingsType().code());
-            if (DealingsType.INSTALLMENT.equals(creditCard.getDealingsType())) {
-                method.setDivideTimes(creditCard.getDivideTimes());
-            }
-        }
+        method.setCreditCard(creditCard);
         request.setPayMethod(method);
 
         // options
         LegacyCardAuthorizeOptions options = new LegacyCardAuthorizeOptions();
-        options.setCustManageFlg(creditCard.getToSaveCreditCard());
+        options.setCustManageFlg(creditCard.getSavingCreditCard());
         options.setCardbrandReturnFlg(returnCardBrand);
         request.setPayOptions(options);
 
@@ -212,7 +159,7 @@ public class DefaultCreditCardService implements CreditCardService {
     }
 
     @Override
-    public SpsResult<CardAuthorizeResponse> reauthorize(PaymentInfo paymentInfo, PayTrackingInfo trackingInfo) {
+    public SpsResult<CardAuthorizeResponse> reauthorize(PaymentInfo paymentInfo, ByTrackingInfo trackingInfo) {
         SpsValidator.beanValidate(paymentInfo, trackingInfo);
         CardReauthorizeRequest request = client.newRequest(CardReauthorizeRequest.class);
 
@@ -220,29 +167,13 @@ public class DefaultCreditCardService implements CreditCardService {
         request.setTrackingId(trackingInfo.getTrackingId());
 
         // authorizeExecute info
-        request.setCustCode(paymentInfo.getCustomerCode());
-        request.setOrderId(paymentInfo.getOrderId());
-        request.setItemId(paymentInfo.getItemId());
-        request.setItemName(paymentInfo.getItemName());
-        request.setTax(paymentInfo.getTax());
-        request.setAmount(paymentInfo.getAmount());
-        request.setFree1(paymentInfo.getFree1());
-        request.setFree2(paymentInfo.getFree2());
-        request.setFree3(paymentInfo.getFree3());
-        request.setOrderRowno(paymentInfo.getOrderRowNo());
+        request.setPaymentInfo(paymentInfo);
         request.setSpsCustInfoReturnFlg(returnCustomerInfo);
-
-        // item details
-        request.setPayDetails(mapItem(paymentInfo.getItems()));
 
         // method
         if (trackingInfo.getDealingsType() != null) {
-            CardAuthorizeMethod method = new CardAuthorizeMethod();
-            method.setDealingsType(trackingInfo.getDealingsType().code());
-            if (DealingsType.INSTALLMENT.equals(trackingInfo.getDealingsType())) {
-                method.setDivideTimes(trackingInfo.getDivideTimes());
-            }
-            request.setPayMethod(method);
+            request.setPayMethod(new CardAuthorizeMethod(trackingInfo.getDealingsType(),
+                    trackingInfo.getDivideTimes()));
         }
 
         // options
@@ -375,18 +306,10 @@ public class DefaultCreditCardService implements CreditCardService {
         request.setSpsCustInfoReturnFlg(returnCustomerInfo);
 
         // method
-        CardInfoMethod method = new CardInfoMethod();
-        method.setResrv1(token.getResrv1());
-        method.setResrv2(token.getResrv2());
-        method.setResrv3(token.getResrv3());
-        request.setPayMethod(method);
+        request.setPayMethod(new CardInfoMethod(token.getResrv1(), token.getResrv2(), token.getResrv3()));
 
         // options
-        CardInfoOptions options = new CardInfoOptions();
-        options.setToken(token.getToken());
-        options.setTokenKey(token.getTokenKey());
-        options.setCardbrandReturnFlg(returnCardBrand);
-        request.setPayOptions(options);
+        request.setPayOptions(new CardInfoOptions(token.getToken(), token.getTokenKey(), returnCardBrand));
 
         return client.execute(request);
     }
@@ -404,12 +327,7 @@ public class DefaultCreditCardService implements CreditCardService {
 
         // card info
         LegacyCardInfoMethod method = new LegacyCardInfoMethod();
-        method.setCcNumber(creditCard.getNumber());
-        method.setCcExpiration(creditCard.getExpiration());
-        method.setSecurityCode(creditCard.getSecurityCode());
-        method.setResrv1(creditCard.getResrv1());
-        method.setResrv2(creditCard.getResrv2());
-        method.setResrv3(creditCard.getResrv3());
+        method.setSaveCreditCard(creditCard);
         request.setPayMethod(method);
 
         // options
@@ -432,18 +350,10 @@ public class DefaultCreditCardService implements CreditCardService {
         request.setSpsCustInfoReturnFlg(returnCustomerInfo);
 
         // card info
-        CardInfoMethod method = new CardInfoMethod();
-        method.setResrv1(token.getResrv1());
-        method.setResrv2(token.getResrv2());
-        method.setResrv3(token.getResrv3());
-        request.setPayMethod(method);
+        request.setPayMethod(new CardInfoMethod(token.getResrv1(), token.getResrv2(), token.getResrv3()));
 
         // options
-        CardInfoOptions options = new CardInfoOptions();
-        options.setToken(token.getToken());
-        options.setTokenKey(token.getTokenKey());
-        options.setCardbrandReturnFlg(returnCardBrand);
-        request.setPayOptions(options);
+        request.setPayOptions(new CardInfoOptions(token.getToken(), token.getTokenKey(), returnCardBrand));
 
         return client.execute(request);
     }
@@ -461,12 +371,7 @@ public class DefaultCreditCardService implements CreditCardService {
 
         // card info
         LegacyCardInfoMethod method = new LegacyCardInfoMethod();
-        method.setCcNumber(creditCard.getNumber());
-        method.setCcExpiration(creditCard.getExpiration());
-        method.setSecurityCode(creditCard.getSecurityCode());
-        method.setResrv1(creditCard.getResrv1());
-        method.setResrv2(creditCard.getResrv2());
-        method.setResrv3(creditCard.getResrv3());
+        method.setSaveCreditCard(creditCard);
         request.setPayMethod(method);
 
         // options

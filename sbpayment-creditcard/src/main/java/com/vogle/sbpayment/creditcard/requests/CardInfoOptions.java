@@ -14,6 +14,15 @@ import javax.validation.constraints.Pattern;
 @Data
 public class CardInfoOptions {
 
+    public CardInfoOptions() {
+    }
+
+    public CardInfoOptions(String token, String tokenKey, String cardbrandReturnFlg) {
+        this.token = token;
+        this.tokenKey = tokenKey;
+        this.cardbrandReturnFlg = cardbrandReturnFlg;
+    }
+
     @NotEmpty
     @JacksonXmlProperty(localName = "token")
     private String token;

@@ -2,6 +2,7 @@ package com.vogle.sbpayment.creditcard.requests;
 
 import com.vogle.sbpayment.client.convert.CipherString;
 import com.vogle.sbpayment.client.convert.MultiByteString;
+import com.vogle.sbpayment.creditcard.params.SaveCreditCard;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import lombok.Data;
@@ -37,4 +38,13 @@ public class LegacyCardInfoMethod extends CreditCardElements {
     @MultiByteString
     @JacksonXmlProperty(localName = "resrv3")
     private String resrv3;
+
+    public void setSaveCreditCard(SaveCreditCard creditCard) {
+        this.setCcNumber(creditCard.getNumber());
+        this.setCcExpiration(creditCard.getExpiration());
+        this.setSecurityCode(creditCard.getSecurityCode());
+        this.setResrv1(creditCard.getResrv1());
+        this.setResrv2(creditCard.getResrv2());
+        this.setResrv3(creditCard.getResrv3());
+    }
 }
