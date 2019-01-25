@@ -158,19 +158,31 @@ public class DefaultCreditCardService implements CreditCardService {
         request.setSpsCustInfoReturnFlg(returnCustomerInfo);
 
         // method
-        CardAuthorizeMethod method = new CardAuthorizeMethod();
-        method.setPayMethod(trackingInfo.getDealingsType(), trackingInfo.getDivideTimes());
-        method.setResrv1(trackingInfo.getResrv1());
-        method.setResrv2(trackingInfo.getResrv2());
-        method.setResrv3(trackingInfo.getResrv3());
-        request.setPayMethod(method);
+        if (trackingInfo.hasOptions()) {
+            CardAuthorizeMethod method = new CardAuthorizeMethod();
+            method.setPayMethod(trackingInfo.getDealingsType(), trackingInfo.getDivideTimes());
+            method.setResrv1(trackingInfo.getResrv1());
+            method.setResrv2(trackingInfo.getResrv2());
+            method.setResrv3(trackingInfo.getResrv3());
+            request.setPayMethod(method);
+        }
 
         // options
         CardReauthorizeOptions options = new CardReauthorizeOptions();
-        options.setCustManageFlg("0");
         options.setCardbrandReturnFlg(returnCardBrand);
-        options.setPayInfoControlType("B"); // 前回与信時の情報を使用する
-        options.setPayInfoDetailControlType("R"); // 前回与信時の情報を使用する
+        options.setCustManageFlg(trackingInfo.getSavingCreditCard());
+
+        // 再与信時に使用するクレジットカード情報を指定
+        // B：前回与信時の情報を使用する
+        // M：現在登録済の情報を使用する
+        // R：リクエストに設定した情報を使用する
+        options.setPayInfoControlType(trackingInfo.hasToken() ? "R" : "B");
+
+        // 決済支払方法使用特定タイプ
+        // R：リクエストに設定した情報を使用する
+        // B：前回与信時の情報を使用する
+        options.setPayInfoDetailControlType(trackingInfo.hasOptions() ? "R" : "B");
+
         request.setPayOptions(options);
 
         return client.execute(request);

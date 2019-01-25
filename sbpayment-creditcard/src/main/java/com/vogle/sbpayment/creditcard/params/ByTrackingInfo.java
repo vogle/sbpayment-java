@@ -8,6 +8,7 @@ import lombok.Data;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 /**
@@ -38,6 +39,12 @@ public class ByTrackingInfo {
      * ワンタイムトークン利用時、必須です。
      */
     private String tokenKey;
+
+    /**
+     * クレジットカード情報の登録/更新を行わ
+     */
+    @NotNull
+    private boolean savingCreditCard;
 
     /**
      * 取引区分
@@ -75,5 +82,17 @@ public class ByTrackingInfo {
 
     public String getDivideTimes() {
         return ParamUtils.convertDivideTimes(this.dealingsType, this.divideTimes);
+    }
+
+    public String getSavingCreditCard() {
+        return ParamUtils.convertBool(savingCreditCard);
+    }
+    
+    public boolean hasToken() {
+        return token != null && !token.isEmpty() && tokenKey != null && !tokenKey.isEmpty();
+    }
+
+    public boolean hasOptions() {
+        return dealingsType != null;
     }
 }
