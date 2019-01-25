@@ -3,11 +3,11 @@ package com.vogle.sbpayment.creditcard;
 import com.vogle.sbpayment.client.SpsClient;
 import com.vogle.sbpayment.client.SpsResult;
 import com.vogle.sbpayment.client.SpsValidator;
-import com.vogle.sbpayment.creditcard.params.BySavedCard;
-import com.vogle.sbpayment.creditcard.params.CardInfoResponseType;
 import com.vogle.sbpayment.creditcard.params.ByCreditCard;
+import com.vogle.sbpayment.creditcard.params.BySavedCard;
 import com.vogle.sbpayment.creditcard.params.ByToken;
 import com.vogle.sbpayment.creditcard.params.ByTrackingInfo;
+import com.vogle.sbpayment.creditcard.params.CardInfoResponseType;
 import com.vogle.sbpayment.creditcard.params.PaymentInfo;
 import com.vogle.sbpayment.creditcard.params.SaveCardByToken;
 import com.vogle.sbpayment.creditcard.params.SaveCreditCard;
@@ -74,21 +74,6 @@ public class DefaultCreditCardService implements CreditCardService {
         return this;
     }
 
-    public enum Feature {
-        /**
-         * When sending customer information, return it from Softbank payment.<br/>
-         * 顧客コードを送るとき、ソフトバングペイメントから顧客情報を返却する。
-         */
-        RETURN_CUSTOMER_INFO,
-
-        /**
-         * When sending credit-card information, return credit-card brand.<br/>
-         * カード情報を送るとき、カードブランド情報を返却する。
-         */
-        RETURN_CARD_BRAND
-    }
-
-
     private CardAuthorizeRequest newCardAuthorizeRequest(PaymentInfo paymentInfo, DealingsType dealingsType,
                                                          String divideTimes) {
         CardAuthorizeRequest request = client.newRequest(CardAuthorizeRequest.class);
@@ -106,6 +91,7 @@ public class DefaultCreditCardService implements CreditCardService {
     @Override
     public SpsResult<CardAuthorizeResponse> authorize(PaymentInfo paymentInfo, ByToken token) {
         SpsValidator.beanValidate(paymentInfo, token);
+
         CardAuthorizeRequest request = newCardAuthorizeRequest(paymentInfo, token.getDealingsType(),
                 token.getDivideTimes());
 
@@ -123,6 +109,7 @@ public class DefaultCreditCardService implements CreditCardService {
     @Override
     public SpsResult<CardAuthorizeResponse> authorize(PaymentInfo paymentInfo, BySavedCard savedCard) {
         SpsValidator.beanValidate(paymentInfo, savedCard);
+
         CardAuthorizeRequest request = newCardAuthorizeRequest(paymentInfo, savedCard.getDealingsType(),
                 savedCard.getDivideTimes());
 
@@ -171,10 +158,12 @@ public class DefaultCreditCardService implements CreditCardService {
         request.setSpsCustInfoReturnFlg(returnCustomerInfo);
 
         // method
-        if (trackingInfo.getDealingsType() != null) {
-            request.setPayMethod(new CardAuthorizeMethod(trackingInfo.getDealingsType(),
-                    trackingInfo.getDivideTimes()));
-        }
+        CardAuthorizeMethod method = new CardAuthorizeMethod();
+        method.setPayMethod(trackingInfo.getDealingsType(), trackingInfo.getDivideTimes());
+        method.setResrv1(trackingInfo.getResrv1());
+        method.setResrv2(trackingInfo.getResrv2());
+        method.setResrv3(trackingInfo.getResrv3());
+        request.setPayMethod(method);
 
         // options
         CardReauthorizeOptions options = new CardReauthorizeOptions();
@@ -229,9 +218,6 @@ public class DefaultCreditCardService implements CreditCardService {
         return client.execute(request);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public SpsResult<DefaultResponse> cancel(String trackingId) {
         SpsValidator.assertsNotEmpty("trackingId", trackingId);
@@ -242,6 +228,11 @@ public class DefaultCreditCardService implements CreditCardService {
         request.setProcessingDatetime(request.getRequestDate());
 
         return client.execute(request);
+    }
+
+    @Override
+    public SpsResult<DefaultResponse> refund(String trackingId) {
+        return cancel(trackingId);
     }
 
     @Override
@@ -262,17 +253,11 @@ public class DefaultCreditCardService implements CreditCardService {
         return client.execute(request);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public SpsResult<CardTranLookupResponse> lookup(String trackingId) {
         return lookup(trackingId, CardInfoResponseType.NONE);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public SpsResult<CardTranLookupResponse> lookup(String trackingId, CardInfoResponseType type) {
         SpsValidator.assertsNotEmpty("trackingId", trackingId);
@@ -382,9 +367,6 @@ public class DefaultCreditCardService implements CreditCardService {
         return client.execute(request);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public SpsResult<CardInfoDeleteResponse> deleteCard(String customerCode) {
         SpsValidator.assertsNotEmpty("customerCode", customerCode);
@@ -398,17 +380,11 @@ public class DefaultCreditCardService implements CreditCardService {
         return client.execute(request);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public SpsResult<CardInfoLookupResponse> lookupCard(String customerCode) {
         return lookupCard(customerCode, CardInfoResponseType.NONE);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public SpsResult<CardInfoLookupResponse> lookupCard(String customerCode, CardInfoResponseType type) {
         SpsValidator.assertsNotEmpty("customerCode", customerCode);
@@ -429,5 +405,19 @@ public class DefaultCreditCardService implements CreditCardService {
         request.setPayOptions(options);
 
         return client.execute(request);
+    }
+
+    public enum Feature {
+        /**
+         * When sending customer information, return it from Softbank payment.<br/>
+         * 顧客コードを送るとき、ソフトバングペイメントから顧客情報を返却する。
+         */
+        RETURN_CUSTOMER_INFO,
+
+        /**
+         * When sending credit-card information, return credit-card brand.<br/>
+         * カード情報を送るとき、カードブランド情報を返却する。
+         */
+        RETURN_CARD_BRAND
     }
 }

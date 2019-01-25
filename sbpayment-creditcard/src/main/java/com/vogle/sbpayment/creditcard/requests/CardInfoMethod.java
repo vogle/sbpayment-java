@@ -16,6 +16,22 @@ import javax.validation.constraints.Size;
 @Data
 public class CardInfoMethod {
 
+    @Size(max = 20)
+    @CipherString
+    @MultiByteString
+    @JacksonXmlProperty(localName = "resrv1")
+    private String resrv1;
+    @Size(max = 20)
+    @CipherString
+    @MultiByteString
+    @JacksonXmlProperty(localName = "resrv2")
+    private String resrv2;
+    @Size(max = 20)
+    @CipherString
+    @MultiByteString
+    @JacksonXmlProperty(localName = "resrv3")
+    private String resrv3;
+
     public CardInfoMethod() {
     }
 
@@ -24,22 +40,4 @@ public class CardInfoMethod {
         this.resrv2 = resrv2;
         this.resrv3 = resrv3;
     }
-
-    @Size(max = 20)
-    @CipherString
-    @MultiByteString
-    @JacksonXmlProperty(localName = "resrv1")
-    private String resrv1;
-
-    @Size(max = 20)
-    @CipherString
-    @MultiByteString
-    @JacksonXmlProperty(localName = "resrv2")
-    private String resrv2;
-
-    @Size(max = 20)
-    @CipherString
-    @MultiByteString
-    @JacksonXmlProperty(localName = "resrv3")
-    private String resrv3;
 }

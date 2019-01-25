@@ -5,10 +5,10 @@ import com.vogle.sbpayment.creditcard.DealingsType;
 import lombok.Builder;
 import lombok.Data;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
 
 /**
  * Token information
@@ -19,22 +19,45 @@ import javax.validation.constraints.Size;
 @Builder
 public class ByToken {
 
+    /**
+     * トークン
+     */
     @NotEmpty
     private String token;
 
+    /**
+     * トークンキー
+     */
     @NotEmpty
     private String tokenKey;
 
+    /**
+     * 取引区分
+     */
     private DealingsType dealingsType;
 
-    @Size(min = 3, max = 3)
-    @Pattern(regexp = "[0-9]{3}")
-    private String divideTimes;
+    /**
+     * 分割回数、取引区分が「{@link DealingsType#INSTALLMENT} 分割」の場合は必須です。
+     */
+    @Min(3)
+    @Max(999)
+    private Integer divideTimes;
 
+    /**
+     * クレジットカード情報の登録/更新を行わ
+     */
     @NotNull
     private boolean savingCreditCard;
 
+    public DealingsType getDealingsType() {
+        return ParamUtils.convertDealingsType(this.dealingsType, this.divideTimes);
+    }
+
+    public String getDivideTimes() {
+        return ParamUtils.convertDivideTimes(this.dealingsType, this.divideTimes);
+    }
+
     public String getSavingCreditCard() {
-        return savingCreditCard ? "1" : "0";
+        return ParamUtils.convertBool(savingCreditCard);
     }
 }

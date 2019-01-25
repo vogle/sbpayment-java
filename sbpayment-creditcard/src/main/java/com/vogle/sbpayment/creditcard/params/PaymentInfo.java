@@ -34,7 +34,7 @@ public class PaymentInfo {
      */
     @NotEmpty
     @Size(max = 38)
-    @Pattern(regexp = "[0-9a-zA-Z]{1,38}")
+    @Pattern(regexp = "[0-9a-zA-Z_-]{1,38}")
     private String orderId;
 
     /**
@@ -42,7 +42,7 @@ public class PaymentInfo {
      */
     @NotEmpty
     @Size(max = 32)
-    @Pattern(regexp = "[0-9a-zA-Z]{1,32}")
+    @Pattern(regexp = "[0-9a-zA-Z_-]{1,32}")
     private String itemId;
 
     /**

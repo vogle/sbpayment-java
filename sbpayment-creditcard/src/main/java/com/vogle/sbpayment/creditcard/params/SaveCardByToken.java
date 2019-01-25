@@ -15,18 +15,33 @@ import javax.validation.constraints.Size;
 @Builder
 public class SaveCardByToken {
 
+    /**
+     * トークン
+     */
     @NotEmpty
     private String token;
 
+    /**
+     * トークンキー
+     */
     @NotEmpty
     private String tokenKey;
 
+    /**
+     * 備考欄１
+     */
     @Size(max = 20)
     private String resrv1;
 
+    /**
+     * 備考欄２
+     */
     @Size(max = 20)
     private String resrv2;
 
+    /**
+     * 備考欄３
+     */
     @Size(max = 20)
     private String resrv3;
 }

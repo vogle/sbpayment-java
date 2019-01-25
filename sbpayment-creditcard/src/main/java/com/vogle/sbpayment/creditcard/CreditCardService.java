@@ -1,6 +1,14 @@
 package com.vogle.sbpayment.creditcard;
 
 import com.vogle.sbpayment.client.SpsResult;
+import com.vogle.sbpayment.creditcard.params.ByCreditCard;
+import com.vogle.sbpayment.creditcard.params.BySavedCard;
+import com.vogle.sbpayment.creditcard.params.ByToken;
+import com.vogle.sbpayment.creditcard.params.ByTrackingInfo;
+import com.vogle.sbpayment.creditcard.params.CardInfoResponseType;
+import com.vogle.sbpayment.creditcard.params.PaymentInfo;
+import com.vogle.sbpayment.creditcard.params.SaveCardByToken;
+import com.vogle.sbpayment.creditcard.params.SaveCreditCard;
 import com.vogle.sbpayment.creditcard.responses.CardAuthorizeResponse;
 import com.vogle.sbpayment.creditcard.responses.CardInfoDeleteResponse;
 import com.vogle.sbpayment.creditcard.responses.CardInfoLookupResponse;
@@ -10,14 +18,6 @@ import com.vogle.sbpayment.creditcard.responses.CardTranLookupResponse;
 import com.vogle.sbpayment.creditcard.responses.DefaultResponse;
 import com.vogle.sbpayment.creditcard.responses.LegacyCardInfoSaveResponse;
 import com.vogle.sbpayment.creditcard.responses.LegacyCardInfoUpdateResponse;
-import com.vogle.sbpayment.creditcard.params.CardInfoResponseType;
-import com.vogle.sbpayment.creditcard.params.ByCreditCard;
-import com.vogle.sbpayment.creditcard.params.BySavedCard;
-import com.vogle.sbpayment.creditcard.params.ByToken;
-import com.vogle.sbpayment.creditcard.params.ByTrackingInfo;
-import com.vogle.sbpayment.creditcard.params.PaymentInfo;
-import com.vogle.sbpayment.creditcard.params.SaveCardByToken;
-import com.vogle.sbpayment.creditcard.params.SaveCreditCard;
 
 /**
  * Credit Card Payment API<br/>
@@ -97,13 +97,22 @@ public interface CreditCardService {
     SpsResult<DefaultResponse> capture(String trackingId, Integer amount);
 
     /**
-     * ST02-00303-101: Cancel or Refund<br/>
+     * ST02-00303-101: Cancel<br/>
      * 取消返金要求
      *
      * @param trackingId The tracking id
      * @return The responses
      */
     SpsResult<DefaultResponse> cancel(String trackingId);
+
+    /**
+     * ST02-00303-101: Refund<br/>
+     * 取消返金要求
+     *
+     * @param trackingId The tracking id
+     * @return The responses
+     */
+    SpsResult<DefaultResponse> refund(String trackingId);
 
     /**
      * ST02-00307-101: Refund with amount <br/>
