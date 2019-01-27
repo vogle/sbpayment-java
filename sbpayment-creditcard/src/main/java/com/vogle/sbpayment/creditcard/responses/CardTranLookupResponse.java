@@ -1,6 +1,7 @@
 package com.vogle.sbpayment.creditcard.responses;
 
 import com.vogle.sbpayment.client.convert.CipherString;
+import com.vogle.sbpayment.client.responses.CommonElements;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
@@ -28,5 +29,10 @@ public class CardTranLookupResponse extends CommonElements {
 
     public TransactionStatus mapTransactionStatus() {
         return TransactionStatus.status(resStatus);
+    }
+
+    @Override
+    public String getDescription() {
+        return FeatureIds.getDescription(this.getId());
     }
 }

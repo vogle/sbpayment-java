@@ -3,12 +3,12 @@ package com.vogle.sbpayment.creditcard;
 import com.vogle.sbpayment.client.SpsClient;
 import com.vogle.sbpayment.client.SpsResult;
 import com.vogle.sbpayment.client.SpsValidator;
+import com.vogle.sbpayment.client.params.PaymentInfo;
 import com.vogle.sbpayment.creditcard.params.ByCreditCard;
 import com.vogle.sbpayment.creditcard.params.BySavedCard;
 import com.vogle.sbpayment.creditcard.params.ByToken;
 import com.vogle.sbpayment.creditcard.params.ByTrackingInfo;
 import com.vogle.sbpayment.creditcard.params.CardInfoResponseType;
-import com.vogle.sbpayment.creditcard.params.PaymentInfo;
 import com.vogle.sbpayment.creditcard.params.SaveCardByToken;
 import com.vogle.sbpayment.creditcard.params.SaveCreditCard;
 import com.vogle.sbpayment.creditcard.requests.CardAuthorizeMethod;
@@ -49,7 +49,7 @@ import com.vogle.sbpayment.creditcard.responses.LegacyCardInfoSaveResponse;
 import com.vogle.sbpayment.creditcard.responses.LegacyCardInfoUpdateResponse;
 
 /**
- * Credit Card service implements
+ * implements for {@link CreditCardService}
  *
  * @author Allan Im
  */
@@ -72,6 +72,20 @@ public class DefaultCreditCardService implements CreditCardService {
             }
         }
         return this;
+    }
+
+    public enum Feature {
+        /**
+         * When sending customer information, return it from Softbank payment.<br/>
+         * 顧客コードを送るとき、ソフトバングペイメントから顧客情報を返却する。
+         */
+        RETURN_CUSTOMER_INFO,
+
+        /**
+         * When sending credit-card information, return credit-card brand.<br/>
+         * カード情報を送るとき、カードブランド情報を返却する。
+         */
+        RETURN_CARD_BRAND
     }
 
     private CardAuthorizeRequest newCardAuthorizeRequest(PaymentInfo paymentInfo, DealingsType dealingsType,
@@ -161,9 +175,12 @@ public class DefaultCreditCardService implements CreditCardService {
         if (trackingInfo.hasOptions()) {
             CardAuthorizeMethod method = new CardAuthorizeMethod();
             method.setPayMethod(trackingInfo.getDealingsType(), trackingInfo.getDivideTimes());
-            method.setResrv1(trackingInfo.getResrv1());
-            method.setResrv2(trackingInfo.getResrv2());
-            method.setResrv3(trackingInfo.getResrv3());
+
+            if (trackingInfo.isSavingCreditCard()) {
+                method.setResrv1(trackingInfo.getResrv1());
+                method.setResrv2(trackingInfo.getResrv2());
+                method.setResrv3(trackingInfo.getResrv3());
+            }
             request.setPayMethod(method);
         }
 
@@ -419,17 +436,4 @@ public class DefaultCreditCardService implements CreditCardService {
         return client.execute(request);
     }
 
-    public enum Feature {
-        /**
-         * When sending customer information, return it from Softbank payment.<br/>
-         * 顧客コードを送るとき、ソフトバングペイメントから顧客情報を返却する。
-         */
-        RETURN_CUSTOMER_INFO,
-
-        /**
-         * When sending credit-card information, return credit-card brand.<br/>
-         * カード情報を送るとき、カードブランド情報を返却する。
-         */
-        RETURN_CARD_BRAND
-    }
 }

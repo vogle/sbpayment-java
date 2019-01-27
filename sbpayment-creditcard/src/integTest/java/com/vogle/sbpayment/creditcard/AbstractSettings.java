@@ -2,8 +2,8 @@ package com.vogle.sbpayment.creditcard;
 
 import com.vogle.sbpayment.client.DefaultSpsClient;
 import com.vogle.sbpayment.client.SpsClient;
-import com.vogle.sbpayment.client.SpsClientSettings;
-import com.vogle.sbpayment.client.SpsClientSettings.CipherSets;
+import com.vogle.sbpayment.client.SbpaymentSettings;
+import com.vogle.sbpayment.client.SbpaymentSettings.CipherSets;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -18,11 +18,11 @@ import java.util.Random;
  **/
 abstract class AbstractSettings {
 
-    SpsClientSettings settings() throws IOException {
+    SbpaymentSettings settings() throws IOException {
         Properties p = new Properties();
         p.load(this.getClass().getClassLoader().getResourceAsStream("it.properties"));
 
-        SpsClientSettings settings = new SpsClientSettings();
+        SbpaymentSettings settings = new SbpaymentSettings();
         settings.setApiUrl(p.getProperty("it1.apiUrl"));
         settings.setMerchantId(p.getProperty("it1.merchantId"));
         settings.setServiceId(p.getProperty("it1.serviceId"));
@@ -39,11 +39,11 @@ abstract class AbstractSettings {
         return settings;
     }
 
-    SpsClientSettings settingsAutoCapture() throws IOException {
+    SbpaymentSettings settingsAutoCapture() throws IOException {
         Properties p = new Properties();
         p.load(this.getClass().getClassLoader().getResourceAsStream("it.properties"));
 
-        SpsClientSettings settings = new SpsClientSettings();
+        SbpaymentSettings settings = new SbpaymentSettings();
         settings.setApiUrl(p.getProperty("it2.apiUrl"));
         settings.setMerchantId(p.getProperty("it2.merchantId"));
         settings.setServiceId(p.getProperty("it2.serviceId"));
@@ -61,7 +61,7 @@ abstract class AbstractSettings {
     }
 
 
-    SpsClient client(SpsClientSettings settings) {
+    SpsClient client(SbpaymentSettings settings) {
         return new DefaultSpsClient(settings);
     }
 

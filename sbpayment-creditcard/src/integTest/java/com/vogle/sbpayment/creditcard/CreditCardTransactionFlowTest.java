@@ -1,10 +1,10 @@
 package com.vogle.sbpayment.creditcard;
 
-import com.vogle.sbpayment.client.SpsClientSettings;
+import com.vogle.sbpayment.client.SbpaymentSettings;
 import com.vogle.sbpayment.client.SpsResult;
 import com.vogle.sbpayment.creditcard.params.ByCreditCard;
 import com.vogle.sbpayment.creditcard.params.ByTrackingInfo;
-import com.vogle.sbpayment.creditcard.params.PaymentInfo;
+import com.vogle.sbpayment.client.params.PaymentInfo;
 import com.vogle.sbpayment.creditcard.responses.CardAuthorizeResponse;
 import com.vogle.sbpayment.creditcard.responses.CardTranLookupMethodInfo;
 import com.vogle.sbpayment.creditcard.responses.CardTranLookupResponse;
@@ -32,7 +32,7 @@ public class CreditCardTransactionFlowTest extends AbstractSettings {
 
     @Before
     public void init() throws IOException {
-        SpsClientSettings settings = settings();
+        SbpaymentSettings settings = settings();
         service = new DefaultCreditCardService(client(settings))
                 .enable(Feature.RETURN_CUSTOMER_INFO)
                 .enable(Feature.RETURN_CARD_BRAND);

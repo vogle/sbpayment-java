@@ -1,11 +1,11 @@
 package com.vogle.sbpayment.creditcard;
 
-import com.vogle.sbpayment.client.SpsClientSettings;
+import com.vogle.sbpayment.client.SbpaymentSettings;
 import com.vogle.sbpayment.client.SpsResult;
 import com.vogle.sbpayment.creditcard.params.ByCreditCard;
 import com.vogle.sbpayment.creditcard.params.BySavedCard;
 import com.vogle.sbpayment.creditcard.params.CardInfoResponseType;
-import com.vogle.sbpayment.creditcard.params.PaymentInfo;
+import com.vogle.sbpayment.client.params.PaymentInfo;
 import com.vogle.sbpayment.creditcard.params.SaveCreditCard;
 import com.vogle.sbpayment.creditcard.responses.CardAuthorizeResponse;
 import com.vogle.sbpayment.creditcard.responses.CardInfoDeleteResponse;
@@ -32,7 +32,7 @@ public class CreditCardStorageTest extends AbstractSettings {
 
     @Before
     public void init() throws IOException {
-        SpsClientSettings settings = settings();
+        SbpaymentSettings settings = settings();
         service = new DefaultCreditCardService(client(settings))
                 .enable(DefaultCreditCardService.Feature.RETURN_CUSTOMER_INFO)
                 .enable(DefaultCreditCardService.Feature.RETURN_CARD_BRAND);

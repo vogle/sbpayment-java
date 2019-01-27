@@ -1,8 +1,9 @@
 package com.vogle.sbpayment.creditcard.requests;
 
-import com.vogle.sbpayment.client.SpsRequest;
+import com.vogle.sbpayment.client.requests.SpsRequest;
 import com.vogle.sbpayment.client.convert.CipherString;
 import com.vogle.sbpayment.client.convert.MultiByteString;
+import com.vogle.sbpayment.client.requests.PayDetail;
 import com.vogle.sbpayment.creditcard.responses.CardAuthorizeResponse;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
@@ -123,7 +124,6 @@ public class LegacyCardReauthorizeRequest implements SpsRequest<CardAuthorizeRes
     private String encryptedFlg;
 
     @NotEmpty
-    @Pattern(regexp = "(\\d{4}(0[0-9]|1[0-2])([0-2][0-9]|3[0-1])([0-1][0-9]|2[0-4])(([0-5][0-9]){2}))")
     @JacksonXmlProperty(localName = "request_date")
     private String requestDate;
 

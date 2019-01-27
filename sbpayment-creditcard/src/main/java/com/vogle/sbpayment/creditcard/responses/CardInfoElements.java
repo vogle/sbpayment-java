@@ -1,5 +1,8 @@
 package com.vogle.sbpayment.creditcard.responses;
 
+import com.vogle.sbpayment.client.responses.CommonElements;
+import com.vogle.sbpayment.client.responses.SpsInfo;
+
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -18,4 +21,8 @@ public class CardInfoElements extends CommonElements {
     @JacksonXmlProperty(localName = "res_sps_info")
     private SpsInfo spsInfo;
 
+    @Override
+    public String getDescription() {
+        return FeatureIds.getDescription(this.getId());
+    }
 }

@@ -1,6 +1,6 @@
 package com.vogle.sbpayment.creditcard.requests;
 
-import com.vogle.sbpayment.client.SpsRequest;
+import com.vogle.sbpayment.client.requests.SpsRequest;
 import com.vogle.sbpayment.client.convert.CipherString;
 import com.vogle.sbpayment.client.convert.MultiByteString;
 import com.vogle.sbpayment.creditcard.responses.CardInfoSaveResponse;
@@ -61,7 +61,6 @@ public class CardInfoSaveRequest implements SpsRequest<CardInfoSaveResponse> {
     private String encryptedFlg;
 
     @NotEmpty
-    @Pattern(regexp = "(\\d{4}(0[0-9]|1[0-2])([0-2][0-9]|3[0-1])([0-1][0-9]|2[0-4])(([0-5][0-9]){2}))")
     @JacksonXmlProperty(localName = "request_date")
     private String requestDate;
 

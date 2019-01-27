@@ -1,6 +1,6 @@
 package com.vogle.sbpayment.creditcard.requests;
 
-import com.vogle.sbpayment.client.SpsRequest;
+import com.vogle.sbpayment.client.requests.SpsRequest;
 import com.vogle.sbpayment.creditcard.responses.DefaultResponse;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
@@ -53,7 +53,6 @@ public class CardCaptureRequest implements SpsRequest<DefaultResponse> {
     private CardCaptureOptions payOptions;
 
     @NotEmpty
-    @Pattern(regexp = "(\\d{4}(0[0-9]|1[0-2])([0-2][0-9]|3[0-1])([0-1][0-9]|2[0-4])(([0-5][0-9]){2}))")
     @JacksonXmlProperty(localName = "request_date")
     private String requestDate;
 

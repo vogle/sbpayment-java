@@ -84,6 +84,9 @@ public class ByTrackingInfo {
         return ParamUtils.convertDivideTimes(this.dealingsType, this.divideTimes);
     }
 
+    public boolean isSavingCreditCard() {
+        return savingCreditCard;
+    }
     public String getSavingCreditCard() {
         return ParamUtils.convertBool(savingCreditCard);
     }

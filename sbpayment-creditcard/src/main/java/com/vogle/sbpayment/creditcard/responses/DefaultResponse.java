@@ -1,5 +1,7 @@
 package com.vogle.sbpayment.creditcard.responses;
 
+import com.vogle.sbpayment.client.responses.CommonElements;
+
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -15,4 +17,9 @@ import lombok.ToString;
 @ToString(callSuper = true)
 @JacksonXmlRootElement(localName = "sps-api-response")
 public class DefaultResponse extends CommonElements {
+
+    @Override
+    public String getDescription() {
+        return FeatureIds.getDescription(this.getId());
+    }
 }
