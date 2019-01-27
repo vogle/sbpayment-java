@@ -1,3 +1,5 @@
+description = 'sbpayment - creditcard'
+
 apply from: "$gradleDir/integration-test.gradle"
 
 dependencies {

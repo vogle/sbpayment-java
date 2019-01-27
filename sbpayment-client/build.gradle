@@ -1,3 +1,5 @@
+description = 'sbpayment - client'
+
 dependencies {
 
     // http connect
@@ -10,5 +12,4 @@ dependencies {
     api('org.hibernate.validator:hibernate-validator')
     runtimeOnly('org.glassfish:javax.el')
 
-    
 }
