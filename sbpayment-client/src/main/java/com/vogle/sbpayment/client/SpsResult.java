@@ -1,5 +1,7 @@
 package com.vogle.sbpayment.client;
 
+import com.vogle.sbpayment.client.responses.SpsResponse;
+
 import lombok.Getter;
 import lombok.ToString;
 

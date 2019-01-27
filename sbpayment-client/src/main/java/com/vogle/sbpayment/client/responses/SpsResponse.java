@@ -1,4 +1,4 @@
-package com.vogle.sbpayment.client;
+package com.vogle.sbpayment.client.responses;
 
 /**
  * Response interface

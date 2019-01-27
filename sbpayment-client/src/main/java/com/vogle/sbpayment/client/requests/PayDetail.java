@@ -1,4 +1,4 @@
-package com.vogle.sbpayment.creditcard.requests;
+package com.vogle.sbpayment.client.requests;
 
 import com.vogle.sbpayment.client.convert.MultiByteString;
 

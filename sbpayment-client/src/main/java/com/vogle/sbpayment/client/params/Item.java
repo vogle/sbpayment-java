@@ -1,4 +1,4 @@
-package com.vogle.sbpayment.creditcard.params;
+package com.vogle.sbpayment.client.params;
 
 import lombok.Builder;
 import lombok.Data;

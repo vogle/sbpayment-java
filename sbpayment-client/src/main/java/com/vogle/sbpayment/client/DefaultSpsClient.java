@@ -1,11 +1,9 @@
 package com.vogle.sbpayment.client;
 
 import com.vogle.sbpayment.client.convert.SpsDataConverter;
+import com.vogle.sbpayment.client.requests.SpsRequest;
+import com.vogle.sbpayment.client.responses.SpsResponse;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.auth.AuthScope;
@@ -41,22 +39,17 @@ public class DefaultSpsClient implements SpsClient {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private final SpsClientSettings settings;
+    private final SbpaymentSettings settings;
     private final HttpClient httpClient;
-    private final XmlMapper xmlMapper;
+    private final DefaultSpsMapper mapper;
 
-    public DefaultSpsClient(SpsClientSettings settings) {
+    public DefaultSpsClient(SbpaymentSettings settings) {
         Asserts.notNull(settings, "The Settings");
         SpsValidator.beanValidate(settings);
 
-        SpsValidator.beanValidate(settings);
         this.settings = settings;
-
         this.httpClient = httpClient(settings);
-
-        this.xmlMapper = new XmlMapper();
-        this.xmlMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-        this.xmlMapper.enable(SerializationFeature.INDENT_OUTPUT);
+        this.mapper = new DefaultSpsMapper(settings);
     }
 
     /**
@@ -106,7 +99,7 @@ public class DefaultSpsClient implements SpsClient {
             request.setSpsHashcode(hashCode);
 
             // 3. DES Encrypt & base64 encode
-            String xmlRequest = objectToXml(request);
+            String xmlRequest = mapper.objectToXml(request);
 
             if (logger.isTraceEnabled()) {
                 logger.trace("SPS Client request XML : \n{}\n", xmlRequest);
@@ -133,7 +126,7 @@ public class DefaultSpsClient implements SpsClient {
                 }
 
                 // xml mapping
-                T bodyObject = xmlToObject(body, request.responseClass());
+                T bodyObject = mapper.xmlToObject(body, request.responseClass());
 
                 if (logger.isInfoEnabled()) {
                     logger.info("SPS Client ({}) response : result = {}{}{}",
@@ -184,72 +177,9 @@ public class DefaultSpsClient implements SpsClient {
     }
 
     /**
-     * XML convert to Object
-     *
-     * @param body        The receiving response body
-     * @param objectClass The Converting object
-     * @return The converted Object
-     */
-    private <T> T xmlToObject(String body, Class<T> objectClass) {
-
-        try {
-            // xml mapping
-            T bodyObject = xmlMapper.readValue(body, objectClass);
-
-            // DES Decrypt
-            if (settings.getCipherSets().isEnabled()) {
-                SpsDataConverter.decrypt(
-                        settings.getCipherSets().getDesKey(),
-                        settings.getCipherSets().getDesInitKey(),
-                        settings.getCharset(), bodyObject);
-            }
-
-            return bodyObject;
-
-        } catch (IOException ex) {
-            logger.error("SPS xmlToObject Error : {}({})", ex.getClass().getSimpleName(), ex.getMessage());
-            throw new XmlMappingException(ex.getMessage(), ex);
-        }
-    }
-
-    /**
-     * Object convert to Xml
-     *
-     * @param value The Source object
-     * @return The converted XML
-     */
-    private <T> String objectToXml(T value) {
-        String charset = settings.getCharset();
-
-        // make xml
-        StringBuilder xml = new StringBuilder("<?xml version=\"1.0\" encoding=\"" + charset + "\"?>\n");
-
-        try {
-            if (settings.getCipherSets().isEnabled()) {
-                // DES Encrypt & base64 encode
-                SpsDataConverter.encrypt(
-                        settings.getCipherSets().getDesKey(),
-                        settings.getCipherSets().getDesInitKey(),
-                        charset, value);
-                SpsDataConverter.encodeWithoutCipherString(charset, value);
-            } else {
-                // base64 encode
-                SpsDataConverter.encode(charset, value);
-            }
-            xml.append(xmlMapper.writeValueAsString(value));
-
-            return xml.toString();
-
-        } catch (JsonProcessingException ex) {
-            logger.error("SPS objectToXml Error : {}({})", ex.getClass().getSimpleName(), ex.getMessage());
-            throw new XmlMappingException(ex.getMessage(), ex);
-        }
-    }
-
-    /**
      * Create HttpClient
      */
-    private HttpClient httpClient(SpsClientSettings settings) {
+    private HttpClient httpClient(SbpaymentSettings settings) {
         // http client
         HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
 
@@ -272,7 +202,6 @@ public class DefaultSpsClient implements SpsClient {
 
         return httpClientBuilder.build();
     }
-
 
     private boolean isEmpty(String str) {
         return str == null || str.isEmpty();

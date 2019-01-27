@@ -1,5 +1,8 @@
 package com.vogle.sbpayment.client;
 
+import com.vogle.sbpayment.client.requests.SpsRequest;
+import com.vogle.sbpayment.client.responses.SpsResponse;
+
 /**
  * Softbank Payment Client
  *
@@ -16,15 +19,13 @@ public interface SpsClient {
      */
     <T extends SpsRequest> T newRequest(Class<T> clazz);
 
-
     /**
      * Execute transmission<br/>
      * 通信実行
      *
      * @param request The sending request object
-     * @return The receiving response entity
+     * @return The received response entity
      */
     <T extends SpsResponse> SpsResult<T> execute(SpsRequest<T> request);
-
 
 }

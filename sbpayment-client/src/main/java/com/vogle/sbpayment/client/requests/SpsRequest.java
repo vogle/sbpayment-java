@@ -1,4 +1,6 @@
-package com.vogle.sbpayment.client;
+package com.vogle.sbpayment.client.requests;
+
+import com.vogle.sbpayment.client.responses.SpsResponse;
 
 /**
  * Request interface

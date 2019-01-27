@@ -1,5 +1,8 @@
 package com.vogle.sbpayment.client;
 
+import com.vogle.sbpayment.client.requests.SpsRequest;
+import com.vogle.sbpayment.client.responses.SpsResponse;
+
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -74,8 +77,8 @@ public class DefaultSpsClientTest {
 
     }
 
-    private SpsClientSettings settings(String merchantId, String serviceId) {
-        SpsClientSettings settings = new SpsClientSettings();
+    private SbpaymentSettings settings(String merchantId, String serviceId) {
+        SbpaymentSettings settings = new SbpaymentSettings();
         settings.setMerchantId(merchantId);
         settings.setServiceId(serviceId);
         settings.setBasicAuthId("BASIC_ID");

@@ -1,6 +1,4 @@
-package com.vogle.sbpayment.creditcard.responses;
-
-import com.vogle.sbpayment.client.SpsResponse;
+package com.vogle.sbpayment.client.responses;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import lombok.Data;
@@ -11,7 +9,7 @@ import lombok.Data;
  * @author Allan Im
  **/
 @Data
-public class CommonElements implements SpsResponse {
+public abstract class CommonElements implements SpsResponse {
 
     @JacksonXmlProperty(isAttribute = true)
     private String id;
@@ -35,7 +33,4 @@ public class CommonElements implements SpsResponse {
         return "OK".equalsIgnoreCase(this.result);
     }
 
-    public String getDescription() {
-        return TransactionIds.getDescription(this.id);
-    }
 }

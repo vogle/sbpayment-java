@@ -1,4 +1,4 @@
-package com.vogle.sbpayment.creditcard.responses;
+package com.vogle.sbpayment.client.responses;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import lombok.Data;

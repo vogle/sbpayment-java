@@ -12,7 +12,7 @@ import javax.validation.constraints.Size;
  * @author Allan Im
  **/
 @Data
-public class SpsClientSettings {
+public class SbpaymentSettings {
 
     /**
      * Softbank payment data charset, Default is "Shift_JIS".<br/>
