@@ -1,0 +1,15 @@
+description = 'sbpayment - client'
+
+dependencies {
+
+    // http connect
+    compile('org.apache.httpcomponents:httpclient')
+
+    // XML Converter
+    compile('com.fasterxml.jackson.dataformat:jackson-dataformat-xml')
+
+    // validation
+    compile('org.hibernate.validator:hibernate-validator')
+    runtimeOnly('org.glassfish:javax.el')
+
+}
