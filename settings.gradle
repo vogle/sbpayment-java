@@ -4,3 +4,5 @@ include "sbpayment-client"
 include "sbpayment-creditcard"
 include "sbpayment-payeasy"
 
+include "sbpayment-spring-boot-starter"
+
