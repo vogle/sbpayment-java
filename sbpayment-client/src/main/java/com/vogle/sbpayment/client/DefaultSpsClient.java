@@ -41,6 +41,12 @@ public class DefaultSpsClient implements SpsClient {
     private final HttpClient httpClient;
     private final SpsMapper mapper;
 
+    /**
+     * Create Client
+     *
+     * @param settings is the client setting information
+     * @param mapper   The {@link SpsMapper}
+     */
     public DefaultSpsClient(SpsClientSettings settings, SpsMapper mapper) {
         Asserts.notNull(settings, "The Settings");
         SpsValidator.beanValidate(settings);

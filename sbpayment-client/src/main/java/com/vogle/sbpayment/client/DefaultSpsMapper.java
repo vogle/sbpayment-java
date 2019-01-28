@@ -28,6 +28,11 @@ public class DefaultSpsMapper implements SpsMapper {
     private String desInitKey;
 
 
+    /**
+     * Create Mapper with hash key
+     *
+     * @param hashKey from Softbank payment system
+     */
     public DefaultSpsMapper(String hashKey) {
         this.hashKey = hashKey;
 
@@ -36,6 +41,13 @@ public class DefaultSpsMapper implements SpsMapper {
         this.xmlMapper.enable(SerializationFeature.INDENT_OUTPUT);
     }
 
+    /**
+     * Create Mapper with hash key & 3DES key
+     *
+     * @param hashKey    from Softbank payment system
+     * @param desKey     from Softbank payment system that length is 24
+     * @param desInitKey from Softbank payment system that length is 8
+     */
     public DefaultSpsMapper(String hashKey, String desKey, String desInitKey) {
         this(hashKey);
         this.desKey = desKey;
