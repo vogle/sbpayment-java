@@ -1,6 +1,5 @@
 package com.vogle.sbpayment.client;
 
-import com.vogle.sbpayment.client.convert.SpsDataConverter;
 import com.vogle.sbpayment.client.requests.SpsRequest;
 import com.vogle.sbpayment.client.responses.SpsResponse;
 
@@ -28,7 +27,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TimeZone;
 
 /**
  * Default Softbank payment client
@@ -39,17 +37,17 @@ public class DefaultSpsClient implements SpsClient {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private final SbpaymentSettings settings;
+    private final SpsClientSettings settings;
     private final HttpClient httpClient;
-    private final DefaultSpsMapper mapper;
+    private final SpsMapper mapper;
 
-    public DefaultSpsClient(SbpaymentSettings settings) {
+    public DefaultSpsClient(SpsClientSettings settings, SpsMapper mapper) {
         Asserts.notNull(settings, "The Settings");
         SpsValidator.beanValidate(settings);
 
         this.settings = settings;
-        this.httpClient = httpClient(settings);
-        this.mapper = new DefaultSpsMapper(settings);
+        this.mapper = mapper;
+        this.httpClient = createHttpClient();
     }
 
     /**
@@ -67,7 +65,7 @@ public class DefaultSpsClient implements SpsClient {
             request.setLimitSecond(settings.getAllowableSecondOnRequest());
 
             DateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
-            dateFormat.setTimeZone(TimeZone.getTimeZone(settings.getTimeZone()));
+            dateFormat.setTimeZone(settings.getTimeZone());
             request.setRequestDate(dateFormat.format(new Date()));
             return request;
         } catch (InstantiationException | IllegalAccessException ex) {
@@ -83,29 +81,19 @@ public class DefaultSpsClient implements SpsClient {
     public <T extends SpsResponse> SpsResult<T> execute(SpsRequest<T> request) {
         Asserts.notNull(request, "The request");
 
-        String charset = settings.getCharset();
+        String charset = mapper.getCharset();
         try {
             if (logger.isDebugEnabled()) {
                 logger.debug("SPS Client request object : {}", request);
             }
 
-            // 1. enable encrypted flag by settings
-            if (settings.getCipherSets().isEnabled()) {
-                SpsDataConverter.enableEncryptedFlg(request);
-            }
-
-            // 2. Insert a hashcode from request
-            String hashCode = SpsDataConverter.makeSpsHashCode(request, settings.getHashKey(), settings.getCharset());
-            request.setSpsHashcode(hashCode);
-
-            // 3. DES Encrypt & base64 encode
-            String xmlRequest = mapper.objectToXml(request);
-
+            // make xml
+            String xmlRequest = mapper.requestToXml(request);
             if (logger.isTraceEnabled()) {
                 logger.trace("SPS Client request XML : \n{}\n", xmlRequest);
             }
 
-            // 4. HTTP Execute
+            // HTTP Execute
             HttpPost method = new HttpPost(settings.getApiUrl());
             method.setEntity(new StringEntity(xmlRequest, charset));
             HttpResponse response = httpClient.execute(method);
@@ -119,7 +107,7 @@ public class DefaultSpsClient implements SpsClient {
                 Map<String, String> headerMap = new HashMap<>();
 
                 // response body
-                String body = EntityUtils.toString(response.getEntity(), settings.getCharset());
+                String body = EntityUtils.toString(response.getEntity(), mapper.getCharset());
                 if (logger.isTraceEnabled()) {
                     logger.trace("SPS Client response header :{}", headerMap);
                     logger.trace("SPS Client response xml :\n{}\n", body);
@@ -179,7 +167,7 @@ public class DefaultSpsClient implements SpsClient {
     /**
      * Create HttpClient
      */
-    private HttpClient httpClient(SbpaymentSettings settings) {
+    private HttpClient createHttpClient() {
         // http client
         HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
 
@@ -192,7 +180,7 @@ public class DefaultSpsClient implements SpsClient {
         }
 
         // headers
-        String charset = settings.getCharset();
+        String charset = mapper.getCharset();
         if (isEmpty(charset)) {
             charset = "Shift_JIS";
         }

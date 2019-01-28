@@ -1,6 +1,7 @@
 package com.vogle.sbpayment.client;
 
 import com.vogle.sbpayment.client.convert.SpsDataConverter;
+import com.vogle.sbpayment.client.requests.SpsRequest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -19,15 +20,48 @@ import java.io.IOException;
 public class DefaultSpsMapper implements SpsMapper {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private final SbpaymentSettings settings;
     private final XmlMapper xmlMapper;
 
-    public DefaultSpsMapper(SbpaymentSettings settings) {
-        this.settings = settings;
+    private String charset = "Shift_JIS";
+    private String hashKey;
+    private String desKey;
+    private String desInitKey;
+
+
+    public DefaultSpsMapper(String hashKey) {
+        this.hashKey = hashKey;
 
         this.xmlMapper = new XmlMapper();
         this.xmlMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         this.xmlMapper.enable(SerializationFeature.INDENT_OUTPUT);
+    }
+
+    public DefaultSpsMapper(String hashKey, String desKey, String desInitKey) {
+        this(hashKey);
+        this.desKey = desKey;
+        this.desInitKey = desInitKey;
+    }
+
+    public void updateCharset(String charset) {
+        this.charset = charset;
+    }
+
+    @Override
+    public String getCharset() {
+        return this.charset;
+    }
+
+    @Override
+    public String getHashKey() {
+        return this.hashKey;
+    }
+
+    private boolean cipherEnabled() {
+        return isNotEmpty(desKey) && isNotEmpty(desInitKey);
+    }
+
+    private boolean isNotEmpty(String value) {
+        return value != null && !value.isEmpty();
     }
 
     @Override
@@ -37,11 +71,8 @@ public class DefaultSpsMapper implements SpsMapper {
             T bodyObject = xmlMapper.readValue(xml, objectClass);
 
             // DES Decrypt
-            if (settings.getCipherSets().isEnabled()) {
-                SpsDataConverter.decrypt(
-                        settings.getCipherSets().getDesKey(),
-                        settings.getCipherSets().getDesInitKey(),
-                        settings.getCharset(), bodyObject);
+            if (cipherEnabled()) {
+                SpsDataConverter.decrypt(desKey, desInitKey, charset, bodyObject);
             }
 
             return bodyObject;
@@ -53,25 +84,21 @@ public class DefaultSpsMapper implements SpsMapper {
     }
 
     @Override
-    public <T> String objectToXml(T value) {
-        String charset = settings.getCharset();
+    public <T> String objectToXml(T object) {
 
         // make xml
         StringBuilder xml = new StringBuilder("<?xml version=\"1.0\" encoding=\"" + charset + "\"?>\n");
 
         try {
-            if (settings.getCipherSets().isEnabled()) {
+            if (cipherEnabled()) {
                 // DES Encrypt & base64 encode
-                SpsDataConverter.encrypt(
-                        settings.getCipherSets().getDesKey(),
-                        settings.getCipherSets().getDesInitKey(),
-                        charset, value);
-                SpsDataConverter.encodeWithoutCipherString(charset, value);
+                SpsDataConverter.encrypt(desKey, desInitKey, charset, object);
+                SpsDataConverter.encodeWithoutCipherString(charset, object);
             } else {
                 // base64 encode
-                SpsDataConverter.encode(charset, value);
+                SpsDataConverter.encode(charset, object);
             }
-            xml.append(xmlMapper.writeValueAsString(value));
+            xml.append(xmlMapper.writeValueAsString(object));
 
             return xml.toString();
 
@@ -79,5 +106,24 @@ public class DefaultSpsMapper implements SpsMapper {
             logger.error("SPS objectToXml Error : {}({})", ex.getClass().getSimpleName(), ex.getMessage());
             throw new XmlMappingException(ex.getMessage(), ex);
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     * It is automatically setting EncryptedFlg & SpsHashCode
+     */
+    @Override
+    public <T extends SpsRequest> String requestToXml(T request) {
+        // 1. enable encrypted flag by settings
+        if (cipherEnabled()) {
+            SpsDataConverter.enableEncryptedFlg(request);
+        }
+
+        // 2. Insert a hashcode from request
+        String hashCode = SpsDataConverter.makeSpsHashCode(request, hashKey, charset);
+        request.setSpsHashcode(hashCode);
+
+        // 3. make xml
+        return objectToXml(request);
     }
 }

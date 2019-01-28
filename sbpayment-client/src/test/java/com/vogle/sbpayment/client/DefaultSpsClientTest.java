@@ -77,20 +77,22 @@ public class DefaultSpsClientTest {
 
     }
 
-    private SbpaymentSettings settings(String merchantId, String serviceId) {
-        SbpaymentSettings settings = new SbpaymentSettings();
-        settings.setMerchantId(merchantId);
-        settings.setServiceId(serviceId);
-        settings.setBasicAuthId("BASIC_ID");
-        settings.setBasicAuthPassword("BASIC_PASS");
-        settings.setHashKey("HASH_KEY");
-        settings.setApiUrl("http://vogle.com");
+    private SpsClientSettings settings(String merchantId, String serviceId) {
+        return SpsClientSettings.builder()
+                .apiUrl("http://vogle.com")
+                .merchantId(merchantId)
+                .serviceId(serviceId)
+                .basicAuthId("BASIC_ID")
+                .basicAuthPassword("BASIC_PASS")
+                .build();
+    }
 
-        return settings;
+    private SpsMapper mapper() {
+        return new DefaultSpsMapper("HASH_KEY");
     }
 
     private DefaultSpsClient client(String merchantId, String serviceId) {
-        return new DefaultSpsClient(settings(merchantId, serviceId));
+        return new DefaultSpsClient(settings(merchantId, serviceId), mapper());
     }
 
     public static class TestRequest implements SpsRequest<SpsResponse> {

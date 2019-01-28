@@ -4,7 +4,6 @@ import com.vogle.sbpayment.client.convert.SpsDataConverter;
 import com.vogle.sbpayment.client.receivers.ReceptionResult;
 import com.vogle.sbpayment.client.receivers.SpsReceivedData;
 
-import org.apache.http.util.Asserts;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,15 +15,15 @@ import org.slf4j.LoggerFactory;
 public class DefaultSpsReceiver implements SpsReceiver {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private final SbpaymentSettings settings;
-    private final DefaultSpsMapper mapper;
+    private final String merchantId;
+    private final String serviceId;
 
-    public DefaultSpsReceiver(SbpaymentSettings settings) {
-        Asserts.notNull(settings, "The Settings");
-        SpsValidator.beanValidate(settings);
+    private final SpsMapper mapper;
 
-        this.settings = settings;
-        this.mapper = new DefaultSpsMapper(settings);
+    public DefaultSpsReceiver(String merchantId, String serviceId, SpsMapper mapper) {
+        this.merchantId = merchantId;
+        this.serviceId = serviceId;
+        this.mapper = mapper;
     }
 
     /**
@@ -46,23 +45,23 @@ public class DefaultSpsReceiver implements SpsReceiver {
         T receivedData = mapper.xmlToObject(xml, receivedDataClass);
 
         // Check merchant id
-        if (!settings.getMerchantId().equals(receivedData.getMerchantId())) {
+        if (!merchantId.equals(receivedData.getMerchantId())) {
             throw new InvalidAccessException("The merchant id is wrong: " + receivedData.getMerchantId());
         }
 
         // Check service id
-        if (!settings.getServiceId().equals(receivedData.getServiceId())) {
+        if (!serviceId.equals(receivedData.getServiceId())) {
             throw new InvalidAccessException("The service id is wrong: " + receivedData.getServiceId());
         }
 
         // Check hash code
-        String hashcode = SpsDataConverter.makeSpsHashCode(receivedData, settings.getHashKey(), settings.getCharset());
+        String hashcode = SpsDataConverter.makeSpsHashCode(receivedData, mapper.getHashKey(), mapper.getCharset());
         if (!hashcode.equals(receivedData.getSpsHashcode())) {
             throw new InvalidAccessException("The hashcode is wrong: " + receivedData.getSpsHashcode());
         }
 
         if (logger.isDebugEnabled()) {
-            logger.debug("SPS Receiver object : {}", receivedData);
+            logger.debug("SPS Received data : {}", receivedData);
         }
 
         return receivedData;
