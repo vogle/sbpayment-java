@@ -1,11 +1,10 @@
 package com.vogle.sbpayment.creditcard;
 
-import com.vogle.sbpayment.client.SbpaymentSettings;
 import com.vogle.sbpayment.client.SpsResult;
-import com.vogle.sbpayment.creditcard.params.ByCreditCard;
-import com.vogle.sbpayment.creditcard.params.CardInfoResponseType;
 import com.vogle.sbpayment.client.params.Item;
 import com.vogle.sbpayment.client.params.PaymentInfo;
+import com.vogle.sbpayment.creditcard.params.ByCreditCard;
+import com.vogle.sbpayment.creditcard.params.CardInfoResponseType;
 import com.vogle.sbpayment.creditcard.responses.CardAuthorizeResponse;
 import com.vogle.sbpayment.creditcard.responses.CardTranLookupMethodInfo;
 import com.vogle.sbpayment.creditcard.responses.CardTranLookupMethodInfo.PayMethodInfoDetail;
@@ -13,13 +12,14 @@ import com.vogle.sbpayment.creditcard.responses.CardTranLookupResponse;
 import com.vogle.sbpayment.creditcard.responses.CommitStatus;
 import com.vogle.sbpayment.creditcard.responses.PaymentStatus;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import static com.vogle.sbpayment.creditcard.DefaultCreditCardService.Feature.RETURN_CARD_BRAND;
+import static com.vogle.sbpayment.creditcard.DefaultCreditCardService.Feature.RETURN_CUSTOMER_INFO;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -32,13 +32,9 @@ public class CreditCardPayInfoTest extends AbstractSettings {
     private CreditCardService service;
 
     @Before
-    public void init() throws IOException {
-        SbpaymentSettings settings = settings();
-        service = new DefaultCreditCardService(client(settings))
-                .enable(DefaultCreditCardService.Feature.RETURN_CUSTOMER_INFO)
-                .enable(DefaultCreditCardService.Feature.RETURN_CARD_BRAND);
+    public void init() {
+        service = new DefaultCreditCardService(client(), RETURN_CARD_BRAND, RETURN_CUSTOMER_INFO);
     }
-
 
     @Test
     public void payLumpSumAndNumberLower4() throws Exception {

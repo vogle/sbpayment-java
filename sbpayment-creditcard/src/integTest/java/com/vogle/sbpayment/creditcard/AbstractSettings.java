@@ -1,9 +1,9 @@
 package com.vogle.sbpayment.creditcard;
 
 import com.vogle.sbpayment.client.DefaultSpsClient;
+import com.vogle.sbpayment.client.DefaultSpsMapper;
 import com.vogle.sbpayment.client.SpsClient;
-import com.vogle.sbpayment.client.SbpaymentSettings;
-import com.vogle.sbpayment.client.SbpaymentSettings.CipherSets;
+import com.vogle.sbpayment.client.SpsClientSettings;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -17,52 +17,33 @@ import java.util.Random;
  * @author Allan Im
  **/
 abstract class AbstractSettings {
+    private SpsClientSettings settings;
+    private String hashKey;
+    private String desKey;
+    private String desInitKey;
 
-    SbpaymentSettings settings() throws IOException {
+    AbstractSettings() {
         Properties p = new Properties();
-        p.load(this.getClass().getClassLoader().getResourceAsStream("it.properties"));
+        try {
+            p.load(this.getClass().getClassLoader().getResourceAsStream("it.properties"));
+        } catch (IOException ignored) {
+        }
 
-        SbpaymentSettings settings = new SbpaymentSettings();
-        settings.setApiUrl(p.getProperty("it1.apiUrl"));
-        settings.setMerchantId(p.getProperty("it1.merchantId"));
-        settings.setServiceId(p.getProperty("it1.serviceId"));
-        settings.setBasicAuthId(p.getProperty("it1.basicAuthId"));
-        settings.setBasicAuthPassword(p.getProperty("it1.basicAuthPassword"));
-        settings.setHashKey(p.getProperty("it1.hashKey"));
+        settings = SpsClientSettings.builder()
+                .apiUrl(p.getProperty("it1.apiUrl"))
+                .merchantId(p.getProperty("it1.merchantId"))
+                .serviceId(p.getProperty("it1.serviceId"))
+                .basicAuthId(p.getProperty("it1.basicAuthId"))
+                .basicAuthPassword(p.getProperty("it1.basicAuthPassword"))
+                .build();
 
-        CipherSets cipherSets = new CipherSets();
-        cipherSets.setEnabled(true);
-        cipherSets.setDesKey(p.getProperty("it1.desKey"));
-        cipherSets.setDesInitKey(p.getProperty("it1.desInitKey"));
-        settings.setCipherSets(cipherSets);
-
-        return settings;
+        hashKey = p.getProperty("it1.hashKey");
+        desKey = p.getProperty("it1.desKey");
+        desInitKey = p.getProperty("it1.desInitKey");
     }
 
-    SbpaymentSettings settingsAutoCapture() throws IOException {
-        Properties p = new Properties();
-        p.load(this.getClass().getClassLoader().getResourceAsStream("it.properties"));
-
-        SbpaymentSettings settings = new SbpaymentSettings();
-        settings.setApiUrl(p.getProperty("it2.apiUrl"));
-        settings.setMerchantId(p.getProperty("it2.merchantId"));
-        settings.setServiceId(p.getProperty("it2.serviceId"));
-        settings.setBasicAuthId(p.getProperty("it2.basicAuthId"));
-        settings.setBasicAuthPassword(p.getProperty("it2.basicAuthPassword"));
-        settings.setHashKey(p.getProperty("it2.hashKey"));
-
-        CipherSets cipherSets = new CipherSets();
-        cipherSets.setEnabled(true);
-        cipherSets.setDesKey(p.getProperty("it2.desKey"));
-        cipherSets.setDesInitKey(p.getProperty("it2.desInitKey"));
-        settings.setCipherSets(cipherSets);
-
-        return settings;
-    }
-
-
-    SpsClient client(SbpaymentSettings settings) {
-        return new DefaultSpsClient(settings);
+    SpsClient client() {
+        return new DefaultSpsClient(settings, new DefaultSpsMapper(hashKey, desKey, desInitKey));
     }
 
     String orderNo() {

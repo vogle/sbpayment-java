@@ -59,19 +59,16 @@ public class DefaultCreditCardService implements CreditCardService {
     private String returnCustomerInfo = "0";
     private String returnCardBrand = "0";
 
-    public DefaultCreditCardService(SpsClient client) {
+    public DefaultCreditCardService(SpsClient client, Feature... enableFeatures) {
         this.client = client;
-    }
 
-    public DefaultCreditCardService enable(Feature... features) {
-        for (Feature feature : features) {
+        for (Feature feature : enableFeatures) {
             if (Feature.RETURN_CUSTOMER_INFO.equals(feature)) {
                 this.returnCustomerInfo = "1";
             } else if (Feature.RETURN_CARD_BRAND.equals(feature)) {
                 this.returnCardBrand = "1";
             }
         }
-        return this;
     }
 
     public enum Feature {

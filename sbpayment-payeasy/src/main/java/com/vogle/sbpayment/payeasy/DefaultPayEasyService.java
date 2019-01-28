@@ -32,49 +32,40 @@ public class DefaultPayEasyService implements PayEasyService {
     private final SpsClient client;
     private final SpsReceiver receiver;
 
-    private final PayEasyType type;
+    private PayEasyType type;
     private String payCsv;
     private String billInfo;
     private String billInfoKana;
     private int billLimitDay = 3;
 
     /**
-     * PayEasy Service
+     * Make LinkType Pay-Easy
      *
-     * @param client   SpsClient
+     * @param client   The SpsClient
      * @param receiver The SpsReceiver
-     * @param type     Online or Link
+     * @param payCsv   金融機関コード、情報リンク方式の場合のみ必須です。ただし、電算システムを利用の場合は不要です。
      */
-    public DefaultPayEasyService(SpsClient client, SpsReceiver receiver, PayEasyType type) {
+    public DefaultPayEasyService(SpsClient client, SpsReceiver receiver, String payCsv) {
+        this.type = PayEasyType.LINK;
         this.client = client;
         this.receiver = receiver;
-        this.type = type;
-    }
-
-
-    /**
-     * 金融機関コード、情報リンク方式の場合のみ必須です。ただし、電算システムを利用の場合は不要です。
-     */
-    public DefaultPayEasyService payCsv(String payCsv) {
         this.payCsv = payCsv;
-        return this;
     }
 
     /**
-     * 請求内容漢字、ATM 等に表示されます。（全角）
+     * Make OnlineType Pay-Easy
+     *
+     * @param client       The SpsClient
+     * @param receiver     The SpsReceiver
+     * @param billInfo     請求内容漢字、ATM 等に表示されます。（全角）
+     * @param billInfoKana 請求内容カナ、ATM 等に表示されます。（全角英数カナ）
      */
-    public DefaultPayEasyService billInfo(String billInfo) {
+    public DefaultPayEasyService(SpsClient client, SpsReceiver receiver, String billInfo, String billInfoKana) {
+        this.type = PayEasyType.ONLINE;
+        this.client = client;
+        this.receiver = receiver;
         this.billInfo = billInfo;
-        return this;
-    }
-
-    /**
-     * *
-     * 請求内容カナ、ATM 等に表示されます。（全角英数カナ）
-     */
-    public DefaultPayEasyService billInfoKana(String billInfoKana) {
         this.billInfoKana = billInfoKana;
-        return this;
     }
 
     /**
@@ -82,9 +73,8 @@ public class DefaultPayEasyService implements PayEasyService {
      * ウェルネットを利用されている加盟店の場合、支払期限は当日指定が可能です。
      * 本日は「0」を基準として、日数を加算。デフォルトは「３日」
      */
-    public DefaultPayEasyService billLimitDay(int billLimitDay) {
+    public void updateBillLimitDay(int billLimitDay) {
         this.billLimitDay = billLimitDay;
-        return this;
     }
 
 

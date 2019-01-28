@@ -1,8 +1,7 @@
 package com.vogle.sbpayment.payeasy;
 
-import com.vogle.sbpayment.client.DefaultSpsMapper;
-import com.vogle.sbpayment.client.SbpaymentSettings;
-import com.vogle.sbpayment.client.SpsReceiver;
+import com.vogle.sbpayment.client.SpsClientSettings;
+import com.vogle.sbpayment.client.SpsMapper;
 import com.vogle.sbpayment.client.SpsResult;
 import com.vogle.sbpayment.client.convert.SpsDataConverter;
 import com.vogle.sbpayment.client.params.PaymentInfo;
@@ -31,18 +30,14 @@ public class PayEasyTest extends AbstractSettings {
 
     private static int BILL_LIMIT_DAY = 5;
     private PayEasyService service;
-    private SpsReceiver receiver;
-    private SbpaymentSettings settings;
-    private DefaultSpsMapper mapper;
+    private SpsClientSettings settings;
+    private SpsMapper mapper;
 
     @Before
     public void init() throws IOException {
-        settings = settings();
-        receiver = receiver(settings);
-        mapper = new DefaultSpsMapper(settings);
-        service = new DefaultPayEasyService(client(settings), receiver, PayEasyType.ONLINE)
-                .billInfo("株式会社").billInfoKana("カブシキガイシャ")
-                .billLimitDay(BILL_LIMIT_DAY);
+        settings = getSettings();
+        mapper = mapper();
+        service = new DefaultPayEasyService(client(), receiver(), "株式会社", "カブシキガイシャ");
     }
 
     @Test
@@ -90,7 +85,7 @@ public class PayEasyTest extends AbstractSettings {
         temp.setDepositInfo(depositInfo);
 
         temp.setRequestDate("20171010101010");
-        temp.setSpsHashcode(SpsDataConverter.makeSpsHashCode(temp, settings.getHashKey(), settings.getCharset()));
+        temp.setSpsHashcode(SpsDataConverter.makeSpsHashCode(temp, mapper.getHashKey(), mapper.getCharset()));
 
         // given xml
         String xml = mapper.objectToXml(temp);
@@ -117,7 +112,7 @@ public class PayEasyTest extends AbstractSettings {
     public void successDepositResponse() {
         String response = service.successDeposit();
         assertThat(response).isNotEmpty()
-                .contains("<?xml version=\"1.0\" encoding=\"" + settings.getCharset() + "\"?>")
+                .contains("<?xml version=\"1.0\" encoding=\"" + mapper.getCharset() + "\"?>")
                 .contains("<sps-api-response id=\"NT01-00103-703\">")
                 .contains("<res_result>OK</res_result>");
     }
@@ -127,10 +122,10 @@ public class PayEasyTest extends AbstractSettings {
         String errMsg = "ERROR Message";
         String response = service.failDeposit(errMsg);
         assertThat(response).isNotEmpty()
-                .contains("<?xml version=\"1.0\" encoding=\"" + settings.getCharset() + "\"?>")
+                .contains("<?xml version=\"1.0\" encoding=\"" + mapper.getCharset() + "\"?>")
                 .contains("<sps-api-response id=\"NT01-00103-703\">")
                 .contains("<res_result>NG</res_result>")
-                .contains("<res_err_msg>" + Base64.getEncoder().encodeToString(errMsg.getBytes(settings.getCharset()))
+                .contains("<res_err_msg>" + Base64.getEncoder().encodeToString(errMsg.getBytes(mapper.getCharset()))
                         + "</res_err_msg>");
     }
 
@@ -146,7 +141,7 @@ public class PayEasyTest extends AbstractSettings {
         temp.setRecDatetime("20171010");
         temp.setRequestDate("20171010101010");
 
-        temp.setSpsHashcode(SpsDataConverter.makeSpsHashCode(temp, settings.getHashKey(), settings.getCharset()));
+        temp.setSpsHashcode(SpsDataConverter.makeSpsHashCode(temp, mapper.getHashKey(), mapper.getCharset()));
 
         // request data
         String xml = mapper.objectToXml(temp);
@@ -168,7 +163,7 @@ public class PayEasyTest extends AbstractSettings {
     public void successExpiredResponse() throws Exception {
         String response = service.successExpiredCancel();
         assertThat(response).isNotEmpty()
-                .contains("<?xml version=\"1.0\" encoding=\"" + settings.getCharset() + "\"?>")
+                .contains("<?xml version=\"1.0\" encoding=\"" + mapper.getCharset() + "\"?>")
                 .contains("<sps-api-response id=\"NT01-00104-703\">")
                 .contains("<res_result>OK</res_result>");
     }
@@ -178,10 +173,10 @@ public class PayEasyTest extends AbstractSettings {
         String errMsg = "エラー発生";
         String response = service.failExpiredCancel(errMsg);
         assertThat(response).isNotEmpty()
-                .contains("<?xml version=\"1.0\" encoding=\"" + settings.getCharset() + "\"?>")
+                .contains("<?xml version=\"1.0\" encoding=\"" + mapper.getCharset() + "\"?>")
                 .contains("<sps-api-response id=\"NT01-00104-703\">")
                 .contains("<res_result>NG</res_result>")
-                .contains("<res_err_msg>" + Base64.getEncoder().encodeToString(errMsg.getBytes(settings.getCharset()))
+                .contains("<res_err_msg>" + Base64.getEncoder().encodeToString(errMsg.getBytes(mapper.getCharset()))
                         + "</res_err_msg>");
     }
 

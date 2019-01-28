@@ -1,11 +1,10 @@
 package com.vogle.sbpayment.creditcard;
 
-import com.vogle.sbpayment.client.SbpaymentSettings;
 import com.vogle.sbpayment.client.SpsResult;
+import com.vogle.sbpayment.client.params.PaymentInfo;
 import com.vogle.sbpayment.creditcard.params.ByCreditCard;
 import com.vogle.sbpayment.creditcard.params.BySavedCard;
 import com.vogle.sbpayment.creditcard.params.CardInfoResponseType;
-import com.vogle.sbpayment.client.params.PaymentInfo;
 import com.vogle.sbpayment.creditcard.params.SaveCreditCard;
 import com.vogle.sbpayment.creditcard.responses.CardAuthorizeResponse;
 import com.vogle.sbpayment.creditcard.responses.CardInfoDeleteResponse;
@@ -14,11 +13,11 @@ import com.vogle.sbpayment.creditcard.responses.CardInfoLookupResponse;
 import com.vogle.sbpayment.creditcard.responses.LegacyCardInfoSaveResponse;
 import com.vogle.sbpayment.creditcard.responses.LegacyCardInfoUpdateResponse;
 
-import java.io.IOException;
-
 import org.junit.Before;
 import org.junit.Test;
 
+import static com.vogle.sbpayment.creditcard.DefaultCreditCardService.Feature.RETURN_CARD_BRAND;
+import static com.vogle.sbpayment.creditcard.DefaultCreditCardService.Feature.RETURN_CUSTOMER_INFO;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -31,11 +30,8 @@ public class CreditCardStorageTest extends AbstractSettings {
     private CreditCardService service;
 
     @Before
-    public void init() throws IOException {
-        SbpaymentSettings settings = settings();
-        service = new DefaultCreditCardService(client(settings))
-                .enable(DefaultCreditCardService.Feature.RETURN_CUSTOMER_INFO)
-                .enable(DefaultCreditCardService.Feature.RETURN_CARD_BRAND);
+    public void init() {
+        service = new DefaultCreditCardService(client(), RETURN_CARD_BRAND, RETURN_CUSTOMER_INFO);
     }
 
     @Test
