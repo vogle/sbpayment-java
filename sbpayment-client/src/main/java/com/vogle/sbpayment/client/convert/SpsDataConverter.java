@@ -2,7 +2,6 @@ package com.vogle.sbpayment.client.convert;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sun.xml.internal.xsom.impl.scd.Iterators;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.http.util.Asserts;
 import org.slf4j.Logger;
@@ -298,7 +297,7 @@ public class SpsDataConverter {
             if (iterable != null) {
                 return (Iterator) field.getType().getMethod(ITERATOR).invoke(iterable);
             } else {
-                return Iterators.empty();
+                return Collections.emptyIterator();
             }
         } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException ex) {
             logger.error("Is not iterator field: '{}'", field.getName());
