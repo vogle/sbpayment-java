@@ -1,11 +1,11 @@
 package com.vogle.sbpayment.creditcard.params;
 
-import lombok.Builder;
-import lombok.Data;
-
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+
+import lombok.Builder;
+import lombok.Data;
 
 /**
  * Credit card information

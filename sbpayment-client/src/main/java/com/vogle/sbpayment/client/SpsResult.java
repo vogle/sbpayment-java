@@ -1,11 +1,11 @@
 package com.vogle.sbpayment.client;
 
-import com.vogle.sbpayment.client.responses.SpsResponse;
+import java.util.Map;
 
 import lombok.Getter;
 import lombok.ToString;
 
-import java.util.Map;
+import com.vogle.sbpayment.client.responses.SpsResponse;
 
 /**
  * Received data from Softbank Payment

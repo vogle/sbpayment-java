@@ -1,8 +1,8 @@
 package com.vogle.sbpayment.client.convert;
 
-import org.junit.Test;
-
 import static org.assertj.core.api.Assertions.assertThat;
+
+import org.junit.Test;
 
 /**
  * Tests for {@link SpsSecurity}

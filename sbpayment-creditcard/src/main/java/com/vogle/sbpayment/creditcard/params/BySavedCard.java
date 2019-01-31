@@ -1,12 +1,12 @@
 package com.vogle.sbpayment.creditcard.params;
 
-import com.vogle.sbpayment.creditcard.DealingsType;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 
 import lombok.Builder;
 import lombok.Data;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
+import com.vogle.sbpayment.creditcard.DealingsType;
 
 /**
  * If pay for saved card, need this information

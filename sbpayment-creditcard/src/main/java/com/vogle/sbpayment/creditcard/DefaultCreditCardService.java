@@ -71,20 +71,6 @@ public class DefaultCreditCardService implements CreditCardService {
         }
     }
 
-    public enum Feature {
-        /**
-         * When sending customer information, return it from Softbank payment.<br/>
-         * 顧客コードを送るとき、ソフトバングペイメントから顧客情報を返却する。
-         */
-        RETURN_CUSTOMER_INFO,
-
-        /**
-         * When sending credit-card information, return credit-card brand.<br/>
-         * カード情報を送るとき、カードブランド情報を返却する。
-         */
-        RETURN_CARD_BRAND
-    }
-
     private CardAuthorizeRequest newCardAuthorizeRequest(PaymentInfo paymentInfo, DealingsType dealingsType,
                                                          String divideTimes) {
         CardAuthorizeRequest request = client.newRequest(CardAuthorizeRequest.class);
@@ -431,6 +417,20 @@ public class DefaultCreditCardService implements CreditCardService {
         request.setPayOptions(options);
 
         return client.execute(request);
+    }
+
+    public enum Feature {
+        /**
+         * When sending customer information, return it from Softbank payment.<br/>
+         * 顧客コードを送るとき、ソフトバングペイメントから顧客情報を返却する。
+         */
+        RETURN_CUSTOMER_INFO,
+
+        /**
+         * When sending credit-card information, return credit-card brand.<br/>
+         * カード情報を送るとき、カードブランド情報を返却する。
+         */
+        RETURN_CARD_BRAND
     }
 
 }

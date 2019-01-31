@@ -1,11 +1,11 @@
 package com.vogle.sbpayment.client;
 
-import com.vogle.sbpayment.client.requests.SpsRequest;
-import com.vogle.sbpayment.client.responses.SpsResponse;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import com.vogle.sbpayment.client.requests.SpsRequest;
+import com.vogle.sbpayment.client.responses.SpsResponse;
 
 /**
  * Tests for {@link DefaultSpsClient}
@@ -108,18 +108,13 @@ public class DefaultSpsClientTest {
         }
 
         @Override
-        public void setMerchantId(String merchantId) {
-            this.merchantId = merchantId;
-        }
-
-        @Override
         public String getMerchantId() {
             return this.merchantId;
         }
 
         @Override
-        public void setServiceId(String serviceId) {
-            this.serviceId = serviceId;
+        public void setMerchantId(String merchantId) {
+            this.merchantId = merchantId;
         }
 
         @Override
@@ -128,8 +123,8 @@ public class DefaultSpsClientTest {
         }
 
         @Override
-        public void setRequestDate(String requestDate) {
-            this.requestDate = requestDate;
+        public void setServiceId(String serviceId) {
+            this.serviceId = serviceId;
         }
 
         @Override
@@ -138,8 +133,8 @@ public class DefaultSpsClientTest {
         }
 
         @Override
-        public void setLimitSecond(Integer limitSecond) {
-            this.limitSecond = limitSecond;
+        public void setRequestDate(String requestDate) {
+            this.requestDate = requestDate;
         }
 
         @Override
@@ -148,13 +143,18 @@ public class DefaultSpsClientTest {
         }
 
         @Override
-        public void setSpsHashcode(String spsHashcode) {
-
+        public void setLimitSecond(Integer limitSecond) {
+            this.limitSecond = limitSecond;
         }
 
         @Override
         public String getSpsHashcode() {
             return null;
+        }
+
+        @Override
+        public void setSpsHashcode(String spsHashcode) {
+
         }
 
         @Override

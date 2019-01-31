@@ -1,12 +1,12 @@
 package com.vogle.sbpayment.creditcard.responses;
 
-import com.vogle.sbpayment.client.responses.CommonElements;
-import com.vogle.sbpayment.client.responses.SpsInfo;
-
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+
+import com.vogle.sbpayment.client.responses.CommonElements;
+import com.vogle.sbpayment.client.responses.SpsInfo;
 
 /**
  * Card info common elements

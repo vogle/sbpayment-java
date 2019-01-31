@@ -1,5 +1,22 @@
 package com.vogle.sbpayment.springboot.autoconfigure;
 
+import static com.vogle.sbpayment.creditcard.DefaultCreditCardService.Feature;
+import static com.vogle.sbpayment.springboot.autoconfigure.SbpaymentProperties.Client;
+import static com.vogle.sbpayment.springboot.autoconfigure.SbpaymentProperties.CreditCard;
+import static com.vogle.sbpayment.springboot.autoconfigure.SbpaymentProperties.PayEasy;
+
+import java.util.HashSet;
+import java.util.Set;
+import java.util.TimeZone;
+
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
 import com.vogle.sbpayment.client.DefaultSpsClient;
 import com.vogle.sbpayment.client.DefaultSpsMapper;
 import com.vogle.sbpayment.client.DefaultSpsReceiver;
@@ -11,23 +28,6 @@ import com.vogle.sbpayment.creditcard.CreditCardService;
 import com.vogle.sbpayment.creditcard.DefaultCreditCardService;
 import com.vogle.sbpayment.payeasy.DefaultPayEasyService;
 import com.vogle.sbpayment.payeasy.PayEasyService;
-
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-
-import java.util.HashSet;
-import java.util.Set;
-import java.util.TimeZone;
-
-import static com.vogle.sbpayment.creditcard.DefaultCreditCardService.Feature;
-import static com.vogle.sbpayment.springboot.autoconfigure.SbpaymentProperties.Client;
-import static com.vogle.sbpayment.springboot.autoconfigure.SbpaymentProperties.CreditCard;
-import static com.vogle.sbpayment.springboot.autoconfigure.SbpaymentProperties.PayEasy;
 
 /**
  * Softbank payment service auto configuration

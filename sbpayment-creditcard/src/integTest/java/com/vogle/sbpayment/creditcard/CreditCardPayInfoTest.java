@@ -1,5 +1,15 @@
 package com.vogle.sbpayment.creditcard;
 
+import static com.vogle.sbpayment.creditcard.DefaultCreditCardService.Feature.RETURN_CARD_BRAND;
+import static com.vogle.sbpayment.creditcard.DefaultCreditCardService.Feature.RETURN_CUSTOMER_INFO;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.Before;
+import org.junit.Test;
+
 import com.vogle.sbpayment.client.SpsResult;
 import com.vogle.sbpayment.client.params.Item;
 import com.vogle.sbpayment.client.params.PaymentInfo;
@@ -11,16 +21,6 @@ import com.vogle.sbpayment.creditcard.responses.CardTranLookupMethodInfo.PayMeth
 import com.vogle.sbpayment.creditcard.responses.CardTranLookupResponse;
 import com.vogle.sbpayment.creditcard.responses.CommitStatus;
 import com.vogle.sbpayment.creditcard.responses.PaymentStatus;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.junit.Before;
-import org.junit.Test;
-
-import static com.vogle.sbpayment.creditcard.DefaultCreditCardService.Feature.RETURN_CARD_BRAND;
-import static com.vogle.sbpayment.creditcard.DefaultCreditCardService.Feature.RETURN_CUSTOMER_INFO;
-import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Tests for {@link CreditCardService} to get payment info

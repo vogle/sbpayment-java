@@ -1,14 +1,14 @@
 package com.vogle.sbpayment.creditcard.requests;
 
-import com.vogle.sbpayment.client.convert.CipherString;
-import com.vogle.sbpayment.client.convert.MultiByteString;
-import com.vogle.sbpayment.creditcard.DealingsType;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import lombok.Data;
 
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
+import com.vogle.sbpayment.client.convert.CipherString;
+import com.vogle.sbpayment.client.convert.MultiByteString;
+import com.vogle.sbpayment.creditcard.DealingsType;
 
 /**
  * Credit card options

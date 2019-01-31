@@ -1,5 +1,11 @@
 package com.vogle.sbpayment.payeasy;
 
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Properties;
+import java.util.Random;
+
 import com.vogle.sbpayment.client.DefaultSpsClient;
 import com.vogle.sbpayment.client.DefaultSpsMapper;
 import com.vogle.sbpayment.client.DefaultSpsReceiver;
@@ -7,12 +13,6 @@ import com.vogle.sbpayment.client.SpsClient;
 import com.vogle.sbpayment.client.SpsClientSettings;
 import com.vogle.sbpayment.client.SpsMapper;
 import com.vogle.sbpayment.client.SpsReceiver;
-
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Properties;
-import java.util.Random;
 
 /**
  * Test settings

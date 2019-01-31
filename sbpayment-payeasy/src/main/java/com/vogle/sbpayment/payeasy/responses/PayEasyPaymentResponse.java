@@ -1,14 +1,14 @@
 package com.vogle.sbpayment.payeasy.responses;
 
-import com.vogle.sbpayment.client.convert.CipherString;
-import com.vogle.sbpayment.client.responses.CommonElements;
-import com.vogle.sbpayment.client.responses.SpsInfo;
-
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+
+import com.vogle.sbpayment.client.convert.CipherString;
+import com.vogle.sbpayment.client.responses.CommonElements;
+import com.vogle.sbpayment.client.responses.SpsInfo;
 
 /**
  * PayEasy payment response

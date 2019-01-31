@@ -1,12 +1,12 @@
 package com.vogle.sbpayment.creditcard;
 
 import com.vogle.sbpayment.client.SpsResult;
+import com.vogle.sbpayment.client.params.PaymentInfo;
 import com.vogle.sbpayment.creditcard.params.ByCreditCard;
 import com.vogle.sbpayment.creditcard.params.BySavedCard;
 import com.vogle.sbpayment.creditcard.params.ByToken;
 import com.vogle.sbpayment.creditcard.params.ByTrackingInfo;
 import com.vogle.sbpayment.creditcard.params.CardInfoResponseType;
-import com.vogle.sbpayment.client.params.PaymentInfo;
 import com.vogle.sbpayment.creditcard.params.SaveCardByToken;
 import com.vogle.sbpayment.creditcard.params.SaveCreditCard;
 import com.vogle.sbpayment.creditcard.responses.CardAuthorizeResponse;

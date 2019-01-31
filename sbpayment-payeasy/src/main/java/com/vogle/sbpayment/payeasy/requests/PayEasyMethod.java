@@ -1,15 +1,15 @@
 package com.vogle.sbpayment.payeasy.requests;
 
-import com.vogle.sbpayment.client.convert.CipherString;
-import com.vogle.sbpayment.client.convert.MultiByteString;
-
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import lombok.Data;
-
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import lombok.Data;
+
+import com.vogle.sbpayment.client.convert.CipherString;
+import com.vogle.sbpayment.client.convert.MultiByteString;
 
 /**
  * PayEasy information

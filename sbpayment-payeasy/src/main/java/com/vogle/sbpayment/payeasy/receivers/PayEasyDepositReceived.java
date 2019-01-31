@@ -1,11 +1,11 @@
 package com.vogle.sbpayment.payeasy.receivers;
 
-import com.vogle.sbpayment.client.convert.CipherString;
-import com.vogle.sbpayment.client.receivers.SpsReceivedData;
-
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import lombok.Data;
+
+import com.vogle.sbpayment.client.convert.CipherString;
+import com.vogle.sbpayment.client.receivers.SpsReceivedData;
 
 /**
  * PayEasy deposit receivers

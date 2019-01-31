@@ -1,11 +1,10 @@
 package com.vogle.sbpayment.springboot.autoconfigure;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.NestedConfigurationProperty;
+import javax.validation.constraints.Size;
 
 import lombok.Data;
-
-import javax.validation.constraints.Size;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 /**
  * Softbank payment system properties
@@ -20,6 +19,14 @@ public class SbpaymentProperties {
      * Softbank payment system information
      */
     private Client client = new Client();
+    /**
+     * Credit Card options
+     */
+    private CreditCard creditcard = new CreditCard();
+    /**
+     * Pay-Easy Options
+     */
+    private PayEasy payeasy = new PayEasy();
 
     @Data
     public static class Client {
@@ -105,11 +112,6 @@ public class SbpaymentProperties {
         }
     }
 
-    /**
-     * Credit Card options
-     */
-    private CreditCard creditcard = new CreditCard();
-
     @Data
     public static class CreditCard {
 
@@ -138,11 +140,6 @@ public class SbpaymentProperties {
         private Client alternateClient = new Client();
 
     }
-
-    /**
-     * Pay-Easy Options
-     */
-    private PayEasy payeasy = new PayEasy();
 
     @Data
     public static class PayEasy {

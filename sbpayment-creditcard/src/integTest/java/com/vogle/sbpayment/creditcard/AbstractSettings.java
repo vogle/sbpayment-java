@@ -1,15 +1,15 @@
 package com.vogle.sbpayment.creditcard;
 
-import com.vogle.sbpayment.client.DefaultSpsClient;
-import com.vogle.sbpayment.client.DefaultSpsMapper;
-import com.vogle.sbpayment.client.SpsClient;
-import com.vogle.sbpayment.client.SpsClientSettings;
-
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Properties;
 import java.util.Random;
+
+import com.vogle.sbpayment.client.DefaultSpsClient;
+import com.vogle.sbpayment.client.DefaultSpsMapper;
+import com.vogle.sbpayment.client.SpsClient;
+import com.vogle.sbpayment.client.SpsClientSettings;
 
 /**
  * Test settings
