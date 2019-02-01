@@ -37,21 +37,21 @@ public class DefaultSpsClient implements SpsClient {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private final SpsClientSettings settings;
+    private final SpsConfig config;
     private final HttpClient httpClient;
     private final SpsMapper mapper;
 
     /**
      * Create Client
      *
-     * @param settings is the client setting information
-     * @param mapper   The {@link SpsMapper}
+     * @param config The Softbank Payment configuration
+     * @param mapper The {@link SpsMapper}
      */
-    public DefaultSpsClient(SpsClientSettings settings, SpsMapper mapper) {
-        Asserts.notNull(settings, "The Settings");
-        SpsValidator.beanValidate(settings);
+    public DefaultSpsClient(SpsConfig config, SpsMapper mapper) {
+        Asserts.notNull(config, "The Configuration");
+        SpsValidator.beanValidate(config);
 
-        this.settings = settings;
+        this.config = config;
         this.mapper = mapper;
         this.httpClient = createHttpClient();
     }
@@ -66,12 +66,12 @@ public class DefaultSpsClient implements SpsClient {
         try {
             T request = clazz.newInstance();
 
-            request.setMerchantId(settings.getMerchantId());
-            request.setServiceId(settings.getServiceId());
-            request.setLimitSecond(settings.getAllowableSecondOnRequest());
+            request.setMerchantId(config.getMerchantId());
+            request.setServiceId(config.getServiceId());
+            request.setLimitSecond(config.getAllowableSecondOnRequest());
 
             DateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
-            dateFormat.setTimeZone(settings.getTimeZone());
+            dateFormat.setTimeZone(config.getTimeZone());
             request.setRequestDate(dateFormat.format(new Date()));
             return request;
         } catch (InstantiationException | IllegalAccessException ex) {
@@ -100,7 +100,7 @@ public class DefaultSpsClient implements SpsClient {
             }
 
             // HTTP Execute
-            HttpPost method = new HttpPost(settings.getApiUrl());
+            HttpPost method = new HttpPost(config.getApiUrl());
             method.setEntity(new StringEntity(xmlRequest, charset));
             HttpResponse response = httpClient.execute(method);
 
@@ -140,19 +140,19 @@ public class DefaultSpsClient implements SpsClient {
             } else if (statusCode == 401) {
                 logger.error("SPS Client connect fail : Either you supplied the wrong credentials,"
                                 + " authId : {}, authPw : {} ",
-                        settings.getBasicAuthId(), settings.getBasicAuthPassword());
+                        config.getBasicAuthId(), config.getBasicAuthPassword());
                 return new SpsResult<>(statusCode);
             } else if (statusCode == 403) {
                 logger.error("SPS Client connect fail : You don't have permission to access {} on this server",
-                        settings.getApiUrl());
+                        config.getApiUrl());
                 return new SpsResult<>(statusCode);
             } else if (statusCode == 404) {
                 logger.error("SPS Client connect fail : The requested URL {} was not found on this server",
-                        settings.getApiUrl());
+                        config.getApiUrl());
                 return new SpsResult<>(statusCode);
             } else if (statusCode == 500) {
                 logger.error("SPS Client connect fail : Internal server error from {}",
-                        settings.getApiUrl());
+                        config.getApiUrl());
                 return new SpsResult<>(statusCode);
             } else if (statusCode == 503) {
                 logger.error("SPS Client connect fail : The server is temporarily unable to service your request"
@@ -178,10 +178,10 @@ public class DefaultSpsClient implements SpsClient {
         HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
 
         // basic authorize information
-        if (isNotEmpty(settings.getBasicAuthId()) && isNotEmpty(settings.getBasicAuthPassword())) {
+        if (isNotEmpty(config.getBasicAuthId()) && isNotEmpty(config.getBasicAuthPassword())) {
             CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
             credentialsProvider.setCredentials(AuthScope.ANY,
-                    new UsernamePasswordCredentials(settings.getBasicAuthId(), settings.getBasicAuthPassword()));
+                    new UsernamePasswordCredentials(config.getBasicAuthId(), config.getBasicAuthPassword()));
             httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
         }
 

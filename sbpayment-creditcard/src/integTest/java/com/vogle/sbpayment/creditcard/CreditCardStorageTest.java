@@ -1,7 +1,7 @@
 package com.vogle.sbpayment.creditcard;
 
-import static com.vogle.sbpayment.creditcard.DefaultCreditCardService.Feature.RETURN_CARD_BRAND;
-import static com.vogle.sbpayment.creditcard.DefaultCreditCardService.Feature.RETURN_CUSTOMER_INFO;
+import static com.vogle.sbpayment.creditcard.DefaultCreditCardPayment.Feature.RETURN_CARD_BRAND;
+import static com.vogle.sbpayment.creditcard.DefaultCreditCardPayment.Feature.RETURN_CUSTOMER_INFO;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Before;
@@ -21,17 +21,17 @@ import com.vogle.sbpayment.creditcard.responses.LegacyCardInfoSaveResponse;
 import com.vogle.sbpayment.creditcard.responses.LegacyCardInfoUpdateResponse;
 
 /**
- * Tests for {@link CreditCardService} to save credit information
+ * Tests for {@link CreditCardPayment} to save credit information
  *
  * @author Allan Im
  **/
 public class CreditCardStorageTest extends AbstractSettings {
 
-    private CreditCardService service;
+    private CreditCardPayment payment;
 
     @Before
     public void init() {
-        service = new DefaultCreditCardService(client(), RETURN_CARD_BRAND, RETURN_CUSTOMER_INFO);
+        payment = new DefaultCreditCardPayment(manager(), RETURN_CARD_BRAND, RETURN_CUSTOMER_INFO);
     }
 
     @Test
@@ -48,7 +48,7 @@ public class CreditCardStorageTest extends AbstractSettings {
                 .build();
 
         // when save
-        SpsResult<LegacyCardInfoSaveResponse> save = service.saveCard(customerCode, creditCard);
+        SpsResult<LegacyCardInfoSaveResponse> save = payment.saveCard(customerCode, creditCard);
         assertCommon(save);
         assertThat(save.getBody().isSuccess()).isTrue();
         assertThat(save.getBody().getSpsTransactionId()).isNotBlank();
@@ -57,12 +57,12 @@ public class CreditCardStorageTest extends AbstractSettings {
         assertThat(save.getBody().getSpsInfo()).isNotNull();
 
         // when save 2nd fail
-        SpsResult<LegacyCardInfoSaveResponse> save2 = service.saveCard(customerCode, creditCard);
+        SpsResult<LegacyCardInfoSaveResponse> save2 = payment.saveCard(customerCode, creditCard);
         assertCommon(save2);
         assertThat(save2.getBody().isSuccess()).isFalse();
 
         // lookup normal
-        SpsResult<CardInfoLookupResponse> lookup = service.lookupCard(customerCode);
+        SpsResult<CardInfoLookupResponse> lookup = payment.lookupCard(customerCode);
         assertCommon(lookup);
         assertThat(lookup.getBody().isSuccess()).isTrue();
         assertThat(lookup.getBody().getSpsTransactionId()).isNotBlank();
@@ -79,7 +79,7 @@ public class CreditCardStorageTest extends AbstractSettings {
         creditCard.setResrv1("更新１");
         creditCard.setResrv2("更新２");
         creditCard.setResrv3("更新３");
-        SpsResult<LegacyCardInfoUpdateResponse> update = service.updateCard(customerCode, creditCard);
+        SpsResult<LegacyCardInfoUpdateResponse> update = payment.updateCard(customerCode, creditCard);
         assertCommon(update);
         assertThat(update.getBody().getSpsTransactionId()).isNotBlank();
         assertThat(update.getBody().isSuccess()).isTrue();
@@ -88,7 +88,7 @@ public class CreditCardStorageTest extends AbstractSettings {
         assertThat(update.getBody().getSpsInfo()).isNotNull();
 
         // lookup LOWER4
-        SpsResult<CardInfoLookupResponse> lookupLower4 = service.lookupCard(customerCode, CardInfoResponseType.LOWER4);
+        SpsResult<CardInfoLookupResponse> lookupLower4 = payment.lookupCard(customerCode, CardInfoResponseType.LOWER4);
         assertCommon(lookupLower4);
         assertThat(lookupLower4.getBody().isSuccess()).isTrue();
         assertThat(lookupLower4.getBody().getSpsTransactionId()).isNotBlank();
@@ -103,7 +103,7 @@ public class CreditCardStorageTest extends AbstractSettings {
         assertThat(cardInfoLower4.getResrv3()).isEqualTo("更新３");
 
         // lookup All_MASK
-        SpsResult<CardInfoLookupResponse> lookupAllMask = service.lookupCard(customerCode, CardInfoResponseType.All_MASK);
+        SpsResult<CardInfoLookupResponse> lookupAllMask = payment.lookupCard(customerCode, CardInfoResponseType.All_MASK);
         assertCommon(lookupAllMask);
         assertThat(lookupAllMask.getBody().getSpsTransactionId()).isNotBlank();
         assertThat(lookupAllMask.getBody().isSuccess()).isTrue();
@@ -118,13 +118,13 @@ public class CreditCardStorageTest extends AbstractSettings {
         assertThat(cardInfoAllMask.mapCreditCardBrand()).isEqualTo(CreditCardBrand.VISA);
 
         // delete
-        SpsResult<CardInfoDeleteResponse> delete = service.deleteCard(customerCode);
+        SpsResult<CardInfoDeleteResponse> delete = payment.deleteCard(customerCode);
         assertCommon(delete);
         assertThat(delete.getBody().isSuccess()).isTrue();
         assertThat(delete.getBody().getSpsTransactionId()).isNotBlank();
 
         // lookup non-data fail
-        SpsResult<CardInfoLookupResponse> lookupNoData = service.lookupCard(customerCode);
+        SpsResult<CardInfoLookupResponse> lookupNoData = payment.lookupCard(customerCode);
         assertCommon(lookupNoData);
         assertThat(lookupNoData.getBody().isSuccess()).isFalse();
     }
@@ -150,13 +150,13 @@ public class CreditCardStorageTest extends AbstractSettings {
                 .build();
 
         // authorize
-        SpsResult<CardAuthorizeResponse> authorize = service.authorize(paymentInfo, creditCard);
+        SpsResult<CardAuthorizeResponse> authorize = payment.authorize(paymentInfo, creditCard);
         assertCommon(authorize);
         assertThat(authorize.getBody().isSuccess()).isTrue();
         assertThat(authorize.getBody().getSpsTransactionId()).isNotBlank();
 
         // lookup
-        SpsResult<CardInfoLookupResponse> lookup = service.lookupCard(customerCode, CardInfoResponseType.LOWER4);
+        SpsResult<CardInfoLookupResponse> lookup = payment.lookupCard(customerCode, CardInfoResponseType.LOWER4);
         assertCommon(lookup);
         assertThat(lookup.getBody().isSuccess()).isTrue();
         assertThat(lookup.getBody().getSpsTransactionId()).isNotBlank();
@@ -168,7 +168,7 @@ public class CreditCardStorageTest extends AbstractSettings {
         assertThat(cardInfoLower4.mapCreditCardBrand()).isEqualTo(CreditCardBrand.VISA);
 
         // delete
-        SpsResult<CardInfoDeleteResponse> delete = service.deleteCard(customerCode);
+        SpsResult<CardInfoDeleteResponse> delete = payment.deleteCard(customerCode);
         assertCommon(delete);
         assertThat(delete.getBody().isSuccess()).isTrue();
     }
@@ -186,7 +186,7 @@ public class CreditCardStorageTest extends AbstractSettings {
                 .build();
 
         // save
-        SpsResult<LegacyCardInfoSaveResponse> save = service.saveCard(customerCode, creditCard);
+        SpsResult<LegacyCardInfoSaveResponse> save = payment.saveCard(customerCode, creditCard);
         assertCommon(save);
         assertThat(save.getBody().isSuccess()).isTrue();
         assertThat(save.getBody().getSpsTransactionId()).isNotBlank();
@@ -208,13 +208,13 @@ public class CreditCardStorageTest extends AbstractSettings {
                 .build();
 
         // authorize
-        SpsResult<CardAuthorizeResponse> authorize = service.authorize(paymentInfo, savedCard);
+        SpsResult<CardAuthorizeResponse> authorize = payment.authorize(paymentInfo, savedCard);
         assertCommon(authorize);
         assertThat(authorize.getBody().isSuccess()).isTrue();
         assertThat(authorize.getBody().getSpsTransactionId()).isNotBlank();
 
         // lookup
-        SpsResult<CardInfoLookupResponse> lookup = service.lookupCard(customerCode, CardInfoResponseType.LOWER4);
+        SpsResult<CardInfoLookupResponse> lookup = payment.lookupCard(customerCode, CardInfoResponseType.LOWER4);
         assertCommon(lookup);
         assertThat(lookup.getBody().isSuccess()).isTrue();
         assertThat(lookup.getBody().getSpsTransactionId()).isNotBlank();
@@ -229,7 +229,7 @@ public class CreditCardStorageTest extends AbstractSettings {
         assertThat(cardInfoLower4.getResrv3()).isEqualTo("テスト３0");
 
         // delete
-        SpsResult<CardInfoDeleteResponse> delete = service.deleteCard(customerCode);
+        SpsResult<CardInfoDeleteResponse> delete = payment.deleteCard(customerCode);
         assertCommon(delete);
         assertThat(delete.getBody().isSuccess()).isTrue();
     }
@@ -237,7 +237,7 @@ public class CreditCardStorageTest extends AbstractSettings {
     @Test
     public void delete() {
         String customerCode = "TEST_CUSTOMER_CODE";
-        SpsResult<CardInfoDeleteResponse> delete = service.deleteCard(customerCode);
+        SpsResult<CardInfoDeleteResponse> delete = payment.deleteCard(customerCode);
         assertCommon(delete);
         assertThat(delete.getBody().isSuccess()).isFalse();
     }

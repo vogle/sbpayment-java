@@ -22,7 +22,7 @@ public class DefaultSpsClientTest {
         String serviceId = "Allan Im";
 
         // when
-        DefaultSpsClient client = client(merchantId, serviceId);
+        SpsClient client = client(merchantId, serviceId);
 
         // then
         assertThat(client).isNotNull();
@@ -34,7 +34,7 @@ public class DefaultSpsClientTest {
         // given
         String merchantId = "VOGLE Labs";
         String serviceId = "Allan Im";
-        DefaultSpsClient client = client(merchantId, serviceId);
+        SpsClient client = client(merchantId, serviceId);
 
         // when
         TestRequest request = client.newRequest(TestRequest.class);
@@ -53,7 +53,7 @@ public class DefaultSpsClientTest {
         // given
         String merchantId = "VOGLE Labs";
         String serviceId = "Allan Im";
-        DefaultSpsClient client = client(merchantId, serviceId);
+        SpsClient client = client(merchantId, serviceId);
 
         // when
         client.newRequest(SpsRequest.class);
@@ -66,7 +66,7 @@ public class DefaultSpsClientTest {
         // given
         String merchantId = "VOGLE Labs";
         String serviceId = "Allan Im";
-        DefaultSpsClient client = client(merchantId, serviceId);
+        SpsClient client = client(merchantId, serviceId);
 
         // when
         TestRequest request = client.newRequest(TestRequest.class);
@@ -77,22 +77,20 @@ public class DefaultSpsClientTest {
 
     }
 
-    private SpsClientSettings settings(String merchantId, String serviceId) {
-        return SpsClientSettings.builder()
+    private SpsConfig settings(String merchantId, String serviceId) {
+        return SpsConfig.builder()
                 .apiUrl("http://vogle.com")
                 .merchantId(merchantId)
                 .serviceId(serviceId)
                 .basicAuthId("BASIC_ID")
                 .basicAuthPassword("BASIC_PASS")
+                .hashKey("HASH_KEY")
                 .build();
     }
 
-    private SpsMapper mapper() {
-        return new DefaultSpsMapper("HASH_KEY");
-    }
-
-    private DefaultSpsClient client(String merchantId, String serviceId) {
-        return new DefaultSpsClient(settings(merchantId, serviceId), mapper());
+    private SpsClient client(String merchantId, String serviceId) {
+        SpsManager manager = new DefaultSpsManager(settings(merchantId, serviceId));
+        return manager.client();
     }
 
     public static class TestRequest implements SpsRequest<SpsResponse> {

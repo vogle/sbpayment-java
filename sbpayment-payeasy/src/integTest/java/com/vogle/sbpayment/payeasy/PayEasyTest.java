@@ -8,7 +8,9 @@ import java.util.Base64;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.vogle.sbpayment.client.SpsClientSettings;
+import com.vogle.sbpayment.client.DefaultSpsManager;
+import com.vogle.sbpayment.client.SpsConfig;
+import com.vogle.sbpayment.client.SpsManager;
 import com.vogle.sbpayment.client.SpsMapper;
 import com.vogle.sbpayment.client.SpsResult;
 import com.vogle.sbpayment.client.convert.SpsDataConverter;
@@ -22,22 +24,24 @@ import com.vogle.sbpayment.payeasy.receivers.PayEasyExpiredCancelReceived;
 import com.vogle.sbpayment.payeasy.responses.PayEasyPaymentResponse;
 
 /**
- * Tests for {@link DefaultPayEasyService}
+ * Tests for {@link DefaultPayEasyPayment}
  *
  * @author Nes Im
  **/
 public class PayEasyTest extends AbstractSettings {
 
     private static int BILL_LIMIT_DAY = 5;
-    private PayEasyService service;
-    private SpsClientSettings settings;
+    private PayEasyPayment payment;
+    private SpsConfig config;
+    private SpsManager manager;
     private SpsMapper mapper;
 
     @Before
     public void init() throws IOException {
-        settings = getSettings();
-        mapper = mapper();
-        service = new DefaultPayEasyService(client(), receiver(), "株式会社", "カブシキガイシャ");
+        config = getConfig();
+        manager = new DefaultSpsManager(config);
+        mapper = manager.mapper();
+        payment = new DefaultPayEasyPayment(manager, "株式会社", "カブシキガイシャ");
     }
 
     @Test
@@ -46,7 +50,7 @@ public class PayEasyTest extends AbstractSettings {
         // when
         PaymentInfo paymentInfo = getDefaultPaymentInfo();
         PayEasy payEasy = getPayEasy();
-        SpsResult<PayEasyPaymentResponse> payment = service.payment(paymentInfo, payEasy);
+        SpsResult<PayEasyPaymentResponse> payment = this.payment.payment(paymentInfo, payEasy);
 
         // then
         assertThat(payment).isNotNull();
@@ -71,8 +75,8 @@ public class PayEasyTest extends AbstractSettings {
         // given test data
         PayEasyDepositReceived temp = new PayEasyDepositReceived();
         temp.setId("NT01-00103-703");
-        temp.setMerchantId(settings.getMerchantId());
-        temp.setServiceId(settings.getServiceId());
+        temp.setMerchantId(config.getMerchantId());
+        temp.setServiceId(config.getServiceId());
         temp.setSpsTransactionId("xxxxxxxxxxxxxxxxxxxxx");
         temp.setTrackingId("1234567890");
         temp.setRecDatetime("20171010");
@@ -91,7 +95,7 @@ public class PayEasyTest extends AbstractSettings {
         String xml = mapper.objectToXml(temp);
 
         // when
-        PayEasyDepositReceived received = service.receiveDeposit(xml);
+        PayEasyDepositReceived received = payment.receiveDeposit(xml);
 
         // then
         assertThat(received.getId()).isEqualTo(temp.getId());
@@ -110,7 +114,7 @@ public class PayEasyTest extends AbstractSettings {
 
     @Test
     public void successDepositResponse() {
-        String response = service.successDeposit();
+        String response = payment.successDeposit();
         assertThat(response).isNotEmpty()
                 .contains("<?xml version=\"1.0\" encoding=\"" + mapper.getCharset() + "\"?>")
                 .contains("<sps-api-response id=\"NT01-00103-703\">")
@@ -120,7 +124,7 @@ public class PayEasyTest extends AbstractSettings {
     @Test
     public void failDepositResponse() throws Exception {
         String errMsg = "ERROR Message";
-        String response = service.failDeposit(errMsg);
+        String response = payment.failDeposit(errMsg);
         assertThat(response).isNotEmpty()
                 .contains("<?xml version=\"1.0\" encoding=\"" + mapper.getCharset() + "\"?>")
                 .contains("<sps-api-response id=\"NT01-00103-703\">")
@@ -134,8 +138,8 @@ public class PayEasyTest extends AbstractSettings {
         // test data
         PayEasyExpiredCancelReceived temp = new PayEasyExpiredCancelReceived();
         temp.setId("NT01-00104-703");
-        temp.setMerchantId(settings.getMerchantId());
-        temp.setServiceId(settings.getServiceId());
+        temp.setMerchantId(config.getMerchantId());
+        temp.setServiceId(config.getServiceId());
         temp.setSpsTransactionId("xxxxxxxxxxxxxxxxxxxxx");
         temp.setTrackingId("1234567890");
         temp.setRecDatetime("20171010");
@@ -146,7 +150,7 @@ public class PayEasyTest extends AbstractSettings {
         // request data
         String xml = mapper.objectToXml(temp);
 
-        PayEasyExpiredCancelReceived request = service.receiveExpiredCancel(xml);
+        PayEasyExpiredCancelReceived request = payment.receiveExpiredCancel(xml);
 
         assertThat(request.getId()).isEqualTo(temp.getId());
         assertThat(request.getMerchantId()).isEqualTo(temp.getMerchantId());
@@ -161,7 +165,7 @@ public class PayEasyTest extends AbstractSettings {
 
     @Test
     public void successExpiredResponse() throws Exception {
-        String response = service.successExpiredCancel();
+        String response = payment.successExpiredCancel();
         assertThat(response).isNotEmpty()
                 .contains("<?xml version=\"1.0\" encoding=\"" + mapper.getCharset() + "\"?>")
                 .contains("<sps-api-response id=\"NT01-00104-703\">")
@@ -171,7 +175,7 @@ public class PayEasyTest extends AbstractSettings {
     @Test
     public void failExpiredResponse() throws Exception {
         String errMsg = "エラー発生";
-        String response = service.failExpiredCancel(errMsg);
+        String response = payment.failExpiredCancel(errMsg);
         assertThat(response).isNotEmpty()
                 .contains("<?xml version=\"1.0\" encoding=\"" + mapper.getCharset() + "\"?>")
                 .contains("<sps-api-response id=\"NT01-00104-703\">")

@@ -25,7 +25,7 @@ import com.vogle.sbpayment.creditcard.responses.LegacyCardInfoUpdateResponse;
  *
  * @author Allan Im
  **/
-public interface CreditCardService {
+public interface CreditCardPayment {
 
     /**
      * ST01-00131-101: Authorize with token<br/>

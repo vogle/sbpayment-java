@@ -23,13 +23,12 @@ public class DefaultSpsReceiver implements SpsReceiver {
     /**
      * Create Receiver
      *
-     * @param merchantId from Softbank Payment.
-     * @param serviceId  from Softbank Payment.
-     * @param mapper     The {@link SpsMapper}
+     * @param config The Softbank Payment configuration
+     * @param mapper The {@link SpsMapper}
      */
-    public DefaultSpsReceiver(String merchantId, String serviceId, SpsMapper mapper) {
-        this.merchantId = merchantId;
-        this.serviceId = serviceId;
+    public DefaultSpsReceiver(SpsConfig config, SpsMapper mapper) {
+        this.merchantId = config.getMerchantId();
+        this.serviceId = config.getServiceId();
         this.mapper = mapper;
     }
 

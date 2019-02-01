@@ -6,21 +6,17 @@ import java.util.Date;
 import java.util.Properties;
 import java.util.Random;
 
-import com.vogle.sbpayment.client.DefaultSpsClient;
-import com.vogle.sbpayment.client.DefaultSpsMapper;
-import com.vogle.sbpayment.client.SpsClient;
-import com.vogle.sbpayment.client.SpsClientSettings;
+import com.vogle.sbpayment.client.DefaultSpsManager;
+import com.vogle.sbpayment.client.SpsConfig;
+import com.vogle.sbpayment.client.SpsManager;
 
 /**
- * Test settings
+ * Test config
  *
  * @author Allan Im
  **/
 abstract class AbstractSettings {
-    private SpsClientSettings settings;
-    private String hashKey;
-    private String desKey;
-    private String desInitKey;
+    private SpsConfig config;
 
     AbstractSettings() {
         Properties p = new Properties();
@@ -29,21 +25,21 @@ abstract class AbstractSettings {
         } catch (IOException ignored) {
         }
 
-        settings = SpsClientSettings.builder()
+        config = SpsConfig.builder()
                 .apiUrl(p.getProperty("it1.apiUrl"))
                 .merchantId(p.getProperty("it1.merchantId"))
                 .serviceId(p.getProperty("it1.serviceId"))
                 .basicAuthId(p.getProperty("it1.basicAuthId"))
                 .basicAuthPassword(p.getProperty("it1.basicAuthPassword"))
+                .hashKey(p.getProperty("it1.hashKey"))
+                .desKey(p.getProperty("it1.desKey"))
+                .desInitKey(p.getProperty("it1.desInitKey"))
                 .build();
 
-        hashKey = p.getProperty("it1.hashKey");
-        desKey = p.getProperty("it1.desKey");
-        desInitKey = p.getProperty("it1.desInitKey");
     }
 
-    SpsClient client() {
-        return new DefaultSpsClient(settings, new DefaultSpsMapper(hashKey, desKey, desInitKey));
+    SpsManager manager() {
+        return new DefaultSpsManager(config);
     }
 
     String orderNo() {

@@ -1,6 +1,7 @@
 package com.vogle.sbpayment.creditcard;
 
 import com.vogle.sbpayment.client.SpsClient;
+import com.vogle.sbpayment.client.SpsManager;
 import com.vogle.sbpayment.client.SpsResult;
 import com.vogle.sbpayment.client.SpsValidator;
 import com.vogle.sbpayment.client.params.PaymentInfo;
@@ -49,18 +50,18 @@ import com.vogle.sbpayment.creditcard.responses.LegacyCardInfoSaveResponse;
 import com.vogle.sbpayment.creditcard.responses.LegacyCardInfoUpdateResponse;
 
 /**
- * implements for {@link CreditCardService}
+ * implements for {@link CreditCardPayment}
  *
  * @author Allan Im
  */
-public class DefaultCreditCardService implements CreditCardService {
+public class DefaultCreditCardPayment implements CreditCardPayment {
 
     private final SpsClient client;
     private String returnCustomerInfo = "0";
     private String returnCardBrand = "0";
 
-    public DefaultCreditCardService(SpsClient client, Feature... enableFeatures) {
-        this.client = client;
+    public DefaultCreditCardPayment(SpsManager manager, Feature... enableFeatures) {
+        this.client = manager.client();
 
         for (Feature feature : enableFeatures) {
             if (Feature.RETURN_CUSTOMER_INFO.equals(feature)) {
@@ -69,6 +70,23 @@ public class DefaultCreditCardService implements CreditCardService {
                 this.returnCardBrand = "1";
             }
         }
+    }
+
+    /**
+     * Credit-Card payment Features
+     */
+    public enum Feature {
+        /**
+         * When sending customer information, return it from Softbank payment.<br/>
+         * 顧客コードを送るとき、ソフトバングペイメントから顧客情報を返却する。
+         */
+        RETURN_CUSTOMER_INFO,
+
+        /**
+         * When sending credit-card information, return credit-card brand.<br/>
+         * カード情報を送るとき、カードブランド情報を返却する。
+         */
+        RETURN_CARD_BRAND
     }
 
     private CardAuthorizeRequest newCardAuthorizeRequest(PaymentInfo paymentInfo, DealingsType dealingsType,
@@ -417,20 +435,6 @@ public class DefaultCreditCardService implements CreditCardService {
         request.setPayOptions(options);
 
         return client.execute(request);
-    }
-
-    public enum Feature {
-        /**
-         * When sending customer information, return it from Softbank payment.<br/>
-         * 顧客コードを送るとき、ソフトバングペイメントから顧客情報を返却する。
-         */
-        RETURN_CUSTOMER_INFO,
-
-        /**
-         * When sending credit-card information, return credit-card brand.<br/>
-         * カード情報を送るとき、カードブランド情報を返却する。
-         */
-        RETURN_CARD_BRAND
     }
 
 }

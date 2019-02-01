@@ -6,6 +6,7 @@ import static com.vogle.sbpayment.client.requests.RequestMapper.mapItem;
 
 import com.vogle.sbpayment.client.InvalidAccessException;
 import com.vogle.sbpayment.client.SpsClient;
+import com.vogle.sbpayment.client.SpsManager;
 import com.vogle.sbpayment.client.SpsReceiver;
 import com.vogle.sbpayment.client.SpsResult;
 import com.vogle.sbpayment.client.SpsValidator;
@@ -20,11 +21,11 @@ import com.vogle.sbpayment.payeasy.requests.PayEasyPaymentRequest;
 import com.vogle.sbpayment.payeasy.responses.PayEasyPaymentResponse;
 
 /**
- * Implements for {@link PayEasyService}
+ * Implements for {@link PayEasyPayment}
  *
  * @author Allan Im
  **/
-public class DefaultPayEasyService implements PayEasyService {
+public class DefaultPayEasyPayment implements PayEasyPayment {
 
     private final String depositId = "NT01-00103-703";
     private final String expiredId = "NT01-00104-703";
@@ -41,29 +42,27 @@ public class DefaultPayEasyService implements PayEasyService {
     /**
      * Make LinkType Pay-Easy
      *
-     * @param client   The SpsClient
-     * @param receiver The SpsReceiver
-     * @param payCsv   金融機関コード、情報リンク方式の場合のみ必須です。ただし、電算システムを利用の場合は不要です。
+     * @param manager The SpsManager
+     * @param payCsv  金融機関コード、情報リンク方式の場合のみ必須です。ただし、電算システムを利用の場合は不要です。
      */
-    public DefaultPayEasyService(SpsClient client, SpsReceiver receiver, String payCsv) {
+    public DefaultPayEasyPayment(SpsManager manager, String payCsv) {
         this.type = PayEasyType.LINK;
-        this.client = client;
-        this.receiver = receiver;
+        this.client = manager.client();
+        this.receiver = manager.receiver();
         this.payCsv = payCsv;
     }
 
     /**
      * Make OnlineType Pay-Easy
      *
-     * @param client       The SpsClient
-     * @param receiver     The SpsReceiver
+     * @param manager      The SpsManager
      * @param billInfo     請求内容漢字、ATM 等に表示されます。（全角）
      * @param billInfoKana 請求内容カナ、ATM 等に表示されます。（全角英数カナ）
      */
-    public DefaultPayEasyService(SpsClient client, SpsReceiver receiver, String billInfo, String billInfoKana) {
+    public DefaultPayEasyPayment(SpsManager manager, String billInfo, String billInfoKana) {
         this.type = PayEasyType.ONLINE;
-        this.client = client;
-        this.receiver = receiver;
+        this.client = manager.client();
+        this.receiver = manager.receiver();
         this.billInfo = billInfo;
         this.billInfoKana = billInfoKana;
     }

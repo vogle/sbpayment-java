@@ -14,7 +14,7 @@ import com.vogle.sbpayment.payeasy.responses.PayEasyPaymentResponse;
  *
  * @author Allan Im
  **/
-public interface PayEasyService {
+public interface PayEasyPayment {
 
     /**
      * ST01-00101-703: Payment by the PayEasy<br/>

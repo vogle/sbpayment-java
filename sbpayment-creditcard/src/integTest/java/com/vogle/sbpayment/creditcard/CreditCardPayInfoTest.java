@@ -1,7 +1,7 @@
 package com.vogle.sbpayment.creditcard;
 
-import static com.vogle.sbpayment.creditcard.DefaultCreditCardService.Feature.RETURN_CARD_BRAND;
-import static com.vogle.sbpayment.creditcard.DefaultCreditCardService.Feature.RETURN_CUSTOMER_INFO;
+import static com.vogle.sbpayment.creditcard.DefaultCreditCardPayment.Feature.RETURN_CARD_BRAND;
+import static com.vogle.sbpayment.creditcard.DefaultCreditCardPayment.Feature.RETURN_CUSTOMER_INFO;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.ArrayList;
@@ -23,17 +23,17 @@ import com.vogle.sbpayment.creditcard.responses.CommitStatus;
 import com.vogle.sbpayment.creditcard.responses.PaymentStatus;
 
 /**
- * Tests for {@link CreditCardService} to get payment info
+ * Tests for {@link CreditCardPayment} to get payment info
  *
  * @author Allan Im
  **/
 public class CreditCardPayInfoTest extends AbstractSettings {
 
-    private CreditCardService service;
+    private CreditCardPayment payment;
 
     @Before
     public void init() {
-        service = new DefaultCreditCardService(client(), RETURN_CARD_BRAND, RETURN_CUSTOMER_INFO);
+        payment = new DefaultCreditCardPayment(manager(), RETURN_CARD_BRAND, RETURN_CUSTOMER_INFO);
     }
 
     @Test
@@ -166,14 +166,14 @@ public class CreditCardPayInfoTest extends AbstractSettings {
                                                       CardInfoResponseType responseType) {
 
         // authorize
-        SpsResult<CardAuthorizeResponse> authorize = service.authorize(paymentInfo, creditCard);
+        SpsResult<CardAuthorizeResponse> authorize = payment.authorize(paymentInfo, creditCard);
         String transactionId = authorize.getBody().getTrackingId();
 
         // commit
-        service.commit(transactionId);
+        payment.commit(transactionId);
 
         // lookup
-        SpsResult<CardTranLookupResponse> lookup = service.lookup(transactionId, responseType);
+        SpsResult<CardTranLookupResponse> lookup = payment.lookup(transactionId, responseType);
 
         assertThat(lookup).isNotNull();
         assertThat(lookup.getStatus()).isEqualTo(200);
