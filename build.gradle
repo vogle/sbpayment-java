@@ -1,26 +1,47 @@
 plugins {
     id "io.spring.dependency-management" version "1.0.6.RELEASE" apply false
     id 'io.franzbecker.gradle-lombok' version '1.14' apply false
+    id "com.diffplug.gradle.spotless" version "3.17.0" apply false
 }
+apply from: "$rootDir/gradle/variables.gradle"
 
 group "com.vogle.sbpayment"
 version "0.0.1-SNAPSHOT"
+description 'Softbank Payment for JAVA'
 
 ext {
     gradleDir = "${rootProject.rootDir}/gradle"
+
+    javaprojects = subprojects.findAll { new File(it.projectDir, 'src/main/java').directory }
+    releasedprojects = javaprojects.findAll { !it.name.contains('sample') }
 }
 
-subprojects {
+// Configuration to apply to all the projects
+allprojects {
+    // Add the clean task to all the project
+    apply plugin: 'base'
+    // Generates files for Intellij IDEA
+    apply plugin: 'idea'
+    // Generates files for Eclipse
+    apply plugin: 'eclipse'
 
-    // Sets JAVA
-    apply plugin: 'java-library'
-    sourceCompatibility = 1.8
+    // Generate reports containing useful information about the build (tasks, dependencies, properties)
+    apply plugin: 'project-report'
 
+    // Set the maven repository that looks for plugin dependencies.
     repositories {
         jcenter()
     }
+}
 
-    // Sets dependency manager
+
+configure(javaprojects) {
+    /** Start java library **/
+    // Adds Java compilation along with testing and bundling capabilities
+    apply plugin: 'java-library'
+    sourceCompatibility = 1.8
+
+    // Provides spring dependency management functionality
     apply plugin: 'io.spring.dependency-management'
     dependencyManagement {
         dependencies {
@@ -47,25 +68,107 @@ subprojects {
     // Sets common dependencies
     dependencies {
         // log
-        compile('ch.qos.logback:logback-classic')
+        api('ch.qos.logback:logback-classic')
 
         // test modules
-        testCompile('junit:junit')
-        testCompile('org.assertj:assertj-core')
-        testCompile('org.mockito:mockito-core')
-        testCompile('org.powermock:powermock-api-mockito2')
+        testImplementation('junit:junit')
+        testImplementation('org.assertj:assertj-core')
+        testImplementation('org.mockito:mockito-core')
+        testImplementation('org.powermock:powermock-api-mockito2')
     }
 
-
+    /** Start lombok **/
     // Sets lombok
     apply plugin: 'io.franzbecker.gradle-lombok'
     lombok {
         version = '1.18.4'
     }
 
-    // Sets JavaDoc options
+    /** Start jacoco **/
+    // Provides code coverage metrics for Java code
+    apply plugin: 'jacoco'
+    jacoco {
+        toolVersion = '0.8.3'
+    }
+    jacocoTestReport {
+        reports {
+            html.enabled = true
+            xml.enabled = false
+            csv.enabled = false
+        }
+    }
+    jacocoTestCoverageVerification {
+        violationRules {
+            rule {
+                limit {
+                    minimum = 0.5
+                }
+            }
+
+            rule {
+                enabled = false
+                element = 'CLASS'
+                includes = ['com.vogle.sbpayment*']
+
+                limit {
+                    counter = 'LINE'
+                    value = 'TOTALCOUNT'
+                    maximum = 0.3
+                }
+            }
+        }
+    }
+    check.dependsOn jacocoTestReport
+
+    /** Start checkstyle **/
+    // Performs quality checks on Java source files and generates reports
+    apply plugin: 'checkstyle'
+    checkstyle {
+        config = rootProject.resources.text.fromFile('config/vogle-checkstyle.xml')
+    }
+    // Configures the checkstyle tasks
+    tasks.withType(Checkstyle) {
+        reports {
+            xml.enabled = false
+            html.enabled = true
+        }
+    }
+
+    /** Start checkstyle **/
+    // Also performs quality checks on Java source files and generates reports
+    apply plugin: 'pmd'
+    pmd {
+        toolVersion = '6.11.0'
+        ruleSetConfig = rootProject.resources.text.fromFile('config/vogle-ruleset.xml')
+        ignoreFailures = true
+        rulePriority = 5
+        // Don't use the default gradle rule sets
+        ruleSets = []
+    }
+
+    /** Start Spotless **/
+    // Spotless is a general-purpose formatting plugin
+    apply plugin: "com.diffplug.gradle.spotless"
+
+    spotless {
+
+        java {
+            // Format code using google java format
+            googleJavaFormat()
+
+            // Import order
+//            importOrderFile "$rootDir/spotless.importorder"
+
+            // Java Source Header File
+//            licenseHeaderFile "$rootDir/spotless.license.java"
+        }
+    }
+
+    // Documentation setup
     javadoc {
         source = sourceSets.main.allJava
+        title = project.description
+        failOnError = false
 
         options.locale = "en"
         options.charSet = "UTF-8"
@@ -80,6 +183,49 @@ subprojects {
         options.stylesheetFile = new File(projectDir, "config/javadoc-stylesheet.css")
         options.addStringOption('Xdoclint:none', '-quiet')
 
+        options.links("http://docs.oracle.com/javase/8/docs/api/")
+
+    }
+
+    // Artifact setup
+    jar {
+        manifest {
+            attributes["provider"] = "gradle"
+            manifest.attributes["Created-By"] = "${System.getProperty('java.version')} " +
+                    "(${System.getProperty('java.specification.vendor')})"
+
+            manifest.attributes["Implementation-Title"] = project.name
+            manifest.attributes["Implementation-Version"] = project.version
+            manifest.attributes["Implementation-Vendor"] = 'vogle labs'
+            manifest.attributes["Implementation-Vendor-Id"] = 'com.vogle'
+            manifest.attributes["Implementation-Vendor-Id"] = 'http://vogle.com'
+
+            manifest.attributes["Specification-Title"] = project.name
+            manifest.attributes["Specification-Version"] = project.version
+            manifest.attributes["Specification-Vendor"] = 'vogle labs'
+
+        }
+    }
+
+    // Archive task used to create a sources jar
+    task sourcesJar(type: Jar, dependsOn: classes) {
+        group = 'build'
+        description = 'Builds a source jar artifact suitable for deployment.'
+        classifier = 'sources'
+
+        from sourceSets.main.allSource
+    }
+
+    // Archive task used to create a javadoc jar
+    task javadocJar(type: Jar, dependsOn: javadoc) {
+        description = 'Builds a javadoc jar artifact suitable for deployment.'
+        classifier = 'javadoc'
+
+        from javadoc.outputs.files
+    }
+
+    artifacts {
+        archives sourcesJar, javadocJar
     }
 
 }

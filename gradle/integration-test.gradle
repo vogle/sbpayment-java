@@ -16,13 +16,9 @@ sourceSets {
 }
 
 dependencies {
-    integTestCompile sourceSets.main.output
-    integTestCompile sourceSets.test.output
-    integTestCompile configurations.compile
-    integTestCompile configurations.testCompile
-    integTestRuntime configurations.runtime
+    integTestImplementation sourceSets.main.output
+    integTestImplementation sourceSets.test.output
     integTestRuntime configurations.testRuntime
-    integTestImplementation configurations.implementation
     integTestImplementation configurations.testImplementation
 }
 
@@ -39,4 +35,4 @@ task integrationTest(type: Test, group: "verification") {
 }
 
 // Run integration tests during the 'check' lifecycle (which already includes 'test')
-check.dependsOn integrationTest
+//check.dependsOn integrationTest

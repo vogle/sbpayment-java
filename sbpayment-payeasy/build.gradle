@@ -1,8 +1,8 @@
-description = 'sbpayment - payeasy'
+description 'sbpayment - payeasy'
 
 apply from: "$gradleDir/integration-test.gradle"
 
 dependencies {
-    compile project(':sbpayment-client')
+    api project(':sbpayment-client')
 }
 

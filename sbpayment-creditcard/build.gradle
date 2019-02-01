@@ -1,8 +1,8 @@
-description = 'sbpayment - creditcard'
+description 'sbpayment - creditcard'
 
 apply from: "$gradleDir/integration-test.gradle"
 
 dependencies {
-    compile project(':sbpayment-client')
+    api project(':sbpayment-client')
 }
 

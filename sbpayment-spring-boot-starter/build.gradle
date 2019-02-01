@@ -1,15 +1,14 @@
 description = 'sbpayment - spring'
 
 dependencies {
-    compileOnly project(':sbpayment-creditcard')
-    compileOnly project(':sbpayment-payeasy')
+    implementation project(':sbpayment-creditcard')
+    implementation project(':sbpayment-payeasy')
 
     // spring boot
-    compile 'org.springframework.boot:spring-boot-autoconfigure'
+    implementation 'org.springframework.boot:spring-boot-autoconfigure'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
-    testCompile 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-    testCompileOnly configurations.compileOnly
     runtimeOnly('org.glassfish:javax.el')
 }
 
