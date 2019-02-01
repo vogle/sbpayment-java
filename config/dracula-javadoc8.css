@@ -5,7 +5,7 @@ Overall document style
 @import url(https://fonts.googleapis.com/css?family=Open+Sans|Roboto);
 
 body {
-    background-color: #282a36;
+    background-color: #3C4556;
     color: #f8f8f2;
     font-family: 'Open Sans', Arial, Helvetica, sans-serif;
     font-size: 14px;
@@ -148,7 +148,6 @@ Navigation bar styles
 }
 
 .topNav {
-    background-color: #44475a;
     color: #f8f8f2;
     float: left;
     width: 100%;
