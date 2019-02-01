@@ -29,8 +29,6 @@ public abstract class CommonElements implements SpsResponse {
     @JacksonXmlProperty(localName = "res_date")
     private String date;
 
-    public boolean isSuccess() {
-        return "OK".equalsIgnoreCase(this.result);
-    }
-
+    @Override
+    abstract public String getDescription();
 }

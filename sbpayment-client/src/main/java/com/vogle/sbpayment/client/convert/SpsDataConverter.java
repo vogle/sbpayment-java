@@ -9,13 +9,15 @@ import java.util.Base64;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.http.util.Asserts;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.vogle.sbpayment.client.ValidationHelper;
 
 /**
  * Data Converter by Softbank payment rules
@@ -28,9 +30,9 @@ public class SpsDataConverter {
     private static final String PREFIX_SET = "set";
     private static final String ITERATOR = "iterator";
 
-    private static final ObjectMapper objectMapper = new ObjectMapper();
+    private static final ObjectMapper MAPPER = new ObjectMapper();
 
-    private static Logger logger = LoggerFactory.getLogger(SpsDataConverter.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SpsDataConverter.class);
 
     /**
      * If the filed has {@link MultiByteString}, It is doing Base64Encoding<br/>
@@ -57,8 +59,8 @@ public class SpsDataConverter {
     }
 
     private static <T> void base64Encode(String charsetName, boolean enableCipher, T source) {
-        Asserts.notBlank(charsetName, "charsetName");
-        Asserts.notNull(source, "source");
+        ValidationHelper.assertsNotEmpty("charsetName", charsetName);
+        ValidationHelper.assertsNotNull("source", source);
 
         // for supper class
         for (Class<?> currentClass : getClassTree(source.getClass())) {
@@ -105,8 +107,8 @@ public class SpsDataConverter {
      * @param <T>         String or Iterable object
      */
     public static <T> void encrypt(String desKey, String initKey, String charsetName, T source) {
-        Asserts.notBlank(charsetName, "charsetName");
-        Asserts.notNull(source, "source");
+        ValidationHelper.assertsNotEmpty("charsetName", charsetName);
+        ValidationHelper.assertsNotNull("source", source);
 
         // for supper class
         for (Class<?> currentClass : getClassTree(source.getClass())) {
@@ -143,7 +145,7 @@ public class SpsDataConverter {
         try {
             return Base64.getEncoder().encodeToString(value.getBytes(charsetName));
         } catch (UnsupportedEncodingException ex) {
-            logger.error("Do not encode because Unsupported encoding '{}' ", charsetName);
+            LOGGER.error("Do not encode because Unsupported encoding '{}' ", charsetName);
             throw new InvalidRequestException(ex);
         }
     }
@@ -158,8 +160,8 @@ public class SpsDataConverter {
      * @param <T>         String or Iterable object
      */
     public static <T> void decrypt(String desKey, String initKey, String charsetName, T source) {
-        Asserts.notBlank(charsetName, "charsetName");
-        Asserts.notNull(source, "source");
+        ValidationHelper.assertsNotEmpty("charsetName", charsetName);
+        ValidationHelper.assertsNotNull("source", source);
 
         // for supper class
         for (Class<?> currentClass : getClassTree(source.getClass())) {
@@ -200,7 +202,7 @@ public class SpsDataConverter {
      * @param source check object source
      */
     public static <T> void enableEncryptedFlg(T source) {
-        Asserts.notNull(source, "source");
+        ValidationHelper.assertsNotNull("source", source);
 
         // for supper class
         for (Class<?> currentClass : getClassTree(source.getClass())) {
@@ -226,18 +228,18 @@ public class SpsDataConverter {
      * @param charsetName Sbpayment charset
      */
     public static String makeSpsHashCode(Object value, String hashKey, String charsetName) {
-        Asserts.notNull(value, "value");
-        Asserts.notBlank(hashKey, "hashKey");
-        Asserts.notBlank(charsetName, "charsetName");
+        ValidationHelper.assertsNotNull("value", value);
+        ValidationHelper.assertsNotEmpty("hashKey", hashKey);
+        ValidationHelper.assertsNotEmpty("charsetName", charsetName);
 
         try {
-            byte[] json = objectMapper.writeValueAsBytes(value);
+            byte[] json = MAPPER.writeValueAsBytes(value);
 
             // hash code source
             StringBuilder spsHashCodeSource = new StringBuilder();
 
             // data
-            JsonNode jsonNode = objectMapper.readTree(json);
+            JsonNode jsonNode = MAPPER.readTree(json);
             Iterator<String> nodeNames = jsonNode.fieldNames();
             while (nodeNames.hasNext()) {
                 String filed = nodeNames.next();
@@ -275,18 +277,18 @@ public class SpsDataConverter {
     }
 
     private static String getterName(String fieldName) {
-        return PREFIX_GET + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
+        return PREFIX_GET + fieldName.substring(0, 1).toUpperCase(Locale.ENGLISH) + fieldName.substring(1);
     }
 
     private static String setterName(String fieldName) {
-        return PREFIX_SET + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
+        return PREFIX_SET + fieldName.substring(0, 1).toUpperCase(Locale.ENGLISH) + fieldName.substring(1);
     }
 
     private static Object getObjectFrom(Object source, Field field) {
         try {
             return source.getClass().getMethod(getterName(field.getName())).invoke(source);
         } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException ex) {
-            logger.error("Must check a getter for field: '{}'", field.getName());
+            LOGGER.error("Must check a getter for field: '{}'", field.getName());
             throw new InvalidRequestException(ex);
         }
     }
@@ -294,13 +296,10 @@ public class SpsDataConverter {
     private static Iterator getIteratorFrom(Object source, Field field) {
         try {
             Iterable iterable = (Iterable) source.getClass().getMethod(getterName(field.getName())).invoke(source);
-            if (iterable != null) {
-                return (Iterator) field.getType().getMethod(ITERATOR).invoke(iterable);
-            } else {
-                return Collections.emptyIterator();
-            }
+            return (iterable == null) ? Collections.emptyIterator()
+                    : (Iterator) field.getType().getMethod(ITERATOR).invoke(iterable);
         } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException ex) {
-            logger.error("Is not iterator field: '{}'", field.getName());
+            LOGGER.error("Is not iterator field: '{}'", field.getName());
             throw new InvalidRequestException(ex);
         }
     }
@@ -309,7 +308,7 @@ public class SpsDataConverter {
         try {
             return (String) source.getClass().getMethod(getterName(field.getName())).invoke(source);
         } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException ex) {
-            logger.error("Must check a getter for field: '{}', And it have to return that is the String type.",
+            LOGGER.error("Must check a getter for field: '{}', And it have to return that is the String type.",
                     field.getName());
             throw new InvalidRequestException(ex);
         }
@@ -320,7 +319,7 @@ public class SpsDataConverter {
             source.getClass().getMethod(setterName(field.getName()), String.class)
                     .invoke(source, value);
         } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException ex) {
-            logger.error("Must check a setter for field: '{}', And it have to parameter that is the String type. ",
+            LOGGER.error("Must check a setter for field: '{}', And it have to parameter that is the String type. ",
                     field.getName());
             throw new InvalidRequestException(ex);
         }

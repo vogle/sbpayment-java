@@ -52,7 +52,7 @@ public class CreditCardTransactionFlowTest extends AbstractSettings {
 
         // then
         assertLookup(lookup);
-        return lookup.getBody().getPayMethodInfo().mapPaymentStatus();
+        return lookup.getBody().getPayMethodInfo().getPaymentStatusType();
     }
 
     private void cancel(String transactionId) {
@@ -224,7 +224,7 @@ public class CreditCardTransactionFlowTest extends AbstractSettings {
 
         assertThat(authorize.getBody().getTrackingId()).isNotBlank();
         assertThat(authorize.getBody().getPayMethodInfo()).isNotNull();
-        assertThat(authorize.getBody().getPayMethodInfo().mapCreditCardBrand())
+        assertThat(authorize.getBody().getPayMethodInfo().getCreditCardBrand())
                 .isEqualTo(CreditCardBrand.VISA);
     }
 
@@ -234,11 +234,11 @@ public class CreditCardTransactionFlowTest extends AbstractSettings {
 
     private void assertLookup(SpsResult<CardTranLookupResponse> lookup) {
         assertCommon(lookup);
-        assertThat(lookup.getBody().mapTransactionStatus()).isEqualTo(TransactionStatus.NORMAL);
+        assertThat(lookup.getBody().getTransactionStatus()).isEqualTo(TransactionStatus.NORMAL);
 
         CardTranLookupMethodInfo cardInfo = lookup.getBody().getPayMethodInfo();
-        assertThat(cardInfo.mapCreditCardBrand()).isEqualTo(CreditCardBrand.VISA);
-        assertThat(cardInfo.mapCommitStatus()).isEqualTo(CommitStatus.UNPROCESSED);
+        assertThat(cardInfo.getCreditCardBrand()).isEqualTo(CreditCardBrand.VISA);
+        assertThat(cardInfo.getCommitStatusType()).isEqualTo(CommitStatus.UNPROCESSED);
     }
 
     private void assertCommon(SpsResult<?> result) {

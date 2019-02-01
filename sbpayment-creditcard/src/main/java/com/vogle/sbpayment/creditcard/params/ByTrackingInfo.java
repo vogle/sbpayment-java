@@ -92,10 +92,16 @@ public class ByTrackingInfo {
         return ParamUtils.convertBool(savingCreditCard);
     }
 
+    /**
+     * Returns True if has token & token key
+     */
     public boolean hasToken() {
         return token != null && !token.isEmpty() && tokenKey != null && !tokenKey.isEmpty();
     }
 
+    /**
+     * Returns True if has DealingsType
+     */
     public boolean hasOptions() {
         return dealingsType != null;
     }

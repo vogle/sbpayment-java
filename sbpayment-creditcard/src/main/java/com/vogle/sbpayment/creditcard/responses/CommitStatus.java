@@ -15,6 +15,12 @@ public enum CommitStatus {
         this.statusCode = statusCode;
     }
 
+    /**
+     * Gets {@link CommitStatus} from the code
+     *
+     * @param code commit status code
+     * @return CommitStatus
+     */
     public static CommitStatus status(String code) {
         for (CommitStatus status : CommitStatus.values()) {
             if (code.equalsIgnoreCase(status.getCommitStatusCode())) {
@@ -24,6 +30,11 @@ public enum CommitStatus {
         return null;
     }
 
+    /**
+     * Gets current status code by String
+     *
+     * @return Status code
+     */
     public String getCommitStatusCode() {
         return statusCode;
     }

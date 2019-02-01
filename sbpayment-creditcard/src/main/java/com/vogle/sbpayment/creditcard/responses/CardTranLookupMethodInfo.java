@@ -39,18 +39,30 @@ public class CardTranLookupMethodInfo {
     @JacksonXmlProperty(localName = "res_pay_method_info_detail")
     private PayMethodInfoDetail payMethodInfoDetail;
 
-    public CreditCardBrand mapCreditCardBrand() {
+    /**
+     * Gets a {@link CreditCardBrand}
+     */
+    public CreditCardBrand getCreditCardBrand() {
         return CreditCardBrand.brand(cardbrandCode);
     }
 
-    public CommitStatus mapCommitStatus() {
+    /**
+     * Gets a {@link CommitStatus}
+     */
+    public CommitStatus getCommitStatusType() {
         return CommitStatus.status(commitStatus);
     }
 
-    public PaymentStatus mapPaymentStatus() {
+    /**
+     * Gets a {@link PaymentStatus}
+     */
+    public PaymentStatus getPaymentStatusType() {
         return PaymentStatus.status(paymentStatus);
     }
 
+    /**
+     * Payment Method details
+     */
     @Data
     public static class PayMethodInfoDetail {
 
@@ -70,7 +82,11 @@ public class CardTranLookupMethodInfo {
         @JacksonXmlProperty(localName = "divide_times")
         private String divideTimes;
 
-        public DealingsType mapDealingsType() {
+        /**
+         * Gets a {@link DealingsType}
+         * @return DealingsType
+         */
+        public DealingsType getDealingsTypeEnum() {
             return DealingsType.type(dealingsType);
         }
     }

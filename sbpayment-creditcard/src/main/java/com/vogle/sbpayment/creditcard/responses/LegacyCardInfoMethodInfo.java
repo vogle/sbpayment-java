@@ -18,7 +18,10 @@ public class LegacyCardInfoMethodInfo {
     @JacksonXmlProperty(localName = "cardbrand_code")
     private String cardbrandCode;
 
-    public CreditCardBrand mapCreditCardBrand() {
+    /**
+     * Gets a {@link CreditCardBrand}
+     */
+    public CreditCardBrand getCreditCardBrand() {
         return CreditCardBrand.brand(cardbrandCode);
     }
 }

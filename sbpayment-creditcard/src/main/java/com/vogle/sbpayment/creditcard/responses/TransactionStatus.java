@@ -15,6 +15,12 @@ public enum TransactionStatus {
         this.statusCode = statusCode;
     }
 
+    /**
+     * Gets a {@link TransactionStatus} from the code
+     *
+     * @param code Status code
+     * @return TransactionStatus
+     */
     public static TransactionStatus status(String code) {
         for (TransactionStatus status : TransactionStatus.values()) {
             if (code.equalsIgnoreCase(status.getTransactionStatusCode())) {
@@ -24,6 +30,11 @@ public enum TransactionStatus {
         return ERROR;
     }
 
+    /**
+     * Gets current status code by String
+     *
+     * @return Status code
+     */
     public String getTransactionStatusCode() {
         return statusCode;
     }

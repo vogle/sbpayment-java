@@ -4,6 +4,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
@@ -12,6 +13,7 @@ import lombok.Data;
  * @author Allan Im
  **/
 @Data
+@AllArgsConstructor
 public class CardInfoOptions {
 
     @NotEmpty
@@ -24,12 +26,4 @@ public class CardInfoOptions {
     @JacksonXmlProperty(localName = "cardbrand_return_flg")
     private String cardbrandReturnFlg;
 
-    public CardInfoOptions() {
-    }
-
-    public CardInfoOptions(String token, String tokenKey, String cardbrandReturnFlg) {
-        this.token = token;
-        this.tokenKey = tokenKey;
-        this.cardbrandReturnFlg = cardbrandReturnFlg;
-    }
 }

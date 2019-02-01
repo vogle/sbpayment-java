@@ -35,7 +35,7 @@ import com.vogle.sbpayment.client.responses.SpsResponse;
  **/
 public class DefaultSpsClient implements SpsClient {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private static final Logger LOGGER = LoggerFactory.getLogger(DefaultSpsClient.class);
 
     private final SpsConfig config;
     private final HttpClient httpClient;
@@ -49,7 +49,7 @@ public class DefaultSpsClient implements SpsClient {
      */
     public DefaultSpsClient(SpsConfig config, SpsMapper mapper) {
         Asserts.notNull(config, "The Configuration");
-        SpsValidator.beanValidate(config);
+        ValidationHelper.beanValidate(config);
 
         this.config = config;
         this.mapper = mapper;
@@ -75,8 +75,8 @@ public class DefaultSpsClient implements SpsClient {
             request.setRequestDate(dateFormat.format(new Date()));
             return request;
         } catch (InstantiationException | IllegalAccessException ex) {
-            logger.error(ex.getMessage());
-            throw new IllegalArgumentException();
+            LOGGER.error(ex.getMessage());
+            throw new IllegalArgumentException(ex);
         }
     }
 
@@ -89,14 +89,14 @@ public class DefaultSpsClient implements SpsClient {
 
         String charset = mapper.getCharset();
         try {
-            if (logger.isDebugEnabled()) {
-                logger.debug("SPS Client request object : {}", request);
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("SPS Client request object : {}", request);
             }
 
             // make xml
             String xmlRequest = mapper.requestToXml(request);
-            if (logger.isTraceEnabled()) {
-                logger.trace("SPS Client request XML : \n{}\n", xmlRequest);
+            if (LOGGER.isTraceEnabled()) {
+                LOGGER.trace("SPS Client request XML : \n{}\n", xmlRequest);
             }
 
             // HTTP Execute
@@ -114,60 +114,76 @@ public class DefaultSpsClient implements SpsClient {
 
                 // response body
                 String body = EntityUtils.toString(response.getEntity(), mapper.getCharset());
-                if (logger.isTraceEnabled()) {
-                    logger.trace("SPS Client response header :{}", headerMap);
-                    logger.trace("SPS Client response xml :\n{}\n", body);
+                if (LOGGER.isTraceEnabled()) {
+                    LOGGER.trace("SPS Client response header :{}", headerMap);
+                    LOGGER.trace("SPS Client response xml :\n{}\n", body);
                 }
 
                 // xml mapping
                 T bodyObject = mapper.xmlToObject(body, request.responseClass());
 
-                if (logger.isInfoEnabled()) {
-                    logger.info("SPS Client ({}) response : result = {}{}{}",
+                if (LOGGER.isInfoEnabled()) {
+                    LOGGER.info("SPS Client ({}) response : result = {}{}{}",
                             bodyObject.getId() == null ? "FAIL" : bodyObject.getDescription(),
                             bodyObject.getResult(),
-                            "OK".equalsIgnoreCase(bodyObject.getResult()) ? "" : ", errCode = " + bodyObject.getErrCode(),
+                            "OK".equalsIgnoreCase(bodyObject.getResult()) ? "" : ", errCode = "
+                                    + bodyObject.getErrCode(),
                             bodyObject.getSpsTransactionId() == null ? "" : ", sps-transaction-id = "
                                     + bodyObject.getSpsTransactionId());
                 }
 
-                if (logger.isDebugEnabled()) {
-                    logger.debug("SPS Client response object : {}", bodyObject);
+                if (LOGGER.isDebugEnabled()) {
+                    LOGGER.debug("SPS Client response object : {}", bodyObject);
                 }
 
                 return new SpsResult<>(statusCode, headerMap, bodyObject);
 
-            } else if (statusCode == 401) {
-                logger.error("SPS Client connect fail : Either you supplied the wrong credentials,"
-                                + " authId : {}, authPw : {} ",
-                        config.getBasicAuthId(), config.getBasicAuthPassword());
-                return new SpsResult<>(statusCode);
-            } else if (statusCode == 403) {
-                logger.error("SPS Client connect fail : You don't have permission to access {} on this server",
-                        config.getApiUrl());
-                return new SpsResult<>(statusCode);
-            } else if (statusCode == 404) {
-                logger.error("SPS Client connect fail : The requested URL {} was not found on this server",
-                        config.getApiUrl());
-                return new SpsResult<>(statusCode);
-            } else if (statusCode == 500) {
-                logger.error("SPS Client connect fail : Internal server error from {}",
-                        config.getApiUrl());
-                return new SpsResult<>(statusCode);
-            } else if (statusCode == 503) {
-                logger.error("SPS Client connect fail : The server is temporarily unable to service your request"
-                        + " due to maintenance downtime");
-                return new SpsResult<>(statusCode);
             } else {
-                logger.error("SPS Client connect fail : HTTP Status {}", statusCode);
-                return new SpsResult<>(statusCode);
+                return failedResult(statusCode);
             }
 
         } catch (IOException ex) {
-            logger.error("SPS Client Internal Error : {}({})",
-                    ex.getClass().getSimpleName(), ex.getMessage());
+            if (LOGGER.isErrorEnabled()) {
+                LOGGER.error("SPS Client Internal Error : {}({})",
+                        ex.getClass().getSimpleName(), ex.getMessage());
+            }
         }
         return new SpsResult<>();
+    }
+
+    /**
+     * create filed result
+     */
+    private <T extends SpsResponse> SpsResult<T> failedResult(int statusCode) {
+        if (LOGGER.isErrorEnabled()) {
+            switch (statusCode) {
+                case 401:
+                    LOGGER.error("SPS Client connect fail : Either you supplied the wrong credentials,"
+                                    + " authId : {}, authPw : {} ",
+                            config.getBasicAuthId(), config.getBasicAuthPassword());
+                    break;
+                case 403:
+                    LOGGER.error("SPS Client connect fail : You don't have permission to access {} on this server",
+                            config.getApiUrl());
+                    break;
+                case 404:
+                    LOGGER.error("SPS Client connect fail : The requested URL {} was not found on this server",
+                            config.getApiUrl());
+                    break;
+                case 500:
+                    LOGGER.error("SPS Client connect fail : Internal server error from {}",
+                            config.getApiUrl());
+                    break;
+                case 503:
+                    LOGGER.error("SPS Client connect fail : The server is temporarily unable to service your request"
+                            + " due to maintenance downtime");
+                    break;
+                default:
+                    LOGGER.error("SPS Client connect fail : HTTP Status {}", statusCode);
+                    break;
+            }
+        }
+        return new SpsResult<>(statusCode);
     }
 
     /**

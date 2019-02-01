@@ -18,7 +18,7 @@ import com.vogle.sbpayment.client.requests.SpsRequest;
  * @author Allan Im
  */
 public class DefaultSpsMapper implements SpsMapper {
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private static final Logger LOGGER = LoggerFactory.getLogger(DefaultSpsMapper.class);
 
     private final XmlMapper xmlMapper;
 
@@ -27,7 +27,7 @@ public class DefaultSpsMapper implements SpsMapper {
     private final String desKey;
     private final String desInitKey;
 
-    private boolean enabledCipher;
+    private final boolean enabledCipher;
 
     /**
      * Create Mapper with hash key & 3DES key
@@ -75,7 +75,7 @@ public class DefaultSpsMapper implements SpsMapper {
             return bodyObject;
 
         } catch (IOException ex) {
-            logger.error("SPS xmlToObject Error : {}({})", ex.getClass().getSimpleName(), ex.getMessage());
+            LOGGER.error("SPS xmlToObject Error : {}({})", ex.getClass().getSimpleName(), ex.getMessage());
             throw new XmlMappingException(ex.getMessage(), ex);
         }
     }
@@ -100,7 +100,7 @@ public class DefaultSpsMapper implements SpsMapper {
             return xml.toString();
 
         } catch (JsonProcessingException ex) {
-            logger.error("SPS objectToXml Error : {}({})", ex.getClass().getSimpleName(), ex.getMessage());
+            LOGGER.error("SPS objectToXml Error : {}({})", ex.getClass().getSimpleName(), ex.getMessage());
             throw new XmlMappingException(ex.getMessage(), ex);
         }
     }

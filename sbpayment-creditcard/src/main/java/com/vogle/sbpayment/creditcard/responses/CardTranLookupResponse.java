@@ -27,12 +27,15 @@ public class CardTranLookupResponse extends CommonElements {
     @JacksonXmlProperty(localName = "res_pay_method_info")
     private CardTranLookupMethodInfo payMethodInfo;
 
-    public TransactionStatus mapTransactionStatus() {
+    /**
+     * Gets a {@link TransactionStatus}
+     */
+    public TransactionStatus getTransactionStatus() {
         return TransactionStatus.status(resStatus);
     }
 
     @Override
     public String getDescription() {
-        return FeatureIds.getDescription(this.getId());
+        return FeatureHelper.getDescription(this.getId());
     }
 }

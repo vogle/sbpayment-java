@@ -1,15 +1,15 @@
 package com.vogle.sbpayment.payeasy;
 
-import static com.vogle.sbpayment.client.requests.RequestMapper.avoidNull;
-import static com.vogle.sbpayment.client.requests.RequestMapper.dateOnly;
-import static com.vogle.sbpayment.client.requests.RequestMapper.mapItem;
+import static com.vogle.sbpayment.client.requests.RequestHelper.avoidNull;
+import static com.vogle.sbpayment.client.requests.RequestHelper.dateOnly;
+import static com.vogle.sbpayment.client.requests.RequestHelper.mapItem;
 
 import com.vogle.sbpayment.client.InvalidAccessException;
 import com.vogle.sbpayment.client.SpsClient;
 import com.vogle.sbpayment.client.SpsManager;
 import com.vogle.sbpayment.client.SpsReceiver;
 import com.vogle.sbpayment.client.SpsResult;
-import com.vogle.sbpayment.client.SpsValidator;
+import com.vogle.sbpayment.client.ValidationHelper;
 import com.vogle.sbpayment.client.params.PaymentInfo;
 import com.vogle.sbpayment.payeasy.params.IssueType;
 import com.vogle.sbpayment.payeasy.params.PayEasy;
@@ -33,7 +33,8 @@ public class DefaultPayEasyPayment implements PayEasyPayment {
     private final SpsClient client;
     private final SpsReceiver receiver;
 
-    private PayEasyType type;
+    private final PayEasyType type;
+
     private String payCsv;
     private String billInfo;
     private String billInfoKana;
@@ -79,16 +80,16 @@ public class DefaultPayEasyPayment implements PayEasyPayment {
 
     @Override
     public SpsResult<PayEasyPaymentResponse> payment(PaymentInfo paymentInfo, PayEasy payEasy) {
-        SpsValidator.beanValidate(paymentInfo, payEasy);
+        ValidationHelper.beanValidate(paymentInfo, payEasy);
 
         PayEasyPaymentRequest request = client.newRequest(PayEasyPaymentRequest.class);
 
         if (PayEasyType.LINK.equals(type)) {
-            SpsValidator.assertsNotNull("payCsv", payCsv);
+            ValidationHelper.assertsNotNull("payCsv", payCsv);
         }
         if (PayEasyType.ONLINE.equals(type)) {
-            SpsValidator.assertsNotNull("billInfo", billInfo);
-            SpsValidator.assertsNotNull("billInfoKana", billInfoKana);
+            ValidationHelper.assertsNotNull("billInfo", billInfo);
+            ValidationHelper.assertsNotNull("billInfoKana", billInfoKana);
         }
 
         // payment info
@@ -136,7 +137,7 @@ public class DefaultPayEasyPayment implements PayEasyPayment {
 
     @Override
     public PayEasyDepositReceived receiveDeposit(String xml) throws InvalidAccessException {
-        SpsValidator.assertsNotEmpty(xml, "xml");
+        ValidationHelper.assertsNotEmpty(xml, "xml");
 
         PayEasyDepositReceived request = receiver.receive(xml, PayEasyDepositReceived.class);
 

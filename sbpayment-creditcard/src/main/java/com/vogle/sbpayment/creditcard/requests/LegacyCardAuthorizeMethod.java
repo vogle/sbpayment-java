@@ -51,6 +51,9 @@ public class LegacyCardAuthorizeMethod extends CreditCardElements {
     @JacksonXmlProperty(localName = "resrv3")
     private String resrv3;
 
+    /**
+     * Sets CreditCard information from {@link ByCreditCard}
+     */
     public void setCreditCard(ByCreditCard creditCard) {
         this.setCcNumber(creditCard.getNumber());
         this.setCcExpiration(creditCard.getExpiration());

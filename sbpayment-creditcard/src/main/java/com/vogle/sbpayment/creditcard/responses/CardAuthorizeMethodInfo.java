@@ -26,7 +26,12 @@ public class CardAuthorizeMethodInfo {
     @JacksonXmlProperty(localName = "recognized_no")
     private String recognizedNo;
 
-    public CreditCardBrand mapCreditCardBrand() {
+    /**
+     * Gets a {@link CreditCardBrand}
+     *
+     * @return Card Brand
+     */
+    public CreditCardBrand getCreditCardBrand() {
         return CreditCardBrand.brand(cardbrandCode);
     }
 }

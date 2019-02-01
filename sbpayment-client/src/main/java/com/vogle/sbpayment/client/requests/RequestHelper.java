@@ -12,7 +12,7 @@ import com.vogle.sbpayment.client.params.Item;
  *
  * @author Allan Im
  **/
-public class RequestMapper {
+public class RequestHelper {
 
     /**
      * convert Item to Pay detail
@@ -79,6 +79,13 @@ public class RequestMapper {
         return date.format(DateTimeFormatter.BASIC_ISO_DATE);
     }
 
+    /**
+     * Avoid NULL
+     *
+     * @param origin       origin data
+     * @param defaultValue default value
+     * @return return The Default value if origin data is null
+     */
     public static String avoidNull(String origin, String defaultValue) {
         return (origin == null) ? defaultValue : origin;
     }

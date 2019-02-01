@@ -8,7 +8,7 @@ import java.util.Map;
  *
  * @author Allan Im
  **/
-class FeatureIds {
+class FeatureHelper {
 
     private static Map<String, String> descMap = new HashMap<>();
 

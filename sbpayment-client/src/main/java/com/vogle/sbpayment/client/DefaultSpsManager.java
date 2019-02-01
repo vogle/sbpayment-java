@@ -6,7 +6,7 @@ package com.vogle.sbpayment.client;
  *
  * @author Allan Im
  */
-public class DefaultSpsManager implements SpsManager{
+public class DefaultSpsManager implements SpsManager {
 
     private final SpsMapper mapper;
     private final SpsClient client;

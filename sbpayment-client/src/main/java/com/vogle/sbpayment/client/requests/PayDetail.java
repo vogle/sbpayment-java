@@ -29,15 +29,15 @@ public class PayDetail {
     @JacksonXmlProperty(localName = "dtl_item_name")
     private String dtlItemName;
 
-    @Max(999999)
+    @Max(999_999)
     @JacksonXmlProperty(localName = "dtl_item_count")
     private Integer dtlItemCount;
 
-    @Max(9999999)
+    @Max(9_999_999)
     @JacksonXmlProperty(localName = "dtl_tax")
     private Integer dtlTax;
 
-    @Max(9999999)
+    @Max(9_999_999)
     @JacksonXmlProperty(localName = "dtl_amount")
     private Integer dtlAmount;
 

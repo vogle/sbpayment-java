@@ -70,13 +70,13 @@ public class LegacyCardReauthorizeRequest implements SpsRequest<CardAuthorizeRes
     @JacksonXmlProperty(localName = "item_name")
     private String itemName;
 
-    @Max(9999999)
+    @Max(9_999_999)
     @Min(0)
     @JacksonXmlProperty(localName = "tax")
     private Integer tax;
 
     @NotNull
-    @Max(9999999)
+    @Max(9_999_999)
     @Min(1)
     @JacksonXmlProperty(localName = "amount")
     private Integer amount;
@@ -127,7 +127,7 @@ public class LegacyCardReauthorizeRequest implements SpsRequest<CardAuthorizeRes
     @JacksonXmlProperty(localName = "request_date")
     private String requestDate;
 
-    @Max(9999)
+    @Max(9_999)
     @JacksonXmlProperty(localName = "limit_second")
     private Integer limitSecond;
 

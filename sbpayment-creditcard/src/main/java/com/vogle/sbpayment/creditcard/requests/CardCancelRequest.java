@@ -53,7 +53,7 @@ public class CardCancelRequest implements SpsRequest<DefaultResponse> {
     @JacksonXmlProperty(localName = "request_date")
     private String requestDate;
 
-    @Max(9999)
+    @Max(9_999)
     @JacksonXmlProperty(localName = "limit_second")
     private Integer limitSecond;
 

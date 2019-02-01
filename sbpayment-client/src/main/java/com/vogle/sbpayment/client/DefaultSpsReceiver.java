@@ -13,7 +13,7 @@ import com.vogle.sbpayment.client.receivers.SpsReceivedData;
  * @author Allan Im
  */
 public class DefaultSpsReceiver implements SpsReceiver {
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private static final Logger LOGGER = LoggerFactory.getLogger(DefaultSpsReceiver.class);
 
     private final String merchantId;
     private final String serviceId;
@@ -44,8 +44,8 @@ public class DefaultSpsReceiver implements SpsReceiver {
     public <T extends SpsReceivedData> T receive(String xml, Class<T> receivedDataClass)
             throws InvalidAccessException {
 
-        if (logger.isDebugEnabled()) {
-            logger.debug("SPS Receiver data : {}", xml);
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("SPS Receiver data : {}", xml);
         }
 
         T receivedData = mapper.xmlToObject(xml, receivedDataClass);
@@ -66,8 +66,8 @@ public class DefaultSpsReceiver implements SpsReceiver {
             throw new InvalidAccessException("The hashcode is wrong: " + receivedData.getSpsHashcode());
         }
 
-        if (logger.isDebugEnabled()) {
-            logger.debug("SPS Received data : {}", receivedData);
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("SPS Received data : {}", receivedData);
         }
 
         return receivedData;
@@ -81,7 +81,7 @@ public class DefaultSpsReceiver implements SpsReceiver {
      */
     @Override
     public String resultSuccessful(String featureId) {
-        SpsValidator.assertsNotEmpty(featureId, "featureId");
+        ValidationHelper.assertsNotEmpty(featureId, "featureId");
         return mapper.objectToXml(new ReceptionResult(featureId));
     }
 
@@ -94,8 +94,8 @@ public class DefaultSpsReceiver implements SpsReceiver {
      */
     @Override
     public String resultFailed(String featureId, String errorMessage) {
-        SpsValidator.assertsNotEmpty(featureId, "featureId");
-        SpsValidator.assertsNotEmpty(errorMessage, "errorMessage");
+        ValidationHelper.assertsNotEmpty(featureId, "featureId");
+        ValidationHelper.assertsNotEmpty(errorMessage, "errorMessage");
         return mapper.objectToXml(new ReceptionResult(featureId, errorMessage));
     }
 

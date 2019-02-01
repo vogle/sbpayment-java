@@ -32,11 +32,22 @@ public class ReceptionResult {
     @JacksonXmlProperty(localName = "res_err_msg")
     private String errMsg;
 
+    /**
+     * Constructs a new successful ReceptionResult
+     *
+     * @param id a sbpayment features ID
+     */
     public ReceptionResult(String id) {
         this.id = id;
         this.result = SUCCESS;
     }
 
+    /**
+     * Constructs a new failure ReceptionResult
+     *
+     * @param id           a sbpayment features ID
+     * @param errorMessage sending message
+     */
     public ReceptionResult(String id, String errorMessage) {
         this.id = id;
         this.result = FAIL;

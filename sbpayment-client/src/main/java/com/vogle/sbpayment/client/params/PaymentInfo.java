@@ -54,7 +54,7 @@ public class PaymentInfo {
     /**
      * 税額
      */
-    @Max(9999999)
+    @Max(9_999_999)
     @Min(0)
     private Integer tax;
 
@@ -62,7 +62,7 @@ public class PaymentInfo {
      * 金額（税込）
      */
     @NotNull
-    @Max(9999999)
+    @Max(9_999_999)
     @Min(1)
     private Integer amount;
 

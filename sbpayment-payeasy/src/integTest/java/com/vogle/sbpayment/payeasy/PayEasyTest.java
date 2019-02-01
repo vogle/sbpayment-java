@@ -15,7 +15,7 @@ import com.vogle.sbpayment.client.SpsMapper;
 import com.vogle.sbpayment.client.SpsResult;
 import com.vogle.sbpayment.client.convert.SpsDataConverter;
 import com.vogle.sbpayment.client.params.PaymentInfo;
-import com.vogle.sbpayment.client.requests.RequestMapper;
+import com.vogle.sbpayment.client.requests.RequestHelper;
 import com.vogle.sbpayment.payeasy.params.PayEasy;
 import com.vogle.sbpayment.payeasy.params.TerminalValue;
 import com.vogle.sbpayment.payeasy.receivers.PayEasyDepositInfo;
@@ -65,7 +65,7 @@ public class PayEasyTest extends AbstractSettings {
         assertThat(res.getPayEasyInfo()).isNotNull();
         assertThat(res.getPayEasyInfo().getInvoiceNo()).isNotEmpty();
         assertThat(res.getPayEasyInfo().getBillDate())
-                .isEqualTo(RequestMapper.dateOnly(res.getDate(), BILL_LIMIT_DAY));
+                .isEqualTo(RequestHelper.dateOnly(res.getDate(), BILL_LIMIT_DAY));
         assertThat(res.getPayEasyInfo().getSkno()).isNotEmpty();
         assertThat(res.getPayEasyInfo().getCustNumber()).isNotEmpty();
     }

@@ -39,6 +39,11 @@ public class LegacyCardInfoMethod extends CreditCardElements {
     @JacksonXmlProperty(localName = "resrv3")
     private String resrv3;
 
+    /**
+     * Sets data from {@link SaveCreditCard}
+     *
+     * @param creditCard SaveCreditCard Information
+     */
     public void setSaveCreditCard(SaveCreditCard creditCard) {
         this.setCcNumber(creditCard.getNumber());
         this.setCcExpiration(creditCard.getExpiration());

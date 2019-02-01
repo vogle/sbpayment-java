@@ -63,7 +63,7 @@ public class CreditCardPayInfoTest extends AbstractSettings {
         creditCard.setDivideTimes(3);
 
         // test pay
-        SpsResult<CardTranLookupResponse> lookup = testPay(paymentInfo, creditCard, CardInfoResponseType.All_MASK);
+        SpsResult<CardTranLookupResponse> lookup = testPay(paymentInfo, creditCard, CardInfoResponseType.ALL_MASK);
 
         PayMethodInfoDetail detail = lookup.getBody().getPayMethodInfo().getPayMethodInfoDetail();
         assertThat(detail).isNotNull();
@@ -84,7 +84,7 @@ public class CreditCardPayInfoTest extends AbstractSettings {
         creditCard.setDivideTimes(3);
 
         // test pay
-        SpsResult<CardTranLookupResponse> lookup = testPay(paymentInfo, creditCard, CardInfoResponseType.All_MASK);
+        SpsResult<CardTranLookupResponse> lookup = testPay(paymentInfo, creditCard, CardInfoResponseType.ALL_MASK);
 
         PayMethodInfoDetail detail = lookup.getBody().getPayMethodInfo().getPayMethodInfoDetail();
         assertThat(detail).isNotNull();
@@ -105,7 +105,7 @@ public class CreditCardPayInfoTest extends AbstractSettings {
         creditCard.setDivideTimes(3);
 
         // test pay
-        SpsResult<CardTranLookupResponse> lookup = testPay(paymentInfo, creditCard, CardInfoResponseType.All_MASK);
+        SpsResult<CardTranLookupResponse> lookup = testPay(paymentInfo, creditCard, CardInfoResponseType.ALL_MASK);
 
         PayMethodInfoDetail detail = lookup.getBody().getPayMethodInfo().getPayMethodInfoDetail();
         assertThat(detail).isNotNull();
@@ -184,10 +184,10 @@ public class CreditCardPayInfoTest extends AbstractSettings {
         CardTranLookupMethodInfo cardInfo = lookup.getBody().getPayMethodInfo();
         assertThat(cardInfo).isNotNull();
         assertThat(cardInfo.getCcCompanyCode()).isNotEmpty();
-        assertThat(cardInfo.mapCreditCardBrand()).isEqualTo(CreditCardBrand.VISA);
+        assertThat(cardInfo.getCreditCardBrand()).isEqualTo(CreditCardBrand.VISA);
         assertThat(cardInfo.getRecognizedNo()).isNotEmpty();
-        assertThat(cardInfo.mapCommitStatus()).isEqualTo(CommitStatus.COMMIT);
-        assertThat(cardInfo.mapPaymentStatus()).isEqualTo(PaymentStatus.AUTHORIZED);
+        assertThat(cardInfo.getCommitStatusType()).isEqualTo(CommitStatus.COMMIT);
+        assertThat(cardInfo.getPaymentStatusType()).isEqualTo(PaymentStatus.AUTHORIZED);
 
         return lookup;
     }

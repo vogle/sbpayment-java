@@ -15,6 +15,20 @@ public enum CreditCardBrand {
         this.spsCardbrandCode = spsCardbrandCode;
     }
 
+    /**
+     * Gets a brand
+     * <p>
+     * Code: Brand
+     * "J": JCB
+     * "V": VISA
+     * "M": MASTER
+     * "A": AMEX
+     * "D": DINERS
+     * </p>
+     *
+     * @param code brand code
+     * @return Card Brand
+     */
     public static CreditCardBrand brand(String code) {
         for (CreditCardBrand brand : CreditCardBrand.values()) {
             if (code.equalsIgnoreCase(brand.getSpsCardbrandCode())) {
@@ -24,6 +38,11 @@ public enum CreditCardBrand {
         return OTHER;
     }
 
+    /**
+     * Gets Brand Code
+     *
+     * @return "J", "V", "M", "A" or "D"
+     */
     public String getSpsCardbrandCode() {
         return spsCardbrandCode;
     }

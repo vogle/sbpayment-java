@@ -14,7 +14,7 @@ import lombok.Data;
 @Data
 public class CardPartialRefundOptions {
 
-    @Max(9999999)
+    @Max(9_999_999)
     @Min(1)
     @JacksonXmlProperty(localName = "amount")
     private Integer amount;

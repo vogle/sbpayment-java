@@ -21,7 +21,10 @@ public class CardInfoMethodInfo {
     @JacksonXmlProperty(localName = "res_payinfo_key")
     private String payinfoKey;
 
-    public CreditCardBrand mapCreditCardBrand() {
+    /**
+     * Gets a {@link CreditCardBrand}
+     */
+    public CreditCardBrand getCreditCardBrand() {
         return CreditCardBrand.brand(cardbrandCode);
     }
 }

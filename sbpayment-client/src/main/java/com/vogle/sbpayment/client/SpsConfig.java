@@ -94,8 +94,7 @@ public class SpsConfig {
      * 3DES 暗号化使用可否
      */
     @Getter
-    @Builder.Default
-    private boolean enabledCipher = false;
+    private boolean enabledCipher;
 
     /**
      * 3DES cipher key.<br/>
@@ -111,6 +110,12 @@ public class SpsConfig {
     @Getter
     private String desInitKey;
 
+    /**
+     * Create a SpsConfig from Properties
+     *
+     * @param properties The Properties information
+     * @return new SpsConfig
+     */
     public static SpsConfig from(final Properties properties) {
 
         SpsConfigBuilder builder = builder();

@@ -31,4 +31,11 @@ public interface SpsResponse {
      * Transaction id
      */
     String getSpsTransactionId();
+
+    /**
+     * To return true if the response data is successful
+     */
+    default boolean isSuccess() {
+        return "OK".equalsIgnoreCase(getResult());
+    }
 }

@@ -44,12 +44,12 @@ abstract class AbstractSettings {
 
     String orderNo() {
         Random random = new Random();
-        return "VO" + dayPattern() + random.nextInt(99999);
+        return "VO" + dayPattern() + random.nextInt(99_999);
     }
 
     String customerCode() {
         Random random = new Random();
-        return "VC" + dayPattern() + random.nextInt(99999);
+        return "VC" + dayPattern() + random.nextInt(99_999);
     }
 
     private String dayPattern() {

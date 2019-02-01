@@ -23,7 +23,7 @@ public interface SpsManager {
     SpsClient client();
 
     /**
-     * Gets mad receiver
+     * Gets made receiver
      *
      * @return SpsReceiver
      */

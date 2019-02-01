@@ -42,7 +42,12 @@ public class CardInfoLookupMethodInfo {
     @JacksonXmlProperty(localName = "resrv3")
     private String resrv3;
 
-    public CreditCardBrand mapCreditCardBrand() {
+    /**
+     * Gets a {@link CreditCardBrand}
+     *
+     * @return card brand
+     */
+    public CreditCardBrand getCreditCardBrand() {
         return CreditCardBrand.brand(cardbrandCode);
     }
 }

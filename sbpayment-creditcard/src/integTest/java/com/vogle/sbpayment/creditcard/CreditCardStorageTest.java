@@ -53,7 +53,7 @@ public class CreditCardStorageTest extends AbstractSettings {
         assertThat(save.getBody().isSuccess()).isTrue();
         assertThat(save.getBody().getSpsTransactionId()).isNotBlank();
 
-        assertThat(save.getBody().getPayMethodInfo().mapCreditCardBrand()).isEqualTo(CreditCardBrand.VISA);
+        assertThat(save.getBody().getPayMethodInfo().getCreditCardBrand()).isEqualTo(CreditCardBrand.VISA);
         assertThat(save.getBody().getSpsInfo()).isNotNull();
 
         // when save 2nd fail
@@ -70,7 +70,7 @@ public class CreditCardStorageTest extends AbstractSettings {
         CardInfoLookupMethodInfo cardInfoNormal = lookup.getBody().getPayMethodInfo();
         assertThat(cardInfoNormal.getCcNumber()).isNullOrEmpty();
         assertThat(cardInfoNormal.getCcExpiration()).isNullOrEmpty();
-        assertThat(cardInfoNormal.mapCreditCardBrand()).isEqualTo(CreditCardBrand.VISA);
+        assertThat(cardInfoNormal.getCreditCardBrand()).isEqualTo(CreditCardBrand.VISA);
         assertThat(cardInfoNormal.getResrv1()).isEqualTo("テスト１");
         assertThat(cardInfoNormal.getResrv2()).isEqualTo("テスト２");
         assertThat(cardInfoNormal.getResrv3()).isEqualTo("テスト３");
@@ -84,7 +84,7 @@ public class CreditCardStorageTest extends AbstractSettings {
         assertThat(update.getBody().getSpsTransactionId()).isNotBlank();
         assertThat(update.getBody().isSuccess()).isTrue();
 
-        assertThat(update.getBody().getPayMethodInfo().mapCreditCardBrand()).isEqualTo(CreditCardBrand.VISA);
+        assertThat(update.getBody().getPayMethodInfo().getCreditCardBrand()).isEqualTo(CreditCardBrand.VISA);
         assertThat(update.getBody().getSpsInfo()).isNotNull();
 
         // lookup LOWER4
@@ -97,13 +97,13 @@ public class CreditCardStorageTest extends AbstractSettings {
         assertThat(cardInfoLower4.getCcNumber().startsWith("****")).isTrue();
         assertThat(cardInfoLower4.getCcNumber().endsWith("3312")).isTrue();
         assertThat(cardInfoLower4.getCcExpiration()).isEqualTo("202412");
-        assertThat(cardInfoLower4.mapCreditCardBrand()).isEqualTo(CreditCardBrand.VISA);
+        assertThat(cardInfoLower4.getCreditCardBrand()).isEqualTo(CreditCardBrand.VISA);
         assertThat(cardInfoLower4.getResrv1()).isEqualTo("更新１");
         assertThat(cardInfoLower4.getResrv2()).isEqualTo("更新２");
         assertThat(cardInfoLower4.getResrv3()).isEqualTo("更新３");
 
-        // lookup All_MASK
-        SpsResult<CardInfoLookupResponse> lookupAllMask = payment.lookupCard(customerCode, CardInfoResponseType.All_MASK);
+        // lookup ALL_MASK
+        SpsResult<CardInfoLookupResponse> lookupAllMask = payment.lookupCard(customerCode, CardInfoResponseType.ALL_MASK);
         assertCommon(lookupAllMask);
         assertThat(lookupAllMask.getBody().getSpsTransactionId()).isNotBlank();
         assertThat(lookupAllMask.getBody().isSuccess()).isTrue();
@@ -115,7 +115,7 @@ public class CreditCardStorageTest extends AbstractSettings {
         assertThat(cardInfoAllMask.getResrv1()).isEqualTo("更新１");
         assertThat(cardInfoAllMask.getResrv2()).isEqualTo("更新２");
         assertThat(cardInfoAllMask.getResrv3()).isEqualTo("更新３");
-        assertThat(cardInfoAllMask.mapCreditCardBrand()).isEqualTo(CreditCardBrand.VISA);
+        assertThat(cardInfoAllMask.getCreditCardBrand()).isEqualTo(CreditCardBrand.VISA);
 
         // delete
         SpsResult<CardInfoDeleteResponse> delete = payment.deleteCard(customerCode);
@@ -165,7 +165,7 @@ public class CreditCardStorageTest extends AbstractSettings {
         assertThat(cardInfoLower4.getCcNumber().startsWith("****")).isTrue();
         assertThat(cardInfoLower4.getCcNumber().endsWith("3312")).isTrue();
         assertThat(cardInfoLower4.getCcExpiration()).isEqualTo("202412");
-        assertThat(cardInfoLower4.mapCreditCardBrand()).isEqualTo(CreditCardBrand.VISA);
+        assertThat(cardInfoLower4.getCreditCardBrand()).isEqualTo(CreditCardBrand.VISA);
 
         // delete
         SpsResult<CardInfoDeleteResponse> delete = payment.deleteCard(customerCode);
@@ -191,7 +191,7 @@ public class CreditCardStorageTest extends AbstractSettings {
         assertThat(save.getBody().isSuccess()).isTrue();
         assertThat(save.getBody().getSpsTransactionId()).isNotBlank();
 
-        assertThat(save.getBody().getPayMethodInfo().mapCreditCardBrand()).isEqualTo(CreditCardBrand.VISA);
+        assertThat(save.getBody().getPayMethodInfo().getCreditCardBrand()).isEqualTo(CreditCardBrand.VISA);
         assertThat(save.getBody().getSpsInfo()).isNotNull();
 
         PaymentInfo paymentInfo = PaymentInfo.builder()
@@ -223,7 +223,7 @@ public class CreditCardStorageTest extends AbstractSettings {
         assertThat(cardInfoLower4.getCcNumber().startsWith("****")).isTrue();
         assertThat(cardInfoLower4.getCcNumber().endsWith("3312")).isTrue();
         assertThat(cardInfoLower4.getCcExpiration()).isEqualTo("202412");
-        assertThat(cardInfoLower4.mapCreditCardBrand()).isEqualTo(CreditCardBrand.VISA);
+        assertThat(cardInfoLower4.getCreditCardBrand()).isEqualTo(CreditCardBrand.VISA);
         assertThat(cardInfoLower4.getResrv1()).isEqualTo("テスト１0");
         assertThat(cardInfoLower4.getResrv2()).isEqualTo("テスト２0");
         assertThat(cardInfoLower4.getResrv3()).isEqualTo("テスト３0");

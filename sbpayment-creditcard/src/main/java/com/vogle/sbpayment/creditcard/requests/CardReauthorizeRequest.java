@@ -1,6 +1,6 @@
 package com.vogle.sbpayment.creditcard.requests;
 
-import static com.vogle.sbpayment.client.requests.RequestMapper.mapItem;
+import static com.vogle.sbpayment.client.requests.RequestHelper.mapItem;
 
 import java.util.List;
 
@@ -72,13 +72,13 @@ public class CardReauthorizeRequest implements SpsRequest<CardAuthorizeResponse>
     @JacksonXmlProperty(localName = "item_name")
     private String itemName;
 
-    @Max(9999999)
+    @Max(9_999_999)
     @Min(0)
     @JacksonXmlProperty(localName = "tax")
     private Integer tax;
 
     @NotNull
-    @Max(9999999)
+    @Max(9_999_999)
     @Min(1)
     @JacksonXmlProperty(localName = "amount")
     private Integer amount;
@@ -129,7 +129,7 @@ public class CardReauthorizeRequest implements SpsRequest<CardAuthorizeResponse>
     @JacksonXmlProperty(localName = "request_date")
     private String requestDate;
 
-    @Max(9999)
+    @Max(9_999)
     @JacksonXmlProperty(localName = "limit_second")
     private Integer limitSecond;
 
@@ -143,6 +143,11 @@ public class CardReauthorizeRequest implements SpsRequest<CardAuthorizeResponse>
         return CardAuthorizeResponse.class;
     }
 
+    /**
+     * Set data from payment Info
+     *
+     * @param paymentInfo the payment info
+     */
     public void setPaymentInfo(PaymentInfo paymentInfo) {
         // payment info
         this.setCustCode(paymentInfo.getCustomerCode());

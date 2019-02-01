@@ -33,10 +33,19 @@ public class SpsResult<T extends SpsResponse> {
     @Getter
     private final T body;
 
+
+    /**
+     * Construct a default result
+     */
     public SpsResult() {
         this(999);
     }
 
+    /**
+     * Construct a result with response status code
+     *
+     * @param status The HTTP Status code
+     */
     public SpsResult(int status) {
         this(status, null, null);
     }
@@ -54,8 +63,17 @@ public class SpsResult<T extends SpsResponse> {
         this.body = body;
     }
 
+    /**
+     * To return true if it is successful response after connecting to sbpayment.
+     */
     public boolean isSuccessfulConnection() {
         return 200 == status;
     }
 
+    /**
+     * To return true if the response data is successful
+     */
+    public boolean isSuccess() {
+        return isSuccessfulConnection() && body.isSuccess();
+    }
 }

@@ -7,7 +7,7 @@ package com.vogle.sbpayment.creditcard.params;
  **/
 public enum CardInfoResponseType {
 
-    NONE("0"), All_MASK("1"), LOWER4("2");
+    NONE("0"), ALL_MASK("1"), LOWER4("2");
 
     private String code;
 

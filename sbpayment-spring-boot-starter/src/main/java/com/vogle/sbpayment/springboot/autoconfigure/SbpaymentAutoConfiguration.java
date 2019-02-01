@@ -21,7 +21,6 @@ import com.vogle.sbpayment.client.DefaultSpsManager;
 import com.vogle.sbpayment.client.SpsClient;
 import com.vogle.sbpayment.client.SpsConfig;
 import com.vogle.sbpayment.client.SpsManager;
-import com.vogle.sbpayment.client.SpsReceiver;
 import com.vogle.sbpayment.creditcard.CreditCardPayment;
 import com.vogle.sbpayment.creditcard.DefaultCreditCardPayment;
 import com.vogle.sbpayment.payeasy.DefaultPayEasyPayment;
@@ -38,6 +37,9 @@ import com.vogle.sbpayment.payeasy.PayEasyPayment;
 @EnableConfigurationProperties(SbpaymentProperties.class)
 public class SbpaymentAutoConfiguration {
 
+    /**
+     * {@link SpsManager} in sbpayment-client
+     */
     @Bean
     @ConditionalOnMissingBean
     @ConditionalOnProperty(prefix = "vg.sbpayment.client", name = {"merchant-id", "service-id", "hash-key"})
@@ -64,7 +66,7 @@ public class SbpaymentAutoConfiguration {
     }
 
     /**
-     * sbpayment-creditcard
+     * {@link CreditCardPayment} in sbpayment-creditcard
      */
     @Bean
     @ConditionalOnMissingBean
@@ -92,7 +94,7 @@ public class SbpaymentAutoConfiguration {
     }
 
     /**
-     * sbpayment-payeasy
+     * {@link PayEasyPayment} in sbpayment-payeasy
      */
     @Bean
     @ConditionalOnMissingBean

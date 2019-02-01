@@ -33,7 +33,7 @@ public class CardAuthorizeResponse extends CommonElements {
 
     @Override
     public String getDescription() {
-        return FeatureIds.getDescription(this.getId());
+        return FeatureHelper.getDescription(this.getId());
     }
 
 }

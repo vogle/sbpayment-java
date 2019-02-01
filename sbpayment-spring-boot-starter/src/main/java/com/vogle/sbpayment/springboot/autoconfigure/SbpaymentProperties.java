@@ -18,16 +18,19 @@ public class SbpaymentProperties {
     /**
      * Softbank payment system information
      */
-    private Client client = new Client();
+    private final Client client = new Client();
     /**
      * Credit Card options
      */
-    private CreditCard creditcard = new CreditCard();
+    private final CreditCard creditcard = new CreditCard();
     /**
      * Pay-Easy Options
      */
-    private PayEasy payeasy = new PayEasy();
+    private final PayEasy payeasy = new PayEasy();
 
+    /**
+     * Softbank client configuration
+     */
     @Data
     public static class Client {
         /**
@@ -85,8 +88,11 @@ public class SbpaymentProperties {
         /**
          * Cipher settings
          */
-        private CipherSets cipherSets = new CipherSets();
+        private final CipherSets cipherSets = new CipherSets();
 
+        /**
+         * Cipher configuration
+         */
         @Data
         public static class CipherSets {
 
@@ -94,7 +100,7 @@ public class SbpaymentProperties {
              * Enable Cipher.<br/>
              * 3DES 暗号化使用可否
              */
-            private boolean enabled = false;
+            private boolean enabled;
 
             /**
              * 3DES cipher key.<br/>
@@ -112,39 +118,45 @@ public class SbpaymentProperties {
         }
     }
 
+    /**
+     * CreditCard configuration
+     */
     @Data
     public static class CreditCard {
 
-        private boolean disabled = false;
+        private boolean disabled;
 
         /**
          * 顧客コードを送るとき、SBPS 顧客情報を返却する
          */
-        private boolean customerInfoReturn = false;
+        private boolean customerInfoReturn;
 
         /**
          * カード情報を送るとき、カードブランド情報を返却する。
          */
-        private boolean cardbrandReturn = false;
+        private boolean cardbrandReturn;
 
         /**
          * Alternate client enabled, テスト以外はFalseにしてください。<br/>
          * Trueにしたら、本alternateClientの情報を利用する。
          */
-        private boolean alternateClientEnabled = false;
+        private boolean alternateClientEnabled;
 
         /**
          * Alternate client properties
          */
         @NestedConfigurationProperty
-        private Client alternateClient = new Client();
+        private final Client alternateClient = new Client();
 
     }
 
+    /**
+     * PayEasy configuration
+     */
     @Data
     public static class PayEasy {
 
-        private boolean disabled = false;
+        private boolean disabled;
 
         private Type type = Type.ONLINE;
 
@@ -174,14 +186,17 @@ public class SbpaymentProperties {
          * Alternate client enabled, テスト以外はFalseにしてください。<br/>
          * Trueにしたら、本alternateClientの情報を利用する。
          */
-        private boolean alternateClientEnabled = false;
+        private boolean alternateClientEnabled;
 
         /**
          * Alternate client properties
          */
         @NestedConfigurationProperty
-        private Client alternateClient = new Client();
+        private final Client alternateClient = new Client();
 
+        /**
+         * PayEasy Type
+         */
         enum Type {
             ONLINE, LINK
         }

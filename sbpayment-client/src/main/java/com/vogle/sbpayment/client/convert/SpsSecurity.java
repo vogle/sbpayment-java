@@ -116,9 +116,9 @@ public class SpsSecurity {
     }
 
     private static byte[] rightPad8(final byte[] strByte) {
-        final int repeatSize = 8;
-        final int strLen = strByte.length;
-        final int pads = repeatSize - (strLen % repeatSize);
+        int repeatSize = 8;
+        int strLen = strByte.length;
+        int pads = repeatSize - (strLen % repeatSize);
 
         if (pads == repeatSize) {
             return strByte;
