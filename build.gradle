@@ -49,6 +49,7 @@ configure(javaprojects) {
             dependency 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.9.8'
             dependency 'org.hibernate.validator:hibernate-validator:6.0.14.Final'
             dependency 'org.glassfish:javax.el:3.0.1-b11'
+            dependency 'org.slf4j:slf4j-api:1.7.25'
             dependency 'ch.qos.logback:logback-classic:1.2.3'
 
             dependency 'junit:junit:4.12'
@@ -68,13 +69,14 @@ configure(javaprojects) {
     // Sets common dependencies
     dependencies {
         // log
-        api('ch.qos.logback:logback-classic')
+        implementation 'org.slf4j:slf4j-api'
 
         // test modules
-        testImplementation('junit:junit')
-        testImplementation('org.assertj:assertj-core')
-        testImplementation('org.mockito:mockito-core')
-        testImplementation('org.powermock:powermock-api-mockito2')
+        testImplementation 'ch.qos.logback:logback-classic'
+        testImplementation 'junit:junit'
+        testImplementation 'org.assertj:assertj-core'
+        testImplementation 'org.mockito:mockito-core'
+        testImplementation 'org.powermock:powermock-api-mockito2'
     }
 
     /** Start lombok **/
@@ -139,7 +141,7 @@ configure(javaprojects) {
     apply plugin: 'pmd'
     pmd {
         toolVersion = '6.11.0'
-        ruleSetConfig = rootProject.resources.text.fromFile('config/vogle-ruleset.xml')
+        ruleSetConfig = rootProject.resources.text.fromFile('config/vogle-ruleset-6.11.x.xml')
         ignoreFailures = true
         rulePriority = 5
         // Don't use the default gradle rule sets
@@ -149,7 +151,6 @@ configure(javaprojects) {
     /** Start Spotless **/
     // Spotless is a general-purpose formatting plugin
     apply plugin: "com.diffplug.gradle.spotless"
-
     spotless {
 
         java {
@@ -176,11 +177,10 @@ configure(javaprojects) {
 
         options.use = true
         options.author = true
-        options.version = false
 
-        options.bottom = "©${new Date().format('yyyy')}, vogle.com"
+        options.bottom = "Copyright ${new Date().format('yyyy')}, <a href='http://vogle.com' target='_blank'>vogle labs</a>, All rights reserved."
 
-        options.stylesheetFile = new File(projectDir, "config/javadoc-stylesheet.css")
+        options.stylesheetFile = new File(rootProject.rootDir, "config/dracula-javadoc8.css")
         options.addStringOption('Xdoclint:none', '-quiet')
 
         options.links("http://docs.oracle.com/javase/8/docs/api/")
