@@ -12,7 +12,7 @@
     To completely disable a check, just comment it out or delete it from the file.
 
     Authors: Allan Im
-    https://github.com/vogle/codestyle
+    https://raw.githubusercontent.com/vogle/codestyle/master/checkstyle/vogle-checkstyle.xml
  -->
 
 <module name="Checker">
