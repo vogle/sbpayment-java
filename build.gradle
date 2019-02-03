@@ -1,3 +1,6 @@
+plugins {
+    id 'com.diffplug.gradle.spotless' version '3.17.0'
+}
 description 'Softbank Payment for JAVA'
 
 ext {
@@ -122,21 +125,12 @@ configure(javaprojects) {
 
 
     // Spotless is a general-purpose formatting plugin
-//    apply plugin: "com.diffplug.gradle.spotless"
-//    spotless {
-//
-//        java {
-//            // Format code using google java format
-//            googleJavaFormat()
-//
-//            // Import order
-////            importOrderFile "$rootDir/spotless.importorder"
-//
-//            // Java Source Header File
-////            licenseHeaderFile "$rootDir/spotless.license.java"
-//        }
-//    }
-
+    apply plugin: "com.diffplug.gradle.spotless"
+    spotless {
+        java {
+            licenseHeaderFile "$rootDir/config/license.java"
+        }
+    }
 
 
     // publish
