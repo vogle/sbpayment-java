@@ -1,5 +1,8 @@
 package com.vogle.sbpayment.client.params;
 
+import lombok.Builder;
+import lombok.Data;
+
 import java.util.List;
 
 import javax.validation.Valid;
@@ -9,9 +12,6 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-
-import lombok.Builder;
-import lombok.Data;
 
 /**
  * Payment information

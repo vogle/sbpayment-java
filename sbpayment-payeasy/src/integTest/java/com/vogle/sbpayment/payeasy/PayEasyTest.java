@@ -1,13 +1,5 @@
 package com.vogle.sbpayment.payeasy;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.io.IOException;
-import java.util.Base64;
-
-import org.junit.Before;
-import org.junit.Test;
-
 import com.vogle.sbpayment.client.DefaultSpsManager;
 import com.vogle.sbpayment.client.SpsConfig;
 import com.vogle.sbpayment.client.SpsManager;
@@ -22,6 +14,14 @@ import com.vogle.sbpayment.payeasy.receivers.PayEasyDepositInfo;
 import com.vogle.sbpayment.payeasy.receivers.PayEasyDepositReceived;
 import com.vogle.sbpayment.payeasy.receivers.PayEasyExpiredCancelReceived;
 import com.vogle.sbpayment.payeasy.responses.PayEasyPaymentResponse;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import java.io.IOException;
+import java.util.Base64;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Tests for {@link DefaultPayEasyPayment}

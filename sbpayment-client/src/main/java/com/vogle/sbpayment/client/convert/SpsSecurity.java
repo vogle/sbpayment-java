@@ -1,5 +1,7 @@
 package com.vogle.sbpayment.client.convert;
 
+import org.apache.http.util.Asserts;
+
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -14,8 +16,6 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-
-import org.apache.http.util.Asserts;
 
 /**
  * Security utils by Softbank payment rules.

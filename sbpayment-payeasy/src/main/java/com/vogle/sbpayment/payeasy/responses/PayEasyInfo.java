@@ -1,9 +1,9 @@
 package com.vogle.sbpayment.payeasy.responses;
 
+import com.vogle.sbpayment.client.convert.CipherString;
+
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import lombok.Data;
-
-import com.vogle.sbpayment.client.convert.CipherString;
 
 /**
  * PayEasy Information

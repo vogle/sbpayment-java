@@ -1,5 +1,8 @@
 package com.vogle.sbpayment.client;
 
+import lombok.Builder;
+import lombok.Getter;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Properties;
@@ -7,9 +10,6 @@ import java.util.TimeZone;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-
-import lombok.Builder;
-import lombok.Getter;
 
 /**
  * Softbank payment configuration. <br/>

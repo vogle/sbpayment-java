@@ -1,11 +1,11 @@
 package com.vogle.sbpayment.client;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import com.vogle.sbpayment.client.requests.SpsRequest;
+import com.vogle.sbpayment.client.responses.SpsResponse;
 
 import org.junit.Test;
 
-import com.vogle.sbpayment.client.requests.SpsRequest;
-import com.vogle.sbpayment.client.responses.SpsResponse;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Tests for {@link DefaultSpsClient}

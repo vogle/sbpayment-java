@@ -1,12 +1,12 @@
 package com.vogle.sbpayment.creditcard.requests;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Pattern;
-
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
 
 /**
  * Credit card reauthorize  options

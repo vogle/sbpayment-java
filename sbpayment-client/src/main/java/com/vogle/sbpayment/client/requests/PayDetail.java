@@ -1,12 +1,12 @@
 package com.vogle.sbpayment.client.requests;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Size;
+import com.vogle.sbpayment.client.convert.MultiByteString;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import lombok.Data;
 
-import com.vogle.sbpayment.client.convert.MultiByteString;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Size;
 
 /**
  * Order details

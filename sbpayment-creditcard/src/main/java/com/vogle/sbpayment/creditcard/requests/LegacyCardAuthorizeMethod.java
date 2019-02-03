@@ -1,17 +1,17 @@
 package com.vogle.sbpayment.creditcard.requests;
 
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
+import com.vogle.sbpayment.client.convert.CipherString;
+import com.vogle.sbpayment.client.convert.MultiByteString;
+import com.vogle.sbpayment.creditcard.DealingsType;
+import com.vogle.sbpayment.creditcard.params.ByCreditCard;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
-import com.vogle.sbpayment.client.convert.CipherString;
-import com.vogle.sbpayment.client.convert.MultiByteString;
-import com.vogle.sbpayment.creditcard.DealingsType;
-import com.vogle.sbpayment.creditcard.params.ByCreditCard;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 /**
  * Credit card information with payment options

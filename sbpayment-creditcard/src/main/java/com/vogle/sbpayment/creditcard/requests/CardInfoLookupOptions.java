@@ -1,9 +1,9 @@
 package com.vogle.sbpayment.creditcard.requests;
 
-import javax.validation.constraints.Pattern;
-
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import lombok.Data;
+
+import javax.validation.constraints.Pattern;
 
 /**
  * Card information lookup requests options

@@ -1,11 +1,11 @@
 package com.vogle.sbpayment.client;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.vogle.sbpayment.client.convert.SpsDataConverter;
 import com.vogle.sbpayment.client.receivers.ReceptionResult;
 import com.vogle.sbpayment.client.receivers.SpsReceivedData;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Implements for {@link SpsReceiver}

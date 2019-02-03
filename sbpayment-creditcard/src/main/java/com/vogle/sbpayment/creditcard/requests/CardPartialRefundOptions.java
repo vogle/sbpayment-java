@@ -1,10 +1,10 @@
 package com.vogle.sbpayment.creditcard.requests;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import lombok.Data;
+
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 
 /**
  * Card Partial Refund Options

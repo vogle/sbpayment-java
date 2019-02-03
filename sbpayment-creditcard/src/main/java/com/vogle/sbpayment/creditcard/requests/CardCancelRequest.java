@@ -1,16 +1,16 @@
 package com.vogle.sbpayment.creditcard.requests;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
+import com.vogle.sbpayment.client.requests.SpsRequest;
+import com.vogle.sbpayment.creditcard.responses.DefaultResponse;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import lombok.Data;
 
-import com.vogle.sbpayment.client.requests.SpsRequest;
-import com.vogle.sbpayment.creditcard.responses.DefaultResponse;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 /**
  * Credit card cancel or refund request<br/>

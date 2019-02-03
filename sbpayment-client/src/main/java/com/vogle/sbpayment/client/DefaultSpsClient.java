@@ -1,13 +1,7 @@
 package com.vogle.sbpayment.client;
 
-import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.vogle.sbpayment.client.requests.SpsRequest;
+import com.vogle.sbpayment.client.responses.SpsResponse;
 
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
@@ -25,8 +19,14 @@ import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.vogle.sbpayment.client.requests.SpsRequest;
-import com.vogle.sbpayment.client.responses.SpsResponse;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Default Softbank payment client

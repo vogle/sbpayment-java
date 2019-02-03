@@ -1,9 +1,8 @@
 package com.vogle.sbpayment.springboot.autoconfigure;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.util.HashSet;
-import java.util.Set;
+import com.vogle.sbpayment.client.SpsManager;
+import com.vogle.sbpayment.creditcard.CreditCardPayment;
+import com.vogle.sbpayment.payeasy.PayEasyPayment;
 
 import org.junit.After;
 import org.junit.Before;
@@ -13,9 +12,10 @@ import org.junit.rules.ExpectedException;
 import org.springframework.boot.test.util.TestPropertyValues;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-import com.vogle.sbpayment.client.SpsManager;
-import com.vogle.sbpayment.creditcard.CreditCardPayment;
-import com.vogle.sbpayment.payeasy.PayEasyPayment;
+import java.util.HashSet;
+import java.util.Set;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Tests for {@link SbpaymentAutoConfiguration}

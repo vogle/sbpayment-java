@@ -1,8 +1,5 @@
 package com.vogle.sbpayment.creditcard;
 
-import java.util.Arrays;
-import java.util.List;
-
 import com.vogle.sbpayment.client.SpsClient;
 import com.vogle.sbpayment.client.SpsManager;
 import com.vogle.sbpayment.client.SpsResult;
@@ -52,6 +49,9 @@ import com.vogle.sbpayment.creditcard.responses.DefaultResponse;
 import com.vogle.sbpayment.creditcard.responses.LegacyCardInfoSaveResponse;
 import com.vogle.sbpayment.creditcard.responses.LegacyCardInfoUpdateResponse;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * implements for {@link CreditCardPayment}
  *
@@ -75,23 +75,6 @@ public class DefaultCreditCardPayment implements CreditCardPayment {
         List<Feature> featureList = Arrays.asList(enableFeatures);
         this.returnCustomerInfo = featureList.contains(Feature.RETURN_CUSTOMER_INFO) ? "1" : "0";
         this.returnCardBrand = featureList.contains(Feature.RETURN_CARD_BRAND) ? "1" : "0";
-    }
-
-    /**
-     * Credit-Card payment Features
-     */
-    public enum Feature {
-        /**
-         * When sending customer information, return it from Softbank payment.<br/>
-         * 顧客コードを送るとき、ソフトバングペイメントから顧客情報を返却する。
-         */
-        RETURN_CUSTOMER_INFO,
-
-        /**
-         * When sending credit-card information, return credit-card brand.<br/>
-         * カード情報を送るとき、カードブランド情報を返却する。
-         */
-        RETURN_CARD_BRAND
     }
 
     private CardAuthorizeRequest newCardAuthorizeRequest(PaymentInfo paymentInfo, DealingsType dealingsType,
@@ -445,6 +428,23 @@ public class DefaultCreditCardPayment implements CreditCardPayment {
         request.setPayOptions(options);
 
         return client.execute(request);
+    }
+
+    /**
+     * Credit-Card payment Features
+     */
+    public enum Feature {
+        /**
+         * When sending customer information, return it from Softbank payment.<br/>
+         * 顧客コードを送るとき、ソフトバングペイメントから顧客情報を返却する。
+         */
+        RETURN_CUSTOMER_INFO,
+
+        /**
+         * When sending credit-card information, return credit-card brand.<br/>
+         * カード情報を送るとき、カードブランド情報を返却する。
+         */
+        RETURN_CARD_BRAND
     }
 
 }

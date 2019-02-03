@@ -1,11 +1,11 @@
 package com.vogle.sbpayment.payeasy.params;
 
+import lombok.Builder;
+import lombok.Data;
+
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
-
-import lombok.Builder;
-import lombok.Data;
 
 /**
  * PayEasy payments information
