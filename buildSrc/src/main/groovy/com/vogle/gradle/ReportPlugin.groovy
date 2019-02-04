@@ -30,7 +30,7 @@ class ReportPlugin implements Plugin<Project> {
     def applyJacoco = { Project project ->
         project.plugins.apply(JacocoPlugin)
         project.jacoco {
-            toolVersion = '0.8.3'
+            toolVersion = '0.8.+'
         }
         project.jacocoTestReport {
             reports {

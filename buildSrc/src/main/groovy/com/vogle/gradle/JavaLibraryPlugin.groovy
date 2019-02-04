@@ -2,6 +2,7 @@ package com.vogle.gradle
 
 import io.franzbecker.gradle.lombok.LombokPlugin
 import io.spring.gradle.dependencymanagement.DependencyManagementPlugin
+import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.tasks.compile.AbstractCompile
@@ -30,18 +31,22 @@ class JavaLibraryPlugin implements Plugin<Project> {
         project.tasks.withType(AbstractCompile).each {
             it.options.encoding = 'UTF-8'
         }
-        project.plugins.withType(IdeaPlugin) {
-            project.idea.module {
-                downloadJavadoc = true
-                downloadSources = true
+
+        if (BasePlugin.BuildType.DEBUG == project.ext.env) {
+            project.plugins.withType(IdeaPlugin) {
+                project.idea.module {
+                    downloadJavadoc = true
+                    downloadSources = true
+                }
+            }
+            project.plugins.withType(EclipsePlugin) {
+                project.eclipse.classpath {
+                    downloadSources = true
+                    downloadJavadoc = true
+                }
             }
         }
-        project.plugins.withType(EclipsePlugin) {
-            project.eclipse.classpath {
-                downloadSources = true
-                downloadJavadoc = true
-            }
-        }
+
         project.javadoc {
             source = project.sourceSets.main.allJava
             title = project.description
@@ -53,6 +58,10 @@ class JavaLibraryPlugin implements Plugin<Project> {
             options.author = true
             options.version = false
             options.addStringOption('Xdoclint:none', '-quiet')
+
+            if (JavaVersion.current().isJava9Compatible()) {
+                options.addBooleanOption('html5', true)
+            }
         }
 
         // apply io.spring.dependency-management
@@ -61,7 +70,7 @@ class JavaLibraryPlugin implements Plugin<Project> {
         // apply io.franzbecker.gradle-lombok
         project.plugins.apply(LombokPlugin)
         project.lombok {
-            version = '1.18.4'
+            version = '1.+'
         }
     }
 }

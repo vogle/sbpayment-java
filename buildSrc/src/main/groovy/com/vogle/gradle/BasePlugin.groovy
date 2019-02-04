@@ -36,8 +36,6 @@ class BasePlugin implements Plugin<Project> {
         PLUGINS_IN_PROJECT++
     }
 
-    static final String ENV_LOCAL = "LOCAL-IDE"
-
     @Override
     void apply(Project project) {
         Gradle gradle = project.gradle
@@ -51,7 +49,7 @@ class BasePlugin implements Plugin<Project> {
         if (System.getProperty('env')) {
             project.ext.env = System.getProperty('env')
         } else {
-            project.ext.env = ENV_LOCAL
+            project.ext.env = BuildType.DEBUG
         }
 
         updatePluginCount()
@@ -63,7 +61,7 @@ class BasePlugin implements Plugin<Project> {
             def logLine = "+----------------------------------------------------------+"
 
             project.logger.quiet "${logLine}"
-            project.logger.quiet " .-.-. .-.-. .-.-. .-.-. .-.-.          Gradle Build Plugin "
+            project.logger.quiet " .-.-. .-.-. .-.-. .-.-. .-.-.          Gradle Vogle Plugin "
             project.logger.quiet " '. V )'. O )'. G )'. L )'. E )                by vogle.com "
             project.logger.quiet "   ).'   ).'   ).'   ).'   ).' ${new Date()} "
             project.logger.quiet "${logLine}"
@@ -91,7 +89,7 @@ class BasePlugin implements Plugin<Project> {
         project.plugins.apply(ContactsPlugin)
 
         // ADD IDE if local env
-        if (ENV_LOCAL == project.ext.env) {
+        if (BuildType.DEBUG == project.ext.env) {
 
             // Apply IDEA
             project.plugins.apply(IdeaPlugin)
@@ -100,5 +98,9 @@ class BasePlugin implements Plugin<Project> {
             project.plugins.apply(EclipsePlugin)
 
         }
+    }
+
+    enum BuildType {
+        DEBUG, RELEASE
     }
 }

@@ -51,7 +51,7 @@ class CodeQualityPlugin implements Plugin<Project> {
     def applyPmd = { Project project ->
         project.plugins.apply(PmdPlugin)
         project.pmd {
-            toolVersion = '6.11.0'
+            toolVersion = '6.+'
             ignoreFailures = true
             rulePriority = 5
             // Don't use the default gradle rule sets

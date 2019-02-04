@@ -9,10 +9,9 @@ repositories {
 }
 
 dependencies {
-    implementation 'io.spring.gradle:dependency-management-plugin:1.0.6.RELEASE'
-    implementation 'io.franzbecker:gradle-lombok:1.14'
-    implementation 'com.diffplug.spotless:spotless-plugin-gradle:3.17.0'
-    implementation 'com.netflix.nebula:nebula-publishing-plugin:9.5.0'
+    implementation 'io.spring.gradle:dependency-management-plugin:1.+'
+    implementation 'io.franzbecker:gradle-lombok:1.+'
+    implementation 'com.netflix.nebula:nebula-publishing-plugin:9.+'
 }
 
 
@@ -37,6 +36,10 @@ gradlePlugin {
         archivePlugin {
             id = 'vogle.archive'
             implementationClass = 'com.vogle.gradle.ArchivePlugin'
+        }
+        nexusPublishPlugin {
+            id = 'vogle.nexus-publish'
+            implementationClass = 'com.vogle.gradle.NexusPublishPlugin'
         }
     }
 }
