@@ -1,15 +1,17 @@
-description = 'sbpayment - client'
+description 'Connect to sbpayment system'
 
 dependencies {
 
     // http connect
-    compile('org.apache.httpcomponents:httpclient')
+    api('org.apache.httpcomponents:httpclient')
 
     // XML Converter
-    compile('com.fasterxml.jackson.dataformat:jackson-dataformat-xml')
+    api('com.fasterxml.jackson.dataformat:jackson-dataformat-xml')
 
     // validation
-    compile('org.hibernate.validator:hibernate-validator')
+    api('org.hibernate.validator:hibernate-validator')
     runtimeOnly('org.glassfish:javax.el')
 
+    // log
+    api 'org.slf4j:slf4j-api'
 }

@@ -1,3 +1,21 @@
+/*
+ * Copyright 2019 VOGLE Labs.
+ *
+ * This file is part of sbpayment-java - Sbpayment client.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.vogle.sbpayment.client;
 
 import com.vogle.sbpayment.client.convert.SpsDataConverter;
@@ -13,7 +31,7 @@ import org.slf4j.LoggerFactory;
  * @author Allan Im
  */
 public class DefaultSpsReceiver implements SpsReceiver {
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private static final Logger LOGGER = LoggerFactory.getLogger(DefaultSpsReceiver.class);
 
     private final String merchantId;
     private final String serviceId;
@@ -23,13 +41,12 @@ public class DefaultSpsReceiver implements SpsReceiver {
     /**
      * Create Receiver
      *
-     * @param merchantId from Softbank Payment.
-     * @param serviceId  from Softbank Payment.
-     * @param mapper     The {@link SpsMapper}
+     * @param config The Softbank Payment configuration
+     * @param mapper The {@link SpsMapper}
      */
-    public DefaultSpsReceiver(String merchantId, String serviceId, SpsMapper mapper) {
-        this.merchantId = merchantId;
-        this.serviceId = serviceId;
+    public DefaultSpsReceiver(SpsConfig config, SpsMapper mapper) {
+        this.merchantId = config.getMerchantId();
+        this.serviceId = config.getServiceId();
         this.mapper = mapper;
     }
 
@@ -45,8 +62,8 @@ public class DefaultSpsReceiver implements SpsReceiver {
     public <T extends SpsReceivedData> T receive(String xml, Class<T> receivedDataClass)
             throws InvalidAccessException {
 
-        if (logger.isDebugEnabled()) {
-            logger.debug("SPS Receiver data : {}", xml);
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("SPS Receiver data : {}", xml);
         }
 
         T receivedData = mapper.xmlToObject(xml, receivedDataClass);
@@ -67,8 +84,8 @@ public class DefaultSpsReceiver implements SpsReceiver {
             throw new InvalidAccessException("The hashcode is wrong: " + receivedData.getSpsHashcode());
         }
 
-        if (logger.isDebugEnabled()) {
-            logger.debug("SPS Received data : {}", receivedData);
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("SPS Received data : {}", receivedData);
         }
 
         return receivedData;
@@ -82,7 +99,7 @@ public class DefaultSpsReceiver implements SpsReceiver {
      */
     @Override
     public String resultSuccessful(String featureId) {
-        SpsValidator.assertsNotEmpty(featureId, "featureId");
+        ValidationHelper.assertsNotEmpty(featureId, "featureId");
         return mapper.objectToXml(new ReceptionResult(featureId));
     }
 
@@ -95,8 +112,8 @@ public class DefaultSpsReceiver implements SpsReceiver {
      */
     @Override
     public String resultFailed(String featureId, String errorMessage) {
-        SpsValidator.assertsNotEmpty(featureId, "featureId");
-        SpsValidator.assertsNotEmpty(errorMessage, "errorMessage");
+        ValidationHelper.assertsNotEmpty(featureId, "featureId");
+        ValidationHelper.assertsNotEmpty(errorMessage, "errorMessage");
         return mapper.objectToXml(new ReceptionResult(featureId, errorMessage));
     }
 

@@ -1,3 +1,21 @@
+/*
+ * Copyright 2019 VOGLE Labs.
+ *
+ * This file is part of sbpayment-java - Sbpayment client.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.vogle.sbpayment.client.convert;
 
 import org.apache.http.util.Asserts;
@@ -116,9 +134,9 @@ public class SpsSecurity {
     }
 
     private static byte[] rightPad8(final byte[] strByte) {
-        final int repeatSize = 8;
-        final int strLen = strByte.length;
-        final int pads = repeatSize - (strLen % repeatSize);
+        int repeatSize = 8;
+        int strLen = strByte.length;
+        int pads = repeatSize - (strLen % repeatSize);
 
         if (pads == repeatSize) {
             return strByte;

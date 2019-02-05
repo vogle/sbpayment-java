@@ -1,3 +1,21 @@
+/*
+ * Copyright 2019 VOGLE Labs.
+ *
+ * This file is part of sbpayment-java - Sbpayment client.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.vogle.sbpayment.client.requests;
 
 import com.vogle.sbpayment.client.params.Item;
@@ -12,7 +30,7 @@ import java.util.List;
  *
  * @author Allan Im
  **/
-public class RequestMapper {
+public class RequestHelper {
 
     /**
      * convert Item to Pay detail
@@ -79,6 +97,13 @@ public class RequestMapper {
         return date.format(DateTimeFormatter.BASIC_ISO_DATE);
     }
 
+    /**
+     * Avoid NULL
+     *
+     * @param origin       origin data
+     * @param defaultValue default value
+     * @return return The Default value if origin data is null
+     */
     public static String avoidNull(String origin, String defaultValue) {
         return (origin == null) ? defaultValue : origin;
     }

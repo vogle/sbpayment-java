@@ -1,10 +1,29 @@
+/*
+ * Copyright 2019 VOGLE Labs.
+ *
+ * This file is part of sbpayment-java - Sbpayment client.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.vogle.sbpayment.payeasy;
 
 import com.vogle.sbpayment.client.InvalidAccessException;
 import com.vogle.sbpayment.client.SpsClient;
+import com.vogle.sbpayment.client.SpsManager;
 import com.vogle.sbpayment.client.SpsReceiver;
 import com.vogle.sbpayment.client.SpsResult;
-import com.vogle.sbpayment.client.SpsValidator;
+import com.vogle.sbpayment.client.ValidationHelper;
 import com.vogle.sbpayment.client.params.PaymentInfo;
 import com.vogle.sbpayment.payeasy.params.IssueType;
 import com.vogle.sbpayment.payeasy.params.PayEasy;
@@ -15,16 +34,16 @@ import com.vogle.sbpayment.payeasy.requests.PayEasyMethod;
 import com.vogle.sbpayment.payeasy.requests.PayEasyPaymentRequest;
 import com.vogle.sbpayment.payeasy.responses.PayEasyPaymentResponse;
 
-import static com.vogle.sbpayment.client.requests.RequestMapper.avoidNull;
-import static com.vogle.sbpayment.client.requests.RequestMapper.dateOnly;
-import static com.vogle.sbpayment.client.requests.RequestMapper.mapItem;
+import static com.vogle.sbpayment.client.requests.RequestHelper.avoidNull;
+import static com.vogle.sbpayment.client.requests.RequestHelper.dateOnly;
+import static com.vogle.sbpayment.client.requests.RequestHelper.mapItem;
 
 /**
- * Implements for {@link PayEasyService}
+ * Implements for {@link PayEasyPayment}
  *
  * @author Allan Im
  **/
-public class DefaultPayEasyService implements PayEasyService {
+public class DefaultPayEasyPayment implements PayEasyPayment {
 
     private final String depositId = "NT01-00103-703";
     private final String expiredId = "NT01-00104-703";
@@ -32,7 +51,8 @@ public class DefaultPayEasyService implements PayEasyService {
     private final SpsClient client;
     private final SpsReceiver receiver;
 
-    private PayEasyType type;
+    private final PayEasyType type;
+
     private String payCsv;
     private String billInfo;
     private String billInfoKana;
@@ -41,29 +61,27 @@ public class DefaultPayEasyService implements PayEasyService {
     /**
      * Make LinkType Pay-Easy
      *
-     * @param client   The SpsClient
-     * @param receiver The SpsReceiver
-     * @param payCsv   金融機関コード、情報リンク方式の場合のみ必須です。ただし、電算システムを利用の場合は不要です。
+     * @param manager The SpsManager
+     * @param payCsv  金融機関コード、情報リンク方式の場合のみ必須です。ただし、電算システムを利用の場合は不要です。
      */
-    public DefaultPayEasyService(SpsClient client, SpsReceiver receiver, String payCsv) {
+    public DefaultPayEasyPayment(SpsManager manager, String payCsv) {
         this.type = PayEasyType.LINK;
-        this.client = client;
-        this.receiver = receiver;
+        this.client = manager.client();
+        this.receiver = manager.receiver();
         this.payCsv = payCsv;
     }
 
     /**
      * Make OnlineType Pay-Easy
      *
-     * @param client       The SpsClient
-     * @param receiver     The SpsReceiver
+     * @param manager      The SpsManager
      * @param billInfo     請求内容漢字、ATM 等に表示されます。（全角）
      * @param billInfoKana 請求内容カナ、ATM 等に表示されます。（全角英数カナ）
      */
-    public DefaultPayEasyService(SpsClient client, SpsReceiver receiver, String billInfo, String billInfoKana) {
+    public DefaultPayEasyPayment(SpsManager manager, String billInfo, String billInfoKana) {
         this.type = PayEasyType.ONLINE;
-        this.client = client;
-        this.receiver = receiver;
+        this.client = manager.client();
+        this.receiver = manager.receiver();
         this.billInfo = billInfo;
         this.billInfoKana = billInfoKana;
     }
@@ -80,16 +98,16 @@ public class DefaultPayEasyService implements PayEasyService {
 
     @Override
     public SpsResult<PayEasyPaymentResponse> payment(PaymentInfo paymentInfo, PayEasy payEasy) {
-        SpsValidator.beanValidate(paymentInfo, payEasy);
+        ValidationHelper.beanValidate(paymentInfo, payEasy);
 
         PayEasyPaymentRequest request = client.newRequest(PayEasyPaymentRequest.class);
 
         if (PayEasyType.LINK.equals(type)) {
-            SpsValidator.assertsNotNull("payCsv", payCsv);
+            ValidationHelper.assertsNotNull("payCsv", payCsv);
         }
         if (PayEasyType.ONLINE.equals(type)) {
-            SpsValidator.assertsNotNull("billInfo", billInfo);
-            SpsValidator.assertsNotNull("billInfoKana", billInfoKana);
+            ValidationHelper.assertsNotNull("billInfo", billInfo);
+            ValidationHelper.assertsNotNull("billInfoKana", billInfoKana);
         }
 
         // payment info
@@ -137,7 +155,7 @@ public class DefaultPayEasyService implements PayEasyService {
 
     @Override
     public PayEasyDepositReceived receiveDeposit(String xml) throws InvalidAccessException {
-        SpsValidator.assertsNotEmpty(xml, "xml");
+        ValidationHelper.assertsNotEmpty(xml, "xml");
 
         PayEasyDepositReceived request = receiver.receive(xml, PayEasyDepositReceived.class);
 

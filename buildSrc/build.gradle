@@ -1,0 +1,45 @@
+plugins {
+    id 'java-gradle-plugin'
+}
+
+repositories {
+    maven {
+        url "https://plugins.gradle.org/m2/"
+    }
+}
+
+dependencies {
+    implementation 'io.spring.gradle:dependency-management-plugin:1.+'
+    implementation 'io.franzbecker:gradle-lombok:1.+'
+    implementation 'com.netflix.nebula:nebula-publishing-plugin:9.+'
+}
+
+
+gradlePlugin {
+    plugins {
+        base {
+            id = 'vogle.base'
+            implementationClass = 'com.vogle.gradle.BasePlugin'
+        }
+        javaLibrary {
+            id = 'vogle.java-library'
+            implementationClass = 'com.vogle.gradle.JavaLibraryPlugin'
+        }
+        codeQuality {
+            id = 'vogle.code-quality'
+            implementationClass = 'com.vogle.gradle.CodeQualityPlugin'
+        }
+        reportPlugin {
+            id = 'vogle.report'
+            implementationClass = 'com.vogle.gradle.ReportPlugin'
+        }
+        archivePlugin {
+            id = 'vogle.archive'
+            implementationClass = 'com.vogle.gradle.ArchivePlugin'
+        }
+        nexusPublishPlugin {
+            id = 'vogle.nexus-publish'
+            implementationClass = 'com.vogle.gradle.NexusPublishPlugin'
+        }
+    }
+}

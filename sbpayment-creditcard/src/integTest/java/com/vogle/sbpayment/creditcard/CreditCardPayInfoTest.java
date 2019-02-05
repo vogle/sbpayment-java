@@ -1,3 +1,21 @@
+/*
+ * Copyright 2019 VOGLE Labs.
+ *
+ * This file is part of sbpayment-java - Sbpayment client.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.vogle.sbpayment.creditcard;
 
 import com.vogle.sbpayment.client.SpsResult;
@@ -12,28 +30,28 @@ import com.vogle.sbpayment.creditcard.responses.CardTranLookupResponse;
 import com.vogle.sbpayment.creditcard.responses.CommitStatus;
 import com.vogle.sbpayment.creditcard.responses.PaymentStatus;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.junit.Before;
 import org.junit.Test;
 
-import static com.vogle.sbpayment.creditcard.DefaultCreditCardService.Feature.RETURN_CARD_BRAND;
-import static com.vogle.sbpayment.creditcard.DefaultCreditCardService.Feature.RETURN_CUSTOMER_INFO;
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.vogle.sbpayment.creditcard.DefaultCreditCardPayment.Feature.RETURN_CARD_BRAND;
+import static com.vogle.sbpayment.creditcard.DefaultCreditCardPayment.Feature.RETURN_CUSTOMER_INFO;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Tests for {@link CreditCardService} to get payment info
+ * Tests for {@link CreditCardPayment} to get payment info
  *
  * @author Allan Im
  **/
 public class CreditCardPayInfoTest extends AbstractSettings {
 
-    private CreditCardService service;
+    private CreditCardPayment payment;
 
     @Before
     public void init() {
-        service = new DefaultCreditCardService(client(), RETURN_CARD_BRAND, RETURN_CUSTOMER_INFO);
+        payment = new DefaultCreditCardPayment(manager(), RETURN_CARD_BRAND, RETURN_CUSTOMER_INFO);
     }
 
     @Test
@@ -63,7 +81,7 @@ public class CreditCardPayInfoTest extends AbstractSettings {
         creditCard.setDivideTimes(3);
 
         // test pay
-        SpsResult<CardTranLookupResponse> lookup = testPay(paymentInfo, creditCard, CardInfoResponseType.All_MASK);
+        SpsResult<CardTranLookupResponse> lookup = testPay(paymentInfo, creditCard, CardInfoResponseType.ALL_MASK);
 
         PayMethodInfoDetail detail = lookup.getBody().getPayMethodInfo().getPayMethodInfoDetail();
         assertThat(detail).isNotNull();
@@ -84,7 +102,7 @@ public class CreditCardPayInfoTest extends AbstractSettings {
         creditCard.setDivideTimes(3);
 
         // test pay
-        SpsResult<CardTranLookupResponse> lookup = testPay(paymentInfo, creditCard, CardInfoResponseType.All_MASK);
+        SpsResult<CardTranLookupResponse> lookup = testPay(paymentInfo, creditCard, CardInfoResponseType.ALL_MASK);
 
         PayMethodInfoDetail detail = lookup.getBody().getPayMethodInfo().getPayMethodInfoDetail();
         assertThat(detail).isNotNull();
@@ -105,7 +123,7 @@ public class CreditCardPayInfoTest extends AbstractSettings {
         creditCard.setDivideTimes(3);
 
         // test pay
-        SpsResult<CardTranLookupResponse> lookup = testPay(paymentInfo, creditCard, CardInfoResponseType.All_MASK);
+        SpsResult<CardTranLookupResponse> lookup = testPay(paymentInfo, creditCard, CardInfoResponseType.ALL_MASK);
 
         PayMethodInfoDetail detail = lookup.getBody().getPayMethodInfo().getPayMethodInfoDetail();
         assertThat(detail).isNotNull();
@@ -166,14 +184,14 @@ public class CreditCardPayInfoTest extends AbstractSettings {
                                                       CardInfoResponseType responseType) {
 
         // authorize
-        SpsResult<CardAuthorizeResponse> authorize = service.authorize(paymentInfo, creditCard);
+        SpsResult<CardAuthorizeResponse> authorize = payment.authorize(paymentInfo, creditCard);
         String transactionId = authorize.getBody().getTrackingId();
 
         // commit
-        service.commit(transactionId);
+        payment.commit(transactionId);
 
         // lookup
-        SpsResult<CardTranLookupResponse> lookup = service.lookup(transactionId, responseType);
+        SpsResult<CardTranLookupResponse> lookup = payment.lookup(transactionId, responseType);
 
         assertThat(lookup).isNotNull();
         assertThat(lookup.getStatus()).isEqualTo(200);
@@ -184,10 +202,10 @@ public class CreditCardPayInfoTest extends AbstractSettings {
         CardTranLookupMethodInfo cardInfo = lookup.getBody().getPayMethodInfo();
         assertThat(cardInfo).isNotNull();
         assertThat(cardInfo.getCcCompanyCode()).isNotEmpty();
-        assertThat(cardInfo.mapCreditCardBrand()).isEqualTo(CreditCardBrand.VISA);
+        assertThat(cardInfo.getCreditCardBrand()).isEqualTo(CreditCardBrand.VISA);
         assertThat(cardInfo.getRecognizedNo()).isNotEmpty();
-        assertThat(cardInfo.mapCommitStatus()).isEqualTo(CommitStatus.COMMIT);
-        assertThat(cardInfo.mapPaymentStatus()).isEqualTo(PaymentStatus.AUTHORIZED);
+        assertThat(cardInfo.getCommitStatusType()).isEqualTo(CommitStatus.COMMIT);
+        assertThat(cardInfo.getPaymentStatusType()).isEqualTo(PaymentStatus.AUTHORIZED);
 
         return lookup;
     }

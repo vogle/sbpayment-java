@@ -1,3 +1,21 @@
+/*
+ * Copyright 2019 VOGLE Labs.
+ *
+ * This file is part of sbpayment-java - Sbpayment client.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.vogle.sbpayment.creditcard;
 
 import com.vogle.sbpayment.client.SpsResult;
@@ -15,22 +33,22 @@ import com.vogle.sbpayment.creditcard.responses.TransactionStatus;
 import org.junit.Before;
 import org.junit.Test;
 
-import static com.vogle.sbpayment.creditcard.DefaultCreditCardService.Feature.RETURN_CARD_BRAND;
-import static com.vogle.sbpayment.creditcard.DefaultCreditCardService.Feature.RETURN_CUSTOMER_INFO;
+import static com.vogle.sbpayment.creditcard.DefaultCreditCardPayment.Feature.RETURN_CARD_BRAND;
+import static com.vogle.sbpayment.creditcard.DefaultCreditCardPayment.Feature.RETURN_CUSTOMER_INFO;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Tests for {@link CreditCardService} Transaction services
+ * Tests for {@link CreditCardPayment} Transaction services
  *
  * @author Allan Im
  **/
 public class CreditCardTransactionFlowTest extends AbstractSettings {
 
-    private CreditCardService service;
+    private CreditCardPayment payment;
 
     @Before
     public void init() {
-        service = new DefaultCreditCardService(client(), RETURN_CARD_BRAND, RETURN_CUSTOMER_INFO);
+        payment = new DefaultCreditCardPayment(manager(), RETURN_CARD_BRAND, RETURN_CUSTOMER_INFO);
     }
 
     private String authorize() {
@@ -39,7 +57,7 @@ public class CreditCardTransactionFlowTest extends AbstractSettings {
         ByCreditCard creditCard = getDefaultPayCreditCard();
 
         // when
-        SpsResult<CardAuthorizeResponse> authorize = service.authorize(paymentInfo, creditCard);
+        SpsResult<CardAuthorizeResponse> authorize = payment.authorize(paymentInfo, creditCard);
 
         // then
         assertAuthorize(authorize);
@@ -48,16 +66,16 @@ public class CreditCardTransactionFlowTest extends AbstractSettings {
 
     private PaymentStatus lookup(String transactionId) {
         // when
-        SpsResult<CardTranLookupResponse> lookup = service.lookup(transactionId);
+        SpsResult<CardTranLookupResponse> lookup = payment.lookup(transactionId);
 
         // then
         assertLookup(lookup);
-        return lookup.getBody().getPayMethodInfo().mapPaymentStatus();
+        return lookup.getBody().getPayMethodInfo().getPaymentStatusType();
     }
 
     private void cancel(String transactionId) {
         // when
-        SpsResult<DefaultResponse> cancel = service.cancel(transactionId);
+        SpsResult<DefaultResponse> cancel = payment.cancel(transactionId);
 
         // then
         assertTransaction(cancel);
@@ -84,11 +102,11 @@ public class CreditCardTransactionFlowTest extends AbstractSettings {
         String transactionId = authorize();
 
         // capture
-        SpsResult<DefaultResponse> capture = service.capture(transactionId);
+        SpsResult<DefaultResponse> capture = payment.capture(transactionId);
         assertTransaction(capture);
 
         // refund
-        SpsResult<DefaultResponse> refund = service.refund(transactionId);
+        SpsResult<DefaultResponse> refund = payment.refund(transactionId);
         assertTransaction(refund);
 
         // lookup
@@ -101,11 +119,11 @@ public class CreditCardTransactionFlowTest extends AbstractSettings {
         String transactionId = authorize();
 
         // capture
-        SpsResult<DefaultResponse> capture = service.capture(transactionId, 500);
+        SpsResult<DefaultResponse> capture = payment.capture(transactionId, 500);
         assertTransaction(capture);
 
         // refund
-        SpsResult<DefaultResponse> refund = service.cancel(transactionId);
+        SpsResult<DefaultResponse> refund = payment.cancel(transactionId);
         assertTransaction(refund);
 
         // lookup
@@ -119,11 +137,11 @@ public class CreditCardTransactionFlowTest extends AbstractSettings {
         String transactionId = authorize();
 
         // capture
-        SpsResult<DefaultResponse> capture = service.capture(transactionId);
+        SpsResult<DefaultResponse> capture = payment.capture(transactionId);
         assertTransaction(capture);
 
         // refund
-        SpsResult<DefaultResponse> refund100 = service.refund(transactionId, 100);
+        SpsResult<DefaultResponse> refund100 = payment.refund(transactionId, 100);
         assertTransaction(refund100);
 
         // lookup
@@ -137,11 +155,11 @@ public class CreditCardTransactionFlowTest extends AbstractSettings {
         String transactionId = authorize();
 
         // capture
-        SpsResult<DefaultResponse> capture = service.capture(transactionId, 500);
+        SpsResult<DefaultResponse> capture = payment.capture(transactionId, 500);
         assertTransaction(capture);
 
         // refund
-        SpsResult<DefaultResponse> refund = service.refund(transactionId, 200);
+        SpsResult<DefaultResponse> refund = payment.refund(transactionId, 200);
         assertTransaction(refund);
 
         // lookup
@@ -159,7 +177,7 @@ public class CreditCardTransactionFlowTest extends AbstractSettings {
                 .trackingId(orgTransactionId)
                 .build();
 
-        SpsResult<CardAuthorizeResponse> reauthorize = service.reauthorize(newPaymentInfo, existingCard);
+        SpsResult<CardAuthorizeResponse> reauthorize = payment.reauthorize(newPaymentInfo, existingCard);
         String transactionId = reauthorize.getBody().getTrackingId();
         assertAuthorize(reauthorize);
 
@@ -185,7 +203,7 @@ public class CreditCardTransactionFlowTest extends AbstractSettings {
                 .divideTimes(5)
                 .build();
 
-        SpsResult<CardAuthorizeResponse> reauthorize = service.reauthorize(newPaymentInfo, existingCard);
+        SpsResult<CardAuthorizeResponse> reauthorize = payment.reauthorize(newPaymentInfo, existingCard);
         assertAuthorize(reauthorize);
 
         String transactionId = reauthorize.getBody().getTrackingId();
@@ -224,7 +242,7 @@ public class CreditCardTransactionFlowTest extends AbstractSettings {
 
         assertThat(authorize.getBody().getTrackingId()).isNotBlank();
         assertThat(authorize.getBody().getPayMethodInfo()).isNotNull();
-        assertThat(authorize.getBody().getPayMethodInfo().mapCreditCardBrand())
+        assertThat(authorize.getBody().getPayMethodInfo().getCreditCardBrand())
                 .isEqualTo(CreditCardBrand.VISA);
     }
 
@@ -234,11 +252,11 @@ public class CreditCardTransactionFlowTest extends AbstractSettings {
 
     private void assertLookup(SpsResult<CardTranLookupResponse> lookup) {
         assertCommon(lookup);
-        assertThat(lookup.getBody().mapTransactionStatus()).isEqualTo(TransactionStatus.NORMAL);
+        assertThat(lookup.getBody().getTransactionStatus()).isEqualTo(TransactionStatus.NORMAL);
 
         CardTranLookupMethodInfo cardInfo = lookup.getBody().getPayMethodInfo();
-        assertThat(cardInfo.mapCreditCardBrand()).isEqualTo(CreditCardBrand.VISA);
-        assertThat(cardInfo.mapCommitStatus()).isEqualTo(CommitStatus.UNPROCESSED);
+        assertThat(cardInfo.getCreditCardBrand()).isEqualTo(CreditCardBrand.VISA);
+        assertThat(cardInfo.getCommitStatusType()).isEqualTo(CommitStatus.UNPROCESSED);
     }
 
     private void assertCommon(SpsResult<?> result) {

@@ -1,3 +1,21 @@
+/*
+ * Copyright 2019 VOGLE Labs.
+ *
+ * This file is part of sbpayment-java - Sbpayment client.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.vogle.sbpayment.client;
 
 import com.vogle.sbpayment.client.requests.SpsRequest;
@@ -22,7 +40,7 @@ public class DefaultSpsClientTest {
         String serviceId = "Allan Im";
 
         // when
-        DefaultSpsClient client = client(merchantId, serviceId);
+        SpsClient client = client(merchantId, serviceId);
 
         // then
         assertThat(client).isNotNull();
@@ -34,7 +52,7 @@ public class DefaultSpsClientTest {
         // given
         String merchantId = "VOGLE Labs";
         String serviceId = "Allan Im";
-        DefaultSpsClient client = client(merchantId, serviceId);
+        SpsClient client = client(merchantId, serviceId);
 
         // when
         TestRequest request = client.newRequest(TestRequest.class);
@@ -53,7 +71,7 @@ public class DefaultSpsClientTest {
         // given
         String merchantId = "VOGLE Labs";
         String serviceId = "Allan Im";
-        DefaultSpsClient client = client(merchantId, serviceId);
+        SpsClient client = client(merchantId, serviceId);
 
         // when
         client.newRequest(SpsRequest.class);
@@ -66,7 +84,7 @@ public class DefaultSpsClientTest {
         // given
         String merchantId = "VOGLE Labs";
         String serviceId = "Allan Im";
-        DefaultSpsClient client = client(merchantId, serviceId);
+        SpsClient client = client(merchantId, serviceId);
 
         // when
         TestRequest request = client.newRequest(TestRequest.class);
@@ -77,22 +95,20 @@ public class DefaultSpsClientTest {
 
     }
 
-    private SpsClientSettings settings(String merchantId, String serviceId) {
-        return SpsClientSettings.builder()
+    private SpsConfig settings(String merchantId, String serviceId) {
+        return SpsConfig.builder()
                 .apiUrl("http://vogle.com")
                 .merchantId(merchantId)
                 .serviceId(serviceId)
                 .basicAuthId("BASIC_ID")
                 .basicAuthPassword("BASIC_PASS")
+                .hashKey("HASH_KEY")
                 .build();
     }
 
-    private SpsMapper mapper() {
-        return new DefaultSpsMapper("HASH_KEY");
-    }
-
-    private DefaultSpsClient client(String merchantId, String serviceId) {
-        return new DefaultSpsClient(settings(merchantId, serviceId), mapper());
+    private SpsClient client(String merchantId, String serviceId) {
+        SpsManager manager = new DefaultSpsManager(settings(merchantId, serviceId));
+        return manager.client();
     }
 
     public static class TestRequest implements SpsRequest<SpsResponse> {
@@ -108,18 +124,13 @@ public class DefaultSpsClientTest {
         }
 
         @Override
-        public void setMerchantId(String merchantId) {
-            this.merchantId = merchantId;
-        }
-
-        @Override
         public String getMerchantId() {
             return this.merchantId;
         }
 
         @Override
-        public void setServiceId(String serviceId) {
-            this.serviceId = serviceId;
+        public void setMerchantId(String merchantId) {
+            this.merchantId = merchantId;
         }
 
         @Override
@@ -128,8 +139,8 @@ public class DefaultSpsClientTest {
         }
 
         @Override
-        public void setRequestDate(String requestDate) {
-            this.requestDate = requestDate;
+        public void setServiceId(String serviceId) {
+            this.serviceId = serviceId;
         }
 
         @Override
@@ -138,8 +149,8 @@ public class DefaultSpsClientTest {
         }
 
         @Override
-        public void setLimitSecond(Integer limitSecond) {
-            this.limitSecond = limitSecond;
+        public void setRequestDate(String requestDate) {
+            this.requestDate = requestDate;
         }
 
         @Override
@@ -148,13 +159,18 @@ public class DefaultSpsClientTest {
         }
 
         @Override
-        public void setSpsHashcode(String spsHashcode) {
-
+        public void setLimitSecond(Integer limitSecond) {
+            this.limitSecond = limitSecond;
         }
 
         @Override
         public String getSpsHashcode() {
             return null;
+        }
+
+        @Override
+        public void setSpsHashcode(String spsHashcode) {
+
         }
 
         @Override

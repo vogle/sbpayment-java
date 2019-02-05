@@ -1,33 +1,54 @@
 plugins {
-    id "io.spring.dependency-management" version "1.0.6.RELEASE" apply false
-    id 'io.franzbecker.gradle-lombok' version '1.14' apply false
+    id 'com.diffplug.gradle.spotless' version '3.17.0' apply false
+    id 'com.github.kt3k.coveralls' version '2.8.2' apply false
 }
 
-group "com.vogle.sbpayment"
-version "0.0.1-SNAPSHOT"
+description 'Softbank Payment for JAVA'
 
 ext {
     gradleDir = "${rootProject.rootDir}/gradle"
+
+    javaprojects = subprojects.findAll { new File(it.projectDir, 'src/main/java').directory }
+    publishedprojects = javaprojects.findAll { !it.name.contains('sample') }
 }
 
-subprojects {
+// Configuration to apply to all the projects
+allprojects {
 
-    // Sets JAVA
-    apply plugin: 'java-library'
-    sourceCompatibility = 1.8
+    group GROUP
+    version VERSION_NAME
 
-    repositories {
-        jcenter()
+    apply plugin: 'vogle.base'
+    contacts {
+        'allan@vogle.com' {
+            moniker 'Allan Im'
+            github 'allanim'
+        }
     }
 
-    // Sets dependency manager
-    apply plugin: 'io.spring.dependency-management'
+    // Set the maven repository that looks for plugin dependencies.
+    repositories {
+        mavenCentral()
+    }
+}
+
+// Configuration to apply to JAVA Projects
+configure(javaprojects) {
+
+    // Adds Java compilation along with testing and bundling capabilities
+    apply plugin: 'vogle.java-library'
+
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+    // Provides spring dependency management functionality
     dependencyManagement {
         dependencies {
             dependency 'org.apache.httpcomponents:httpclient:4.5.6'
             dependency 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.9.8'
             dependency 'org.hibernate.validator:hibernate-validator:6.0.14.Final'
             dependency 'org.glassfish:javax.el:3.0.1-b11'
+            dependency 'org.slf4j:slf4j-api:1.7.25'
             dependency 'ch.qos.logback:logback-classic:1.2.3'
 
             dependency 'junit:junit:4.12'
@@ -44,45 +65,93 @@ subprojects {
         }
     }
 
-    // Sets common dependencies
+    // Sets common dependencies in java project
     dependencies {
-        // log
-        compile('ch.qos.logback:logback-classic')
-
+        
         // test modules
-        testCompile('junit:junit')
-        testCompile('org.assertj:assertj-core')
-        testCompile('org.mockito:mockito-core')
-        testCompile('org.powermock:powermock-api-mockito2')
+        testImplementation 'ch.qos.logback:logback-classic'
+        testImplementation 'junit:junit'
+        testImplementation 'org.assertj:assertj-core'
+        testImplementation 'org.mockito:mockito-core'
+        testImplementation 'org.powermock:powermock-api-mockito2'
     }
 
-
-    // Sets lombok
-    apply plugin: 'io.franzbecker.gradle-lombok'
-    lombok {
-        version = '1.18.4'
+    // Performs quality checks on Java source files and generates reports
+    apply plugin: 'vogle.code-quality'
+    checkstyle {
+        config = rootProject.resources.text.fromFile('config/vogle-checkstyle.xml')
+    }
+    pmd {
+        ruleSetConfig = rootProject.resources.text.fromFile('config/vogle-ruleset-6.11.x.xml')
     }
 
-    // Sets JavaDoc options
-    javadoc {
-        source = sourceSets.main.allJava
-
-        options.locale = "en"
-        options.charSet = "UTF-8"
-        options.encoding = "UTF-8"
-
-        options.use = true
-        options.author = true
-        options.version = false
-
-        options.bottom = "©${new Date().format('yyyy')}, vogle.com"
-
-        options.stylesheetFile = new File(projectDir, "config/javadoc-stylesheet.css")
-        options.addStringOption('Xdoclint:none', '-quiet')
-
+    // Spotless is a general-purpose formatting plugin
+    apply plugin: "com.diffplug.gradle.spotless"
+    spotless {
+        java {
+            licenseHeaderFile "$rootDir/config/license.java"
+        }
     }
-
+    
 }
 
+// Configuration to apply to JAVA Projects
+configure(publishedprojects) {
 
+    // Documentation setup
+    javadoc {
+        options.bottom = "Copyright ${new Date().format('yyyy')} <a href='http://vogle.com' target='_blank'>Vogle Labs</a>, All rights reserved."
+        options.stylesheetFile = new File(rootProject.rootDir, "config/dracula-javadoc8.css")
+        options.links("http://docs.oracle.com/javase/8/docs/api/")
+    }
+    
+    // Provides code coverage metrics for Java code
+    apply plugin: 'vogle.report'
+    jacocoTestCoverageVerification {
+        violationRules {
+            rule {
+                limit {
+                    minimum = 0.5
+                }
+            }
+
+            rule {
+                enabled = false
+                element = 'CLASS'
+                includes = ['com.vogle.sbpayment*']
+
+                limit {
+                    counter = 'LINE'
+                    value = 'TOTALCOUNT'
+                    maximum = 0.3
+                }
+            }
+        }
+    }
+    
+    // Coveralls
+    apply plugin: "com.github.kt3k.coveralls"
+    coveralls {
+        sourceDirs = publishedprojects.sourceSets.main.allSource.srcDirs.flatten()
+        jacocoReportPath "${buildDir}/reports/jacoco/jacocoTestReport/jacocoTestReport.xml"
+    }
+    tasks.coveralls {
+        group = 'Coverage reports'
+        description = 'Uploads the aggregated coverage report to Coveralls'
+
+        dependsOn project.task('jacocoRootReport')
+    }
+    
+    // Archive task used to create a sources jar and a javadoc jar
+    apply plugin: "vogle.archive"
+
+
+    // Publish to maven repository
+    apply plugin: "vogle.nexus-publish"
+    nexus {
+        orgName = 'Vogle Labs.'
+        orgUrl = 'http://vogle.com'
+        license = 'apache2'
+    }
+}
 

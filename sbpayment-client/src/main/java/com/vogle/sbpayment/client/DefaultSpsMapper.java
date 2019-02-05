@@ -1,3 +1,21 @@
+/*
+ * Copyright 2019 VOGLE Labs.
+ *
+ * This file is part of sbpayment-java - Sbpayment client.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.vogle.sbpayment.client;
 
 import com.vogle.sbpayment.client.convert.SpsDataConverter;
@@ -18,44 +36,33 @@ import java.io.IOException;
  * @author Allan Im
  */
 public class DefaultSpsMapper implements SpsMapper {
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private static final Logger LOGGER = LoggerFactory.getLogger(DefaultSpsMapper.class);
 
     private final XmlMapper xmlMapper;
 
-    private String charset = "Shift_JIS";
-    private String hashKey;
-    private String desKey;
-    private String desInitKey;
+    private final String charset;
+    private final String hashKey;
+    private final String desKey;
+    private final String desInitKey;
 
-
-    /**
-     * Create Mapper with hash key
-     *
-     * @param hashKey from Softbank payment system
-     */
-    public DefaultSpsMapper(String hashKey) {
-        this.hashKey = hashKey;
-
-        this.xmlMapper = new XmlMapper();
-        this.xmlMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-        this.xmlMapper.enable(SerializationFeature.INDENT_OUTPUT);
-    }
+    private final boolean enabledCipher;
 
     /**
      * Create Mapper with hash key & 3DES key
      *
-     * @param hashKey    from Softbank payment system
-     * @param desKey     from Softbank payment system that length is 24
-     * @param desInitKey from Softbank payment system that length is 8
+     * @param config The Softbank Payment configuration
      */
-    public DefaultSpsMapper(String hashKey, String desKey, String desInitKey) {
-        this(hashKey);
-        this.desKey = desKey;
-        this.desInitKey = desInitKey;
-    }
+    public DefaultSpsMapper(SpsConfig config) {
+        this.hashKey = config.getHashKey();
+        this.desKey = config.getDesKey();
+        this.desInitKey = config.getDesInitKey();
+        this.charset = config.getCharset();
 
-    public void updateCharset(String charset) {
-        this.charset = charset;
+        this.enabledCipher = config.isEnabledCipher() && isNotEmpty(desKey) && isNotEmpty(desInitKey);
+
+        this.xmlMapper = new XmlMapper();
+        this.xmlMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+        this.xmlMapper.enable(SerializationFeature.INDENT_OUTPUT);
     }
 
     @Override
@@ -66,10 +73,6 @@ public class DefaultSpsMapper implements SpsMapper {
     @Override
     public String getHashKey() {
         return this.hashKey;
-    }
-
-    private boolean cipherEnabled() {
-        return isNotEmpty(desKey) && isNotEmpty(desInitKey);
     }
 
     private boolean isNotEmpty(String value) {
@@ -83,14 +86,14 @@ public class DefaultSpsMapper implements SpsMapper {
             T bodyObject = xmlMapper.readValue(xml, objectClass);
 
             // DES Decrypt
-            if (cipherEnabled()) {
+            if (enabledCipher) {
                 SpsDataConverter.decrypt(desKey, desInitKey, charset, bodyObject);
             }
 
             return bodyObject;
 
         } catch (IOException ex) {
-            logger.error("SPS xmlToObject Error : {}({})", ex.getClass().getSimpleName(), ex.getMessage());
+            LOGGER.error("SPS xmlToObject Error : {}({})", ex.getClass().getSimpleName(), ex.getMessage());
             throw new XmlMappingException(ex.getMessage(), ex);
         }
     }
@@ -102,7 +105,7 @@ public class DefaultSpsMapper implements SpsMapper {
         StringBuilder xml = new StringBuilder("<?xml version=\"1.0\" encoding=\"" + charset + "\"?>\n");
 
         try {
-            if (cipherEnabled()) {
+            if (enabledCipher) {
                 // DES Encrypt & base64 encode
                 SpsDataConverter.encrypt(desKey, desInitKey, charset, object);
                 SpsDataConverter.encodeWithoutCipherString(charset, object);
@@ -115,7 +118,7 @@ public class DefaultSpsMapper implements SpsMapper {
             return xml.toString();
 
         } catch (JsonProcessingException ex) {
-            logger.error("SPS objectToXml Error : {}({})", ex.getClass().getSimpleName(), ex.getMessage());
+            LOGGER.error("SPS objectToXml Error : {}({})", ex.getClass().getSimpleName(), ex.getMessage());
             throw new XmlMappingException(ex.getMessage(), ex);
         }
     }
@@ -126,8 +129,8 @@ public class DefaultSpsMapper implements SpsMapper {
      */
     @Override
     public <T extends SpsRequest> String requestToXml(T request) {
-        // 1. enable encrypted flag by settings
-        if (cipherEnabled()) {
+        // 1. enable encrypted flag by config
+        if (enabledCipher) {
             SpsDataConverter.enableEncryptedFlg(request);
         }
 

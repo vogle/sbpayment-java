@@ -1,22 +1,37 @@
+/*
+ * Copyright 2019 VOGLE Labs.
+ *
+ * This file is part of sbpayment-java - Sbpayment client.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.vogle.sbpayment.springboot.autoconfigure;
 
-import com.vogle.sbpayment.client.SpsClient;
-import com.vogle.sbpayment.client.SpsMapper;
-import com.vogle.sbpayment.client.SpsReceiver;
-import com.vogle.sbpayment.creditcard.CreditCardService;
-import com.vogle.sbpayment.payeasy.PayEasyService;
-
-import org.springframework.boot.test.util.TestPropertyValues;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-
-import java.util.HashSet;
-import java.util.Set;
+import com.vogle.sbpayment.client.SpsManager;
+import com.vogle.sbpayment.creditcard.CreditCardPayment;
+import com.vogle.sbpayment.payeasy.PayEasyPayment;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.springframework.boot.test.util.TestPropertyValues;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -60,9 +75,7 @@ public class SbpaymentAutoConfigurationTest {
 
         // check bean
         assertThat(this.context.getBeanNamesForType(SbpaymentProperties.class)).hasSize(0);
-        assertThat(this.context.getBeanNamesForType(SpsClient.class)).hasSize(0);
-        assertThat(this.context.getBeanNamesForType(SpsReceiver.class)).hasSize(0);
-        assertThat(this.context.getBeanNamesForType(SpsMapper.class)).hasSize(0);
+        assertThat(this.context.getBeanNamesForType(SpsManager.class)).hasSize(0);
     }
 
     @Test
@@ -74,40 +87,18 @@ public class SbpaymentAutoConfigurationTest {
         // check bean
         assertThat(this.context.getBeanNamesForType(SbpaymentProperties.class)).hasSize(1);
 
-        assertThat(this.context.getBeanNamesForType(SpsMapper.class)).hasSize(0);
-        assertThat(this.context.getBeanNamesForType(SpsClient.class)).hasSize(0);
-        assertThat(this.context.getBeanNamesForType(SpsReceiver.class)).hasSize(0);
-    }
-
-
-    @Test
-    public void checkSpsMapperEnabled() {
-        TestPropertyValues.of(
-                "vg.sbpayment.client.api-url:http://test.vogle.com",
-                "vg.sbpayment.client.hash-key:HASH_KEY"
-        ).applyTo(this.context);
-        this.context.register(SbpaymentAutoConfiguration.class);
-        this.context.refresh();
-
-        // check bean
-        assertThat(this.context.getBeanNamesForType(SbpaymentProperties.class)).hasSize(1);
-        assertThat(this.context.getBeanNamesForType(SpsMapper.class)).hasSize(1);
-
-        assertThat(this.context.getBeanNamesForType(SpsClient.class)).hasSize(0);
-        assertThat(this.context.getBeanNamesForType(SpsReceiver.class)).hasSize(0);
+        assertThat(this.context.getBeanNamesForType(SpsManager.class)).hasSize(0);
     }
 
     @Test
-    public void checkClientAndReceiverEnabled() {
+    public void checkManagerEnabled() {
         TestPropertyValues.of(required).applyTo(this.context);
         this.context.register(SbpaymentAutoConfiguration.class);
         this.context.refresh();
 
         // check bean
         assertThat(this.context.getBeanNamesForType(SbpaymentProperties.class)).hasSize(1);
-        assertThat(this.context.getBeanNamesForType(SpsMapper.class)).hasSize(1);
-        assertThat(this.context.getBeanNamesForType(SpsClient.class)).hasSize(1);
-        assertThat(this.context.getBeanNamesForType(SpsReceiver.class)).hasSize(1);
+        assertThat(this.context.getBeanNamesForType(SpsManager.class)).hasSize(1);
     }
 
 
@@ -118,8 +109,8 @@ public class SbpaymentAutoConfigurationTest {
         this.context.refresh();
 
         // check bean
-        assertThat(this.context.getBeanNamesForType(CreditCardService.class)).hasSize(1);
-        assertThat(this.context.getBeanNamesForType(PayEasyService.class)).hasSize(1);
+        assertThat(this.context.getBeanNamesForType(CreditCardPayment.class)).hasSize(1);
+        assertThat(this.context.getBeanNamesForType(PayEasyPayment.class)).hasSize(1);
     }
 
     @Test
@@ -130,7 +121,7 @@ public class SbpaymentAutoConfigurationTest {
         this.context.refresh();
 
         // check bean
-        assertThat(this.context.getBeanNamesForType(CreditCardService.class)).hasSize(0);
+        assertThat(this.context.getBeanNamesForType(CreditCardPayment.class)).hasSize(0);
     }
 
     @Test
@@ -141,7 +132,7 @@ public class SbpaymentAutoConfigurationTest {
         this.context.refresh();
 
         // check bean
-        assertThat(this.context.getBeanNamesForType(PayEasyService.class)).hasSize(0);
+        assertThat(this.context.getBeanNamesForType(PayEasyPayment.class)).hasSize(0);
     }
 
 }
