@@ -1,4 +1,4 @@
-description = 'sbpayment - spring'
+description = 'Spirng boot start for sbpayment'
 
 dependencies {
     // sbpayment modules

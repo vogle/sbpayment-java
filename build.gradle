@@ -1,5 +1,6 @@
 plugins {
-    id 'com.diffplug.gradle.spotless' version '3.17.0'
+    id 'com.diffplug.gradle.spotless' version '3.17.0' apply false
+    id 'com.github.kt3k.coveralls' version '2.8.2' apply false
 }
 
 description 'Softbank Payment for JAVA'
@@ -8,14 +9,14 @@ ext {
     gradleDir = "${rootProject.rootDir}/gradle"
 
     javaprojects = subprojects.findAll { new File(it.projectDir, 'src/main/java').directory }
-    sampleprojects = javaprojects.findAll { !it.name.contains('sample') }
+    publishedprojects = javaprojects.findAll { !it.name.contains('sample') }
 }
 
 // Configuration to apply to all the projects
 allprojects {
 
-    group "com.vogle.sbpayment"
-    version "0.0.1-SNAPSHOT"
+    group GROUP
+    version VERSION_NAME
 
     apply plugin: 'vogle.base'
     contacts {
@@ -66,9 +67,7 @@ configure(javaprojects) {
 
     // Sets common dependencies in java project
     dependencies {
-        // log
-        api 'org.slf4j:slf4j-api'
-
+        
         // test modules
         testImplementation 'ch.qos.logback:logback-classic'
         testImplementation 'junit:junit'
@@ -76,14 +75,6 @@ configure(javaprojects) {
         testImplementation 'org.mockito:mockito-core'
         testImplementation 'org.powermock:powermock-api-mockito2'
     }
-
-    // Documentation setup
-    javadoc {
-        options.bottom = "Copyright ${new Date().format('yyyy')} <a href='http://vogle.com' target='_blank'>Vogle Labs</a>, All rights reserved."
-        options.stylesheetFile = new File(rootProject.rootDir, "config/dracula-javadoc8.css")
-        options.links("http://docs.oracle.com/javase/8/docs/api/")
-    }
-
 
     // Performs quality checks on Java source files and generates reports
     apply plugin: 'vogle.code-quality'
@@ -94,7 +85,26 @@ configure(javaprojects) {
         ruleSetConfig = rootProject.resources.text.fromFile('config/vogle-ruleset-6.11.x.xml')
     }
 
+    // Spotless is a general-purpose formatting plugin
+    apply plugin: "com.diffplug.gradle.spotless"
+    spotless {
+        java {
+            licenseHeaderFile "$rootDir/config/license.java"
+        }
+    }
+    
+}
 
+// Configuration to apply to JAVA Projects
+configure(publishedprojects) {
+
+    // Documentation setup
+    javadoc {
+        options.bottom = "Copyright ${new Date().format('yyyy')} <a href='http://vogle.com' target='_blank'>Vogle Labs</a>, All rights reserved."
+        options.stylesheetFile = new File(rootProject.rootDir, "config/dracula-javadoc8.css")
+        options.links("http://docs.oracle.com/javase/8/docs/api/")
+    }
+    
     // Provides code coverage metrics for Java code
     apply plugin: 'vogle.report'
     jacocoTestCoverageVerification {
@@ -118,17 +128,20 @@ configure(javaprojects) {
             }
         }
     }
-
-
-    // Spotless is a general-purpose formatting plugin
-    apply plugin: "com.diffplug.gradle.spotless"
-    spotless {
-        java {
-            licenseHeaderFile "$rootDir/config/license.java"
-        }
+    
+    // Coveralls
+    apply plugin: "com.github.kt3k.coveralls"
+    coveralls {
+        sourceDirs = publishedprojects.sourceSets.main.allSource.srcDirs.flatten()
+        jacocoReportPath "${buildDir}/reports/jacoco/jacocoTestReport/jacocoTestReport.xml"
     }
+    tasks.coveralls {
+        group = 'Coverage reports'
+        description = 'Uploads the aggregated coverage report to Coveralls'
 
-
+        dependsOn project.task('jacocoRootReport')
+    }
+    
     // Archive task used to create a sources jar and a javadoc jar
     apply plugin: "vogle.archive"
 
@@ -140,8 +153,5 @@ configure(javaprojects) {
         orgUrl = 'http://vogle.com'
         license = 'apache2'
     }
-
 }
-
-
 

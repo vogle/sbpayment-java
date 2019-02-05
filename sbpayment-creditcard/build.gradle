@@ -1,4 +1,4 @@
-description 'sbpayment - creditcard'
+description 'Credit-Card Payment'
 
 apply from: "$gradleDir/integration-test.gradle"
 

@@ -20,6 +20,7 @@ package com.vogle.sbpayment.client;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -36,6 +37,7 @@ import javax.validation.constraints.NotNull;
  * @author Allan Im
  **/
 @Builder
+@ToString
 public class SpsConfig {
 
     /**

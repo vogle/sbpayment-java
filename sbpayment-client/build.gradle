@@ -1,4 +1,4 @@
-description 'sbpayment - client'
+description 'Connect to sbpayment system'
 
 dependencies {
 
@@ -12,4 +12,6 @@ dependencies {
     api('org.hibernate.validator:hibernate-validator')
     runtimeOnly('org.glassfish:javax.el')
 
+    // log
+    api 'org.slf4j:slf4j-api'
 }

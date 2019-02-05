@@ -1,4 +1,4 @@
-description 'sbpayment - payeasy'
+description 'Pay-Easy Payment'
 
 apply from: "$gradleDir/integration-test.gradle"
 
