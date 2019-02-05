@@ -62,31 +62,31 @@ public class PayEasyTest extends AbstractSettings {
         payment = new DefaultPayEasyPayment(manager, "株式会社", "カブシキガイシャ");
     }
 
-    @Test
-    public void payment() {
-
-        // when
-        PaymentInfo paymentInfo = getDefaultPaymentInfo();
-        PayEasy payEasy = getPayEasy();
-        SpsResult<PayEasyPaymentResponse> payment = this.payment.payment(paymentInfo, payEasy);
-
-        // then
-        assertThat(payment).isNotNull();
-        assertThat(payment.getStatus()).isEqualTo(200);
-        assertThat(payment.getHeaders()).isNotNull();
-        assertThat(payment.getBody()).isNotNull();
-        assertThat(payment.getBody().isSuccess()).isTrue();
-        assertThat(payment.getBody().getSpsTransactionId()).isNotEmpty();
-
-        PayEasyPaymentResponse res = payment.getBody();
-        assertThat(res.getTrackingId()).isNotBlank();
-        assertThat(res.getPayEasyInfo()).isNotNull();
-        assertThat(res.getPayEasyInfo().getInvoiceNo()).isNotEmpty();
-        assertThat(res.getPayEasyInfo().getBillDate())
-                .isEqualTo(RequestHelper.dateOnly(res.getDate(), BILL_LIMIT_DAY));
-        assertThat(res.getPayEasyInfo().getSkno()).isNotEmpty();
-        assertThat(res.getPayEasyInfo().getCustNumber()).isNotEmpty();
-    }
+//    @Test
+//    public void payment() {
+//
+//        // when
+//        PaymentInfo paymentInfo = getDefaultPaymentInfo();
+//        PayEasy payEasy = getPayEasy();
+//        SpsResult<PayEasyPaymentResponse> payment = this.payment.payment(paymentInfo, payEasy);
+//
+//        // then
+//        assertThat(payment).isNotNull();
+//        assertThat(payment.getStatus()).isEqualTo(200);
+//        assertThat(payment.getHeaders()).isNotNull();
+//        assertThat(payment.getBody()).isNotNull();
+//        assertThat(payment.getBody().isSuccess()).isTrue();
+//        assertThat(payment.getBody().getSpsTransactionId()).isNotEmpty();
+//
+//        PayEasyPaymentResponse res = payment.getBody();
+//        assertThat(res.getTrackingId()).isNotBlank();
+//        assertThat(res.getPayEasyInfo()).isNotNull();
+//        assertThat(res.getPayEasyInfo().getInvoiceNo()).isNotEmpty();
+//        assertThat(res.getPayEasyInfo().getBillDate())
+//                .isEqualTo(RequestHelper.dateOnly(res.getDate(), BILL_LIMIT_DAY));
+//        assertThat(res.getPayEasyInfo().getSkno()).isNotEmpty();
+//        assertThat(res.getPayEasyInfo().getCustNumber()).isNotEmpty();
+//    }
 
     @Test
     public void convertDepositReceived() throws Exception {

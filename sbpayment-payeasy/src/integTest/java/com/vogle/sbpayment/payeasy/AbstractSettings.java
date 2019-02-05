@@ -35,9 +35,6 @@ import java.util.Random;
  **/
 abstract class AbstractSettings {
     private SpsConfig config;
-    private String hashKey;
-    private String desKey;
-    private String desInitKey;
 
     AbstractSettings() {
         Properties p = new Properties();
@@ -46,17 +43,8 @@ abstract class AbstractSettings {
         } catch (IOException ignored) {
         }
 
-        config = SpsConfig.builder()
-                .apiUrl(p.getProperty("it2.apiUrl"))
-                .merchantId(p.getProperty("it2.merchantId"))
-                .serviceId(p.getProperty("it2.serviceId"))
-                .basicAuthId(p.getProperty("it2.basicAuthId"))
-                .basicAuthPassword(p.getProperty("it2.basicAuthPassword"))
-                .build();
-
-        hashKey = p.getProperty("it2.hashKey");
-        desKey = p.getProperty("it2.desKey");
-        desInitKey = p.getProperty("it2.desInitKey");
+        config = SpsConfig.from(p);
+        System.out.println(config);
     }
 
     SpsConfig getConfig() {
