@@ -24,7 +24,7 @@ subprojects {
     apply plugin: 'io.spring.dependency-management'
     dependencyManagement {
         dependencies {
-            dependency 'org.apache.httpcomponents:httpclient:4.5.6'
+            dependency 'org.apache.httpcomponents:httpclient:4.5.7'
             dependency 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.9.8'
             dependency 'org.hibernate.validator:hibernate-validator:6.0.14.Final'
             dependency 'org.glassfish:javax.el:3.0.1-b11'
