@@ -101,6 +101,6 @@ class BasePlugin implements Plugin<Project> {
     }
 
     enum BuildType {
-        DEBUG, RELEASE
+        DEBUG, TEST, CI, RELEASE
     }
 }

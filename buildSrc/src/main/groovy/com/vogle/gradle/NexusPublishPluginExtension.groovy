@@ -12,6 +12,9 @@ class NexusPublishPluginExtension {
 
     Boolean sign = Boolean.TRUE
 
+    String releasesRepo = "https://oss.sonatype.org/service/local/staging/deploy/maven2"
+    String snapshotRepo = "https://oss.sonatype.org/content/repositories/snapshots"
+
     License license
 
     enum License {
