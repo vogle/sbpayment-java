@@ -27,8 +27,8 @@ env:
   - secure: HseTecOhcI9kXu/hRXCmhuCrXgZ4l+TYjQew0aF/cpOYi6f4yFsqvRB4B+mOv+zaMnQl2/MwXI7pRMc1euQ4hemFEdskoCNp1dz3G2boGyzsHKWoXq8FTLp9by3hiAXiSKasy5fSGf2BpYmuYjCEfomtvswOF5HUJZCA+u9U0oHmtTTayZq2OkBNAwpqg/Dnn3+EtdPaAxvIT599KboC5dufwAVSe17RV02y2j1x87maRTYj6aEmhzcUH6jWN/Jh0m6o+xewVgBkmcPThao/HAeopZcePQhJM5QIdgieKRxEhje/VfEXEiQYNoGNYzf+lanzBVbvmqVnSk21FIBobrlPlzv3kcdet7hiZaFHm/mOdcwpQ5z8xomX4vnbg20AU6Ys8LTLRVRaTEWKPA6xUzeKRZDg7on9GwOKFjWvvyFXBBDXqzSzwKVHI0xoF0Lilc7RnXpCtTg6JwsKzwXmWUkGIaO5GhNVaSF14WNYWvIcQf7iDyKmfy2O4puIc7445y4pXbnMD4YjUBd+48Dn9MvIRKeeZ0aAQBl5vdFudLwtZDV398w+pNqkIQEAXZS0nuujaobDVCZLB+DUc6vOOQCla9Ld3E6xblu47FzSKbl/OaVsOSImlqPglrVvMsh7iZasuNX/hrvIvcB6IVXRV59ioVFfx94yUYAUpdSE5Yc=
 before_install:
 - openssl aes-256-cbc -K $encrypted_f13efdfcd46f_key -iv $encrypted_f13efdfcd46f_iv
-  -in it2.properties.enc -out ./config/it2.properties -d
-- openssl aes-256-cbc -K $encrypted_f13efdfcd46f_key -iv $encrypted_f13efdfcd46f_iv
   -in it1.properties.enc -out ./config/it1.properties -d
+- openssl aes-256-cbc -K $encrypted_f13efdfcd46f_key -iv $encrypted_f13efdfcd46f_iv
+  -in it2.properties.enc -out ./config/it2.properties -d
 - openssl aes-256-cbc -K $encrypted_f13efdfcd46f_key -iv $encrypted_f13efdfcd46f_iv
   -in allanim.gpg.enc -out ./config/allanim.gpg -d
