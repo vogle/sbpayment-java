@@ -18,7 +18,7 @@
 
 package com.vogle.sbpayment.springboot.autoconfigure;
 
-import com.vogle.sbpayment.client.SpsManager;
+import com.vogle.sbpayment.client.Sbpayment;
 import com.vogle.sbpayment.creditcard.CreditCardPayment;
 import com.vogle.sbpayment.payeasy.PayEasyPayment;
 
@@ -45,10 +45,10 @@ public class SbpaymentAutoConfigurationTest {
     private static Set<String> required = new HashSet<>();
 
     static {
-        required.add("vg.sbpayment.client.api-url:http://test.vogle.com");
-        required.add("vg.sbpayment.client.hash-key:HASH_KEY");
-        required.add("vg.sbpayment.client.merchant-id:MERCHANT_ID");
-        required.add("vg.sbpayment.client.service-id:SERVICE_ID");
+        required.add("sbpayment.client.api-url:http://test.vogle.com");
+        required.add("sbpayment.client.hash-key:HASH_KEY");
+        required.add("sbpayment.client.merchant-id:MERCHANT_ID");
+        required.add("sbpayment.client.service-id:SERVICE_ID");
     }
 
     @Rule
@@ -75,30 +75,30 @@ public class SbpaymentAutoConfigurationTest {
 
         // check bean
         assertThat(this.context.getBeanNamesForType(SbpaymentProperties.class)).hasSize(0);
-        assertThat(this.context.getBeanNamesForType(SpsManager.class)).hasSize(0);
+        assertThat(this.context.getBeanNamesForType(Sbpayment.class)).hasSize(0);
     }
 
     @Test
     public void checkPropertiesEnabled() {
-        TestPropertyValues.of("vg.sbpayment.client.api-url:http://test.vogle.com").applyTo(this.context);
+        TestPropertyValues.of("sbpayment.client.api-url:http://test.vogle.com").applyTo(this.context);
         this.context.register(SbpaymentAutoConfiguration.class);
         this.context.refresh();
 
         // check bean
         assertThat(this.context.getBeanNamesForType(SbpaymentProperties.class)).hasSize(1);
 
-        assertThat(this.context.getBeanNamesForType(SpsManager.class)).hasSize(0);
+        assertThat(this.context.getBeanNamesForType(Sbpayment.class)).hasSize(0);
     }
 
     @Test
-    public void checkManagerEnabled() {
+    public void checkSbpaymentEnabled() {
         TestPropertyValues.of(required).applyTo(this.context);
         this.context.register(SbpaymentAutoConfiguration.class);
         this.context.refresh();
 
         // check bean
         assertThat(this.context.getBeanNamesForType(SbpaymentProperties.class)).hasSize(1);
-        assertThat(this.context.getBeanNamesForType(SpsManager.class)).hasSize(1);
+        assertThat(this.context.getBeanNamesForType(Sbpayment.class)).hasSize(1);
     }
 
 
@@ -115,7 +115,7 @@ public class SbpaymentAutoConfigurationTest {
 
     @Test
     public void checkCreditCardDisabled() {
-        required.add("vg.sbpayment.creditcard.disabled:true");
+        required.add("sbpayment.creditcard.disabled:true");
         TestPropertyValues.of(required).applyTo(this.context);
         this.context.register(SbpaymentAutoConfiguration.class);
         this.context.refresh();
@@ -126,7 +126,7 @@ public class SbpaymentAutoConfigurationTest {
 
     @Test
     public void checkPayEasyDisabled() {
-        required.add("vg.sbpayment.payeasy.disabled:true");
+        required.add("sbpayment.payeasy.disabled:true");
         TestPropertyValues.of(required).applyTo(this.context);
         this.context.register(SbpaymentAutoConfiguration.class);
         this.context.refresh();

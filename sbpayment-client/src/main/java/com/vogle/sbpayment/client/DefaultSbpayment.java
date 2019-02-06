@@ -19,31 +19,63 @@
 package com.vogle.sbpayment.client;
 
 /**
- * Softbank payment Manager<br/>
+ * Softbank payment<br/>
  * It has Mapper, Client & Receiver
  *
  * @author Allan Im
  */
-public interface SpsManager {
+public class DefaultSbpayment implements Sbpayment {
+    private final SpsConfig config;
+
+    private SpsMapper mapper;
+    private SpsClient client;
+    private SpsReceiver receiver;
+
+    /**
+     * Create Sbpayment
+     *
+     * @param config The Softbank Payment Configuration
+     */
+    public DefaultSbpayment(SpsConfig config) {
+        this.config = config;
+    }
 
     /**
      * Gets made mapper
      *
      * @return SpsMapper
      */
-    SpsMapper mapper();
+    @Override
+    public SpsMapper mapper() {
+        if (mapper == null) {
+            mapper = new DefaultSpsMapper(config);
+        }
+        return mapper;
+    }
 
     /**
      * Gets made client
      *
      * @return SpsClient
      */
-    SpsClient client();
+    @Override
+    public SpsClient client() {
+        if (client == null) {
+            client = new DefaultSpsClient(config, mapper());
+        }
+        return client;
+    }
 
     /**
      * Gets made receiver
      *
      * @return SpsReceiver
      */
-    SpsReceiver receiver();
+    @Override
+    public SpsReceiver receiver() {
+        if (receiver == null) {
+            receiver = new DefaultSpsReceiver(config, mapper());
+        }
+        return receiver;
+    }
 }

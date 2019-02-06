@@ -35,4 +35,4 @@ task integrationTest(type: Test, group: "verification") {
 }
 
 // Run integration tests during the 'check' lifecycle (which already includes 'test')
-//check.dependsOn integrationTest
+check.dependsOn integrationTest

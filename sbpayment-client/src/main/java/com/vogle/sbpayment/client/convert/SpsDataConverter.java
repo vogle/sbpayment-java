@@ -217,9 +217,10 @@ public class SpsDataConverter {
      * The encryptedFlg of source sets "1", this mean that enable the cipher<br/>
      * Sourceオブジェクトで「encryptedFlg」フィールドを探して、”1”を登録する。暗号化をする場合、実行する。
      *
-     * @param source check object source
+     * @param source  check object source
+     * @param enabled set "1" if true
      */
-    public static <T> void enableEncryptedFlg(T source) {
+    public static <T> void setEncryptedFlg(T source, boolean enabled) {
         ValidationHelper.assertsNotNull("source", source);
 
         // for supper class
@@ -230,13 +231,14 @@ public class SpsDataConverter {
                 Field field = currentClass.getDeclaredField("encryptedFlg");
                 if (field.getType().equals(String.class)) {
                     // Encrypted Flag set enable value that is "1"
-                    setValueTo(source, field, "1");
+                    setValueTo(source, field, enabled ? "1" : "0");
                 }
             } catch (NoSuchFieldException ignored) {
             }
 
         }
     }
+
 
     /**
      * Make hash-code by Softbank payment rules

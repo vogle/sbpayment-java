@@ -18,10 +18,10 @@
 
 package com.vogle.sbpayment.springboot.autoconfigure;
 
-import com.vogle.sbpayment.client.DefaultSpsManager;
+import com.vogle.sbpayment.client.DefaultSbpayment;
+import com.vogle.sbpayment.client.Sbpayment;
 import com.vogle.sbpayment.client.SpsClient;
 import com.vogle.sbpayment.client.SpsConfig;
-import com.vogle.sbpayment.client.SpsManager;
 import com.vogle.sbpayment.creditcard.CreditCardPayment;
 import com.vogle.sbpayment.creditcard.DefaultCreditCardPayment;
 import com.vogle.sbpayment.payeasy.DefaultPayEasyPayment;
@@ -51,23 +51,23 @@ import static com.vogle.sbpayment.springboot.autoconfigure.SbpaymentProperties.P
  **/
 @Configuration
 @ConditionalOnClass(SpsClient.class)
-@ConditionalOnProperty(prefix = "vg.sbpayment.client", name = "api-url")
+@ConditionalOnProperty(prefix = "sbpayment.client", name = "api-url")
 @EnableConfigurationProperties(SbpaymentProperties.class)
 public class SbpaymentAutoConfiguration {
 
     /**
-     * {@link SpsManager} in sbpayment-client
+     * {@link Sbpayment} in sbpayment-client
      */
     @Bean
     @ConditionalOnMissingBean
-    @ConditionalOnProperty(prefix = "vg.sbpayment.client", name = {"merchant-id", "service-id", "hash-key"})
-    public SpsManager spsManager(SbpaymentProperties properties) {
+    @ConditionalOnProperty(prefix = "sbpayment.client", name = {"merchant-id", "service-id", "hash-key"})
+    public Sbpayment sbpayment(SbpaymentProperties properties) {
         Client client = properties.getClient();
-        return createManager(client);
+        return createSbpayment(client);
     }
 
-    private SpsManager createManager(Client client) {
-        return new DefaultSpsManager(SpsConfig.builder()
+    private Sbpayment createSbpayment(Client client) {
+        return new DefaultSbpayment(SpsConfig.builder()
                 .charset(client.getCharset())
                 .timeZone(TimeZone.getTimeZone(client.getTimeZone()))
                 .apiUrl(client.getApiUrl())
@@ -76,7 +76,7 @@ public class SbpaymentAutoConfiguration {
                 .basicAuthId(client.getBasicAuthId())
                 .basicAuthPassword(client.getBasicAuthPassword())
                 .hashKey(client.getHashKey())
-                .enabledCipher(client.getCipherSets().isEnabled())
+                .cipherEnabled(client.getCipherSets().isEnabled())
                 .desKey(client.getCipherSets().getDesKey())
                 .desInitKey(client.getCipherSets().getDesInitKey())
                 .allowableSecondOnRequest(client.getAllowableSecondOnRequest())
@@ -89,10 +89,10 @@ public class SbpaymentAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     @ConditionalOnClass(CreditCardPayment.class)
-    @ConditionalOnBean(SpsManager.class)
-    @ConditionalOnProperty(prefix = "vg.sbpayment.creditcard", name = "disabled", havingValue = "false",
+    @ConditionalOnBean(Sbpayment.class)
+    @ConditionalOnProperty(prefix = "sbpayment.creditcard", name = "disabled", havingValue = "false",
             matchIfMissing = true)
-    public CreditCardPayment creditCardPayment(SbpaymentProperties properties, SpsManager manager) {
+    public CreditCardPayment creditCardPayment(SbpaymentProperties properties, Sbpayment sbpayment) {
         CreditCard creditCard = properties.getCreditcard();
 
         Set<Feature> enableFeatures = new HashSet<>();
@@ -104,10 +104,10 @@ public class SbpaymentAutoConfiguration {
         }
 
         if (creditCard.isAlternateClientEnabled()) {
-            SpsManager privateManager = createManager(creditCard.getAlternateClient());
-            return new DefaultCreditCardPayment(privateManager, enableFeatures.toArray(new Feature[0]));
+            Sbpayment privatePayment = createSbpayment(creditCard.getAlternateClient());
+            return new DefaultCreditCardPayment(privatePayment, enableFeatures.toArray(new Feature[0]));
         } else {
-            return new DefaultCreditCardPayment(manager, enableFeatures.toArray(new Feature[0]));
+            return new DefaultCreditCardPayment(sbpayment, enableFeatures.toArray(new Feature[0]));
         }
     }
 
@@ -117,26 +117,25 @@ public class SbpaymentAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     @ConditionalOnClass(PayEasyPayment.class)
-    @ConditionalOnBean(SpsManager.class)
-    @ConditionalOnProperty(prefix = "vg.sbpayment.payeasy", name = "disabled", havingValue = "false",
+    @ConditionalOnBean(Sbpayment.class)
+    @ConditionalOnProperty(prefix = "sbpayment.payeasy", name = "disabled", havingValue = "false",
             matchIfMissing = true)
-    public PayEasyPayment payEasyPayment(SbpaymentProperties properties, SpsManager manager) {
+    public PayEasyPayment payEasyPayment(SbpaymentProperties properties, Sbpayment sbpayment) {
         PayEasy payEasy = properties.getPayeasy();
 
         if (payEasy.isAlternateClientEnabled()) {
-            SpsManager privateManager = createManager(payEasy.getAlternateClient());
-
-            return createPayEasyService(privateManager, payEasy);
+            Sbpayment privatePayment = createSbpayment(payEasy.getAlternateClient());
+            return createPayEasyService(privatePayment, payEasy);
         } else {
-            return createPayEasyService(manager, payEasy);
+            return createPayEasyService(sbpayment, payEasy);
         }
     }
 
-    private PayEasyPayment createPayEasyService(SpsManager manager, PayEasy payEasy) {
+    private PayEasyPayment createPayEasyService(Sbpayment sbpayment, PayEasy payEasy) {
         if (PayEasy.Type.ONLINE.equals(payEasy.getType())) {
-            return new DefaultPayEasyPayment(manager, payEasy.getBillInfo(), payEasy.getBillInfoKana());
+            return new DefaultPayEasyPayment(sbpayment, payEasy.getBillInfo(), payEasy.getBillInfoKana());
         } else {
-            return new DefaultPayEasyPayment(manager, payEasy.getPayCsv());
+            return new DefaultPayEasyPayment(sbpayment, payEasy.getPayCsv());
         }
     }
 }

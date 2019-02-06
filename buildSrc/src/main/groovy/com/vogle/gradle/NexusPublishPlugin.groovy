@@ -23,8 +23,6 @@ import org.gradle.plugins.signing.SigningPlugin
  */
 class NexusPublishPlugin implements Plugin<Project> {
 
-    static String RELEASES_REPO_KEY = 'nexusReleasesRepo'
-    static String SNAPSHOT_REPO_KEY = 'nexusSnapshotRepo'
     static String USERNAME_KEY = 'nexusUsername'
     static String PASSWORD_KEY = 'nexusPassword'
 
@@ -51,22 +49,21 @@ class NexusPublishPlugin implements Plugin<Project> {
                         project.afterEvaluate { Project p ->
                             configureOrganization(publication, p)
                             configureLicense(publication, p)
-                            applySigning(publication, p)
+                            configureSigning(publication, p)
+                            configureUrl(publication, project)
+                            configureRemoteRepository(project)
                         }
                     } else {
                         configureOrganization(publication, project)
                         configureLicense(publication, project)
-                        applySigning(publication, project)
+                        configureSigning(publication, project)
+                        configureUrl(publication, project)
+                        configureRemoteRepository(project)
                     }
                 }
             }
         }
 
-        // apply URL
-        applyUrl(project)
-
-        // apply repositories
-        applyRemoteRepository(project)
 
         // create Task
         project.tasks.create('publishToNexus') {
@@ -82,6 +79,10 @@ class NexusPublishPlugin implements Plugin<Project> {
         if (project.nexus.orgName) {
             publication.pom.organization {
                 name = project.nexus.orgName
+            }
+        }
+        if (project.nexus.orgUrl) {
+            publication.pom.organization {
                 url = project.nexus.orgUrl
             }
         }
@@ -115,7 +116,7 @@ class NexusPublishPlugin implements Plugin<Project> {
         }
     }
 
-    def applySigning = { MavenPublication publication, Project project ->
+    def configureSigning = { MavenPublication publication, Project project ->
         if (project.nexus.sign) {
             project.plugins.apply(SigningPlugin)
             project.signing {
@@ -124,45 +125,33 @@ class NexusPublishPlugin implements Plugin<Project> {
         }
     }
 
-    def applyUrl = { Project project ->
+    def configureUrl = { MavenPublication publication, Project project ->
         project.plugins.withType(ScmInfoPlugin) { ScmInfoPlugin scmInfo ->
-            project.publishing {
-                publications {
-                    withType(MavenPublication) {
-                        pom {
-                            if (scmInfo.selectedProvider instanceof GitScmProvider) {
-                                url = MavenScmPlugin.calculateUrlFromOrigin(scmInfo.extension.origin, project)
-                            }
-                            scm {
-                                url = scmInfo.extension.origin
-                            }
-                        }
-                    }
-                }
+
+            if (scmInfo.selectedProvider instanceof GitScmProvider) {
+                publication.pom.url = MavenScmPlugin.calculateUrlFromOrigin(scmInfo.extension.origin, project)
+            }
+            publication.pom.scm {
+                url = scmInfo.extension.origin
             }
         }
     }
 
-    def applyRemoteRepository = { Project project ->
-        if (project.hasProperty(RELEASES_REPO_KEY) && project.hasProperty(SNAPSHOT_REPO_KEY)) {
-            project.publishing {
-                repositories {
-                    maven {
-                        def releasesRepoUrl = project.property(RELEASES_REPO_KEY)
-                        def snapshotsRepoUrl = project.property(SNAPSHOT_REPO_KEY)
+    def configureRemoteRepository = { Project project ->
+        project.publishing {
+            repositories {
+                maven {
+                    def releasesRepoUrl = project.nexus.releasesRepo
+                    def snapshotRepoUrl = project.nexus.snapshotRepo
 
-                        name = 'nexus'
-                        url = project.version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
-                        credentials {
-                            username = project.property(USERNAME_KEY)
-                            password = project.property(PASSWORD_KEY)
-                        }
+                    name = 'nexus'
+                    url = project.version.endsWith('SNAPSHOT') ? snapshotRepoUrl : releasesRepoUrl
+                    credentials {
+                        username = project.property(USERNAME_KEY)
+                        password = project.property(PASSWORD_KEY)
                     }
                 }
             }
-        } else {
-            project.logger.warn('The nexus repositories("nexusReleasesRepo", "nexusSnapshotRepo") MUST be stored ' +
-                    'in your gradle.properties file in your users home directory.')
         }
     }
 }

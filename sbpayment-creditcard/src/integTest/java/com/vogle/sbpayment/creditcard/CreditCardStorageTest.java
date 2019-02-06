@@ -49,7 +49,7 @@ public class CreditCardStorageTest extends AbstractSettings {
 
     @Before
     public void init() {
-        payment = new DefaultCreditCardPayment(manager(), RETURN_CARD_BRAND, RETURN_CUSTOMER_INFO);
+        payment = new DefaultCreditCardPayment(sbpayment(), RETURN_CARD_BRAND, RETURN_CUSTOMER_INFO);
     }
 
     @Test

@@ -173,7 +173,7 @@ public class SpsDataConverterTest {
         SampleObject source = new SampleObject();
 
         // when
-        SpsDataConverter.enableEncryptedFlg(source);
+        SpsDataConverter.setEncryptedFlg(source, true);
 
         // then
         assertThat(source.getEncryptedFlg()).isEqualTo("1");
@@ -185,7 +185,7 @@ public class SpsDataConverterTest {
         NoGetterObject source = new NoGetterObject();
 
         // when
-        SpsDataConverter.enableEncryptedFlg(source);
+        SpsDataConverter.setEncryptedFlg(source, true);
     }
 
     @Test

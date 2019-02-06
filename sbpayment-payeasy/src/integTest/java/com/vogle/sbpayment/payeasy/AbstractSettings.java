@@ -18,10 +18,12 @@
 
 package com.vogle.sbpayment.payeasy;
 
-import com.vogle.sbpayment.client.DefaultSpsManager;
+import com.vogle.sbpayment.client.DefaultSbpayment;
+import com.vogle.sbpayment.client.Sbpayment;
 import com.vogle.sbpayment.client.SpsConfig;
-import com.vogle.sbpayment.client.SpsManager;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -39,20 +41,20 @@ abstract class AbstractSettings {
     AbstractSettings() {
         Properties p = new Properties();
         try {
-            p.load(this.getClass().getClassLoader().getResourceAsStream("it.properties"));
+            p.load(new FileInputStream(System.getProperty("user.dir") + File.separator
+                    + "../config/it2.properties"));
         } catch (IOException ignored) {
         }
 
         config = SpsConfig.from(p);
-        System.out.println(config);
     }
 
     SpsConfig getConfig() {
         return config;
     }
 
-    SpsManager manager() {
-        return new DefaultSpsManager(config);
+    Sbpayment sbpayment() {
+        return new DefaultSbpayment(config);
     }
 
     String orderNo() {

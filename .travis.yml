@@ -1,16 +1,39 @@
 language: java
+jdk: oraclejdk8
 
 install: true
 
-jdk: oraclejdk8
 
-script:
-  - ./gradlew build
+jobs:
+  include:
+  - stage: build
+    script: "./gradlew clean build -x test -x integTest"
+  - stage: test
+    script: "./gradlew test"
+  - stage: integration test
+    script: "./gradlew integTest"
+  - stage: deploy
+    script: "./gradlew publishToNexus -PnexusUsername=${NEXUS_USERNAME} -PnexusPassword=${NEXUS_PASSWORD} -Psigning.keyId=${GPG_KEY_ID} -Psigning.password=${GPG_KEY_PASSPHRASE} -Psigning.secretKeyRingFile=config/allanim.gpg"
+
+
 
 before_cache:
-  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
-  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+- rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+- rm -fr $HOME/.gradle/caches/*/plugin-resolution/
 cache:
   directories:
-    - $HOME/.gradle/caches/
-    - $HOME/.gradle/wrapper/
+  - "$HOME/.gradle/caches/"
+  - "$HOME/.gradle/wrapper/"
+env:
+  global:
+    - secure: PRSH5ARoNACyAQMHp02aU8WHleYazElhbqoQFyjQY0FY35D3Xkgt36m9dCIqWfZ0sfxiFPMyD1vRFLaQ/9nFNvNY2VhGSDnGcz2uHxoQf01gOLDPdx/3/YGCfZbNCrk9aR7cpVxGeTRa2+Zv8Vp21e4/8mhQ8OaeqctWGzsUG7ddKpXa5+QmtaLG7S7ZwUYakBNQ6IQT7ONR0qi5nFG8HBxMTKsckibAsc079tDIO6X4OY2OpuE+7FbovNDbBuOccDqctkc7gVULoqHEtZ4F5RvGlUHc/b/vg1nlxth+TtPS7x2B2xWpvtYcY5amG8uhzNh8MZ5X848B56zN0scuBJl7RedFtc/K47tCpNZiW+Y0DI7Ocu9+fyqQ5xk+/omr+ZYStleWWbmzTDmUQx+9LUG4GsBIHhrdagsKVgiK4bal62JKA+C7Acs97T2knRXi+9jSMSmlMCSmEPwU7AcohuGY/3bbRWVk+Y8J3fvaVd58aSMPPnp6GD7zmh3jtMoBva4LbO/tHxl70Xpihu7zCXw4Fvgal2h2e3MtDjWETcmTWsxjUxxrjRjVhRtH8+L/ZwvVcEMIYdLNqT9DO7eOuQmD/2DXd9RQxeYdjcHFmohWcec4ZApHEO9y8glZ7e8wpn0NmFa4pNd++mD7agLrYVz3HOOBW3mWbKVBr0h7aRA=
+    - secure: kuxDHUhd5dfYupUobBc3gllHyLc8IxV2sudG7H/RHppFKfrxZ4vhklgwRisQ+x79QZmcbjSPOfXBWmV0e//wwHjK1WExWdIM1vGeYy8NKn1XdtYSV76EUFQqua1EgKxefR6jzyseBx2veNPU6PQeZPKdNiC4yhThHw+quhmXNjbM0md0dIi0V0LPdUtDd+QZRyxO3et6oPvOQ6xWKcH4M1a3OjkgmoXP6h+eiVqlSHjUvzIJoWshs4tUbTbNFRezytcnowO7kerRNVywiTvuzRa4rjVDKsgP09RI+RsOCQG83B8JKRC4ljMe9u6DGSMdNchtTQi2zkXQm3MYOsFKoBbVv2cWAgtGnLpxGtM+/cG0nkP03eBYdtOn1VVtF8hp9RJy49j0/jaFohu9hZ5X5BWan2FWGar+6Un8PlaOQRQDlt//l36cxhDKIrRxSsh2frM/qzcavQw2jA+8uZJbYVY+EtSvpUdS6qdGwX1FpNTKQVucjQtt9PtAYF+GY6naB3mKVMjygHpnNM4gGTT3D3gBpNq2xnwXHhbDlMazyDRSGAJmomWMGZIWZVxh2MrBLfPQgZHSoD0Suud8WC0Th/gxsCm1/3p5mrr4tyilhaoCBaxJtWu/kSLrdKbcCjXE8BjKqv5Kdi59zv+XcEJePl8/brBdE7ZWQlMc+b59Yrw=
+    - secure: jG+c0CgewRU7uljGXyzM6YgHI4m6YyqshA4b57qzoambCXEs7ZjO69XF3Ng5F6Krg02nGWncxgrCiSVVCMqUqYflrZ53sGvTr0IRrXBK9fA9xKmj8O+bQz4nJ8ZN10Y2wd7Bt8IY9PZLoYGRx9IZQSRw6QBtcOV1lY3edk0/sfxQAINQP1rfym8L6iVb9onDszOwT64VLAbXiVCXo2VFADHQRVn5i4STFcrvvnRbsQNuCvz+klXWPnepNt0NGASMk4oeuAmM/CFLxeo5qkxm5kxXacseCEaLgAce2OFvO5kAXu4UNoYxo/DS6TXyjF0GBEG9vOo1X762H7LeroYeNAFbpolfTGNhlZwlwIfUG88ZCHZDUTXrRRomKNBPtamt/ho+IOgVf/N0DWdrxVBVbGFWx2BqLvMZlXVbeg1PsLmF02jLHdyEtywuU/W5LRWhDdUqcEjW5dpmcAKTf+rRdkJE3o+ROPqaBcq1G6qNTIrL07Pq4j47JO7yxmhum+73UrgVLcEJFxs6OFttAapFMT+P4WIopfjJSfMhILFsfXBw4DsWF6MVuHmdN0uyPqQ0j1gs9m+kones/VqTNfxdIRZa+NhpUeb55KcvL2Kg8347CQXiJ++CjUzHpPzv6b9mLBuiuTZhJJNmov7g6VWz9O0IFshCKTvSDxRJ4C8UZQM=
+    - secure: INJWtU96eNRaXVHkRL0LUTQx8Z5LjDR4BRxSDt8YyTqKhMcHhn+YoU9DXyRFbqas8YpZDJDfusmpVD6grqCo24nG9s3SqDnzLRLvoQO18MXVVQ4wOTHlsTGxi+gvbABrZTFdlY/rH0TLetHiBsAxyRby2+QQUjEe4W+ZGzam/Q+DLlVsQfqkfviNuZ8MQ7jd4xu74Uhcy06ZxqKOdrLuoK2EW51wROnb12FTmenvOo1JtZU5bVV0adWNWgIQgsZF9QOx4tArqgybb0uMsDixlBEIlrzS8aLJlNyjwWFOzYnM1RYCLOc2D2lFBTf+eaPY8UcsC84B7RQzdeQWBeuoDzYY4DiuOu8Z2qq2cVvgCkSL53cp8VYu1Q6gLhMTZFqXdGIHKuA29I8p/gHOegU8BdbFhxQ+kcPYxeJH3TkNlzknAbdXIK5tPgdimu/pdMG+ArgP7Cc4kTz6Bnf6UdhUp33tXm9PKM4sjuEkEAqUn6Zy7L/bGzL2JYRDFoNjeyNYd3QClsJyRu24GHAH34M1I0iKcUizdF7DgFEovxvVYRss9yZ0Bhhn2XTUWXYuDBFCgTWHuE39K21b94w5pj87RUSnzJiAslbfH3zkdBXv/nmB29UTEPtEBegn8zhGJnWiOBWsKmG1peb2rfxGOmkbrRr9Fir63Yc0bLKxE5RiXaQ=
+before_install:
+  - openssl aes-256-cbc -K $encrypted_32796e7f69aa_key -iv $encrypted_32796e7f69aa_iv
+    -in allanim.gpg.enc -out ./config/allanim.gpg -d
+  - openssl aes-256-cbc -K $encrypted_32796e7f69aa_key -iv $encrypted_32796e7f69aa_iv
+    -in it2.properties.enc -out ./config/it2.properties -d
+  - openssl aes-256-cbc -K $encrypted_32796e7f69aa_key -iv $encrypted_32796e7f69aa_iv
+    -in it1.properties.enc -out ./config/it1.properties -d

@@ -18,8 +18,8 @@
 
 package com.vogle.sbpayment.creditcard;
 
+import com.vogle.sbpayment.client.Sbpayment;
 import com.vogle.sbpayment.client.SpsClient;
-import com.vogle.sbpayment.client.SpsManager;
 import com.vogle.sbpayment.client.SpsResult;
 import com.vogle.sbpayment.client.ValidationHelper;
 import com.vogle.sbpayment.client.params.PaymentInfo;
@@ -84,11 +84,11 @@ public class DefaultCreditCardPayment implements CreditCardPayment {
     /**
      * Constructs a new CreditCardPayment
      *
-     * @param manager        The {@link SpsManager}
+     * @param sbpayment      The {@link Sbpayment}
      * @param enableFeatures {@link Feature}s
      */
-    public DefaultCreditCardPayment(SpsManager manager, Feature... enableFeatures) {
-        this.client = manager.client();
+    public DefaultCreditCardPayment(Sbpayment sbpayment, Feature... enableFeatures) {
+        this.client = sbpayment.client();
 
         List<Feature> featureList = Arrays.asList(enableFeatures);
         this.returnCustomerInfo = featureList.contains(Feature.RETURN_CUSTOMER_INFO) ? "1" : "0";
