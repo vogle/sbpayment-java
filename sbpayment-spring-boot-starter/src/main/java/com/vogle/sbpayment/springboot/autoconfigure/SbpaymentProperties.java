@@ -30,7 +30,7 @@ import javax.validation.constraints.Size;
  * @author Allan Im
  **/
 @Data
-@ConfigurationProperties("vg.sbpayment")
+@ConfigurationProperties("sbpayment")
 public class SbpaymentProperties {
 
     /**

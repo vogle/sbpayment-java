@@ -19,8 +19,8 @@
 package com.vogle.sbpayment.payeasy;
 
 import com.vogle.sbpayment.client.InvalidAccessException;
+import com.vogle.sbpayment.client.Sbpayment;
 import com.vogle.sbpayment.client.SpsClient;
-import com.vogle.sbpayment.client.SpsManager;
 import com.vogle.sbpayment.client.SpsReceiver;
 import com.vogle.sbpayment.client.SpsResult;
 import com.vogle.sbpayment.client.ValidationHelper;
@@ -61,27 +61,27 @@ public class DefaultPayEasyPayment implements PayEasyPayment {
     /**
      * Make LinkType Pay-Easy
      *
-     * @param manager The SpsManager
-     * @param payCsv  金融機関コード、情報リンク方式の場合のみ必須です。ただし、電算システムを利用の場合は不要です。
+     * @param sbpayment The {@link Sbpayment}
+     * @param payCsv    金融機関コード、情報リンク方式の場合のみ必須です。ただし、電算システムを利用の場合は不要です。
      */
-    public DefaultPayEasyPayment(SpsManager manager, String payCsv) {
+    public DefaultPayEasyPayment(Sbpayment sbpayment, String payCsv) {
         this.type = PayEasyType.LINK;
-        this.client = manager.client();
-        this.receiver = manager.receiver();
+        this.client = sbpayment.client();
+        this.receiver = sbpayment.receiver();
         this.payCsv = payCsv;
     }
 
     /**
      * Make OnlineType Pay-Easy
      *
-     * @param manager      The SpsManager
+     * @param sbpayment    The {@link Sbpayment}
      * @param billInfo     請求内容漢字、ATM 等に表示されます。（全角）
      * @param billInfoKana 請求内容カナ、ATM 等に表示されます。（全角英数カナ）
      */
-    public DefaultPayEasyPayment(SpsManager manager, String billInfo, String billInfoKana) {
+    public DefaultPayEasyPayment(Sbpayment sbpayment, String billInfo, String billInfoKana) {
         this.type = PayEasyType.ONLINE;
-        this.client = manager.client();
-        this.receiver = manager.receiver();
+        this.client = sbpayment.client();
+        this.receiver = sbpayment.receiver();
         this.billInfo = billInfo;
         this.billInfoKana = billInfoKana;
     }

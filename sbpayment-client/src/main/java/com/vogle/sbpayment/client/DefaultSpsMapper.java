@@ -45,7 +45,7 @@ public class DefaultSpsMapper implements SpsMapper {
     private final String desKey;
     private final String desInitKey;
 
-    private final boolean enabledCipher;
+    private final boolean cipherEnabled;
 
     /**
      * Create Mapper with hash key & 3DES key
@@ -58,7 +58,7 @@ public class DefaultSpsMapper implements SpsMapper {
         this.desInitKey = config.getDesInitKey();
         this.charset = config.getCharset();
 
-        this.enabledCipher = config.isEnabledCipher() && isNotEmpty(desKey) && isNotEmpty(desInitKey);
+        this.cipherEnabled = config.isCipherEnabled() && isNotEmpty(desKey) && isNotEmpty(desInitKey);
 
         this.xmlMapper = new XmlMapper();
         this.xmlMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
@@ -86,7 +86,7 @@ public class DefaultSpsMapper implements SpsMapper {
             T bodyObject = xmlMapper.readValue(xml, objectClass);
 
             // DES Decrypt
-            if (enabledCipher) {
+            if (cipherEnabled) {
                 SpsDataConverter.decrypt(desKey, desInitKey, charset, bodyObject);
             }
 
@@ -105,7 +105,7 @@ public class DefaultSpsMapper implements SpsMapper {
         StringBuilder xml = new StringBuilder("<?xml version=\"1.0\" encoding=\"" + charset + "\"?>\n");
 
         try {
-            if (enabledCipher) {
+            if (cipherEnabled) {
                 // DES Encrypt & base64 encode
                 SpsDataConverter.encrypt(desKey, desInitKey, charset, object);
                 SpsDataConverter.encodeWithoutCipherString(charset, object);
@@ -130,9 +130,7 @@ public class DefaultSpsMapper implements SpsMapper {
     @Override
     public <T extends SpsRequest> String requestToXml(T request) {
         // 1. enable encrypted flag by config
-        if (enabledCipher) {
-            SpsDataConverter.enableEncryptedFlg(request);
-        }
+        SpsDataConverter.setEncryptedFlg(request, cipherEnabled);
 
         // 2. Insert a hashcode from request
         String hashCode = SpsDataConverter.makeSpsHashCode(request, hashKey, charset);

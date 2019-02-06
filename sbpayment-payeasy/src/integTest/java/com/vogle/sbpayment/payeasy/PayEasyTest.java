@@ -18,9 +18,9 @@
 
 package com.vogle.sbpayment.payeasy;
 
-import com.vogle.sbpayment.client.DefaultSpsManager;
+import com.vogle.sbpayment.client.DefaultSbpayment;
 import com.vogle.sbpayment.client.SpsConfig;
-import com.vogle.sbpayment.client.SpsManager;
+import com.vogle.sbpayment.client.Sbpayment;
 import com.vogle.sbpayment.client.SpsMapper;
 import com.vogle.sbpayment.client.SpsResult;
 import com.vogle.sbpayment.client.convert.SpsDataConverter;
@@ -36,7 +36,6 @@ import com.vogle.sbpayment.payeasy.responses.PayEasyPaymentResponse;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.util.Base64;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -51,42 +50,42 @@ public class PayEasyTest extends AbstractSettings {
     private static int BILL_LIMIT_DAY = 5;
     private PayEasyPayment payment;
     private SpsConfig config;
-    private SpsManager manager;
     private SpsMapper mapper;
 
     @Before
-    public void init() throws IOException {
+    public void init() {
         config = getConfig();
-        manager = new DefaultSpsManager(config);
-        mapper = manager.mapper();
-        payment = new DefaultPayEasyPayment(manager, "株式会社", "カブシキガイシャ");
+        Sbpayment sbpayment = new DefaultSbpayment(config);
+        mapper = sbpayment.mapper();
+        payment = new DefaultPayEasyPayment(sbpayment, "株式会社", "カブシキガイシャ");
+        ((DefaultPayEasyPayment) payment).updateBillLimitDay(BILL_LIMIT_DAY);
     }
 
-//    @Test
-//    public void payment() {
-//
-//        // when
-//        PaymentInfo paymentInfo = getDefaultPaymentInfo();
-//        PayEasy payEasy = getPayEasy();
-//        SpsResult<PayEasyPaymentResponse> payment = this.payment.payment(paymentInfo, payEasy);
-//
-//        // then
-//        assertThat(payment).isNotNull();
-//        assertThat(payment.getStatus()).isEqualTo(200);
-//        assertThat(payment.getHeaders()).isNotNull();
-//        assertThat(payment.getBody()).isNotNull();
-//        assertThat(payment.getBody().isSuccess()).isTrue();
-//        assertThat(payment.getBody().getSpsTransactionId()).isNotEmpty();
-//
-//        PayEasyPaymentResponse res = payment.getBody();
-//        assertThat(res.getTrackingId()).isNotBlank();
-//        assertThat(res.getPayEasyInfo()).isNotNull();
-//        assertThat(res.getPayEasyInfo().getInvoiceNo()).isNotEmpty();
-//        assertThat(res.getPayEasyInfo().getBillDate())
-//                .isEqualTo(RequestHelper.dateOnly(res.getDate(), BILL_LIMIT_DAY));
-//        assertThat(res.getPayEasyInfo().getSkno()).isNotEmpty();
-//        assertThat(res.getPayEasyInfo().getCustNumber()).isNotEmpty();
-//    }
+    @Test
+    public void payment() {
+
+        // when
+        PaymentInfo paymentInfo = getDefaultPaymentInfo();
+        PayEasy payEasy = getPayEasy();
+        SpsResult<PayEasyPaymentResponse> payment = this.payment.payment(paymentInfo, payEasy);
+
+        // then
+        assertThat(payment).isNotNull();
+        assertThat(payment.getStatus()).isEqualTo(200);
+        assertThat(payment.getHeaders()).isNotNull();
+        assertThat(payment.getBody()).isNotNull();
+        assertThat(payment.getBody().isSuccess()).isTrue();
+        assertThat(payment.getBody().getSpsTransactionId()).isNotEmpty();
+
+        PayEasyPaymentResponse res = payment.getBody();
+        assertThat(res.getTrackingId()).isNotBlank();
+        assertThat(res.getPayEasyInfo()).isNotNull();
+        assertThat(res.getPayEasyInfo().getInvoiceNo()).isNotEmpty();
+        assertThat(res.getPayEasyInfo().getBillDate())
+                .isEqualTo(RequestHelper.dateOnly(res.getDate(), BILL_LIMIT_DAY));
+        assertThat(res.getPayEasyInfo().getSkno()).isNotEmpty();
+        assertThat(res.getPayEasyInfo().getCustNumber()).isNotEmpty();
+    }
 
     @Test
     public void convertDepositReceived() throws Exception {

@@ -114,7 +114,7 @@ public class SpsConfig {
      * 3DES 暗号化使用可否
      */
     @Getter
-    private boolean enabledCipher;
+    private boolean cipherEnabled;
 
     /**
      * 3DES cipher key.<br/>
@@ -147,6 +147,8 @@ public class SpsConfig {
                     builder.timeZone(TimeZone.getTimeZone((String) value));
                 } else if ("allowableSecondOnRequest".equalsIgnoreCase(name)) {
                     builder.allowableSecondOnRequest((Integer) value);
+                } else if ("cipherEnabled".equalsIgnoreCase(name)) {
+                    builder.cipherEnabled(Boolean.valueOf((String) value));
                 } else {
                     try {
                         Method method = SpsConfigBuilder.class.getMethod(name, String.class);

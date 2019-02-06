@@ -23,6 +23,11 @@ import com.vogle.sbpayment.client.responses.SpsResponse;
 
 import org.junit.Test;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Properties;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -107,8 +112,8 @@ public class DefaultSpsClientTest {
     }
 
     private SpsClient client(String merchantId, String serviceId) {
-        SpsManager manager = new DefaultSpsManager(settings(merchantId, serviceId));
-        return manager.client();
+        Sbpayment sbpayment = new DefaultSbpayment(settings(merchantId, serviceId));
+        return sbpayment.client();
     }
 
     public static class TestRequest implements SpsRequest<SpsResponse> {
@@ -178,4 +183,5 @@ public class DefaultSpsClientTest {
             return null;
         }
     }
+
 }
