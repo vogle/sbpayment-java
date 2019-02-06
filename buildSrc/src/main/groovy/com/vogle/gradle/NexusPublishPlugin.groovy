@@ -64,13 +64,19 @@ class NexusPublishPlugin implements Plugin<Project> {
             }
         }
 
-
         // create Task
         project.tasks.create('publishToNexus') {
             group = 'publishing'
             description = 'Publishes all Maven publications to the Nexus repository.'
             dependsOn project.tasks.withType(PublishToMavenRepository).matching {
                 it.repository == project.publishing.repositories.nexus
+            }
+
+            doLast {
+                if (!project.publishing.repositories.hasProperty('nexus')) {
+                    project.logger.error('** You can not publish to NEXUS, If you want it is working,' +
+                            ' you MUST enter {} and {} at a gradle.properties file', USERNAME_KEY, PASSWORD_KEY)
+                }
             }
         }
     }
@@ -138,17 +144,21 @@ class NexusPublishPlugin implements Plugin<Project> {
     }
 
     def configureRemoteRepository = { Project project ->
-        project.publishing {
-            repositories {
-                maven {
-                    def releasesRepoUrl = project.nexus.releasesRepo
-                    def snapshotRepoUrl = project.nexus.snapshotRepo
+        
+        // register repository
+        if (project.hasProperty(USERNAME_KEY) && project.hasProperty(PASSWORD_KEY)) {
+            project.publishing {
+                repositories {
+                    maven {
+                        def releasesRepoUrl = project.nexus.releasesRepo
+                        def snapshotRepoUrl = project.nexus.snapshotRepo
 
-                    name = 'nexus'
-                    url = project.version.endsWith('SNAPSHOT') ? snapshotRepoUrl : releasesRepoUrl
-                    credentials {
-                        username = project.property(USERNAME_KEY)
-                        password = project.property(PASSWORD_KEY)
+                        name = 'nexus'
+                        url = project.version.endsWith('SNAPSHOT') ? snapshotRepoUrl : releasesRepoUrl
+                        credentials {
+                            username = project.property(USERNAME_KEY)
+                            password = project.property(PASSWORD_KEY)
+                        }
                     }
                 }
             }
