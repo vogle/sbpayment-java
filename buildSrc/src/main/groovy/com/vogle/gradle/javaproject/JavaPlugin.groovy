@@ -1,4 +1,4 @@
-package com.vogle.gradle
+package com.vogle.gradle.javaproject
 
 import io.franzbecker.gradle.lombok.LombokPlugin
 import io.spring.gradle.dependencymanagement.DependencyManagementPlugin
@@ -10,10 +10,10 @@ import org.gradle.plugins.ide.eclipse.EclipsePlugin
 import org.gradle.plugins.ide.idea.IdeaPlugin
 
 /**
- * Sets Java Library plugins
+ * Java plugins
  * <pre>
  *     Include below
- *     - The Java Library Plugin: https://docs.gradle.org/current/userguide/java_library_plugin.html
+ *     - The Java Plugin: https://docs.gradle.org/current/userguide/java_plugin.html
  *     - io.spring.dependency-management: https://plugins.gradle.org/plugin/io.spring.dependency-management
  *     - io.franzbecker.gradle-lombok: https://plugins.gradle.org/plugin/io.franzbecker.gradle-lombok
  * </pre>
@@ -21,29 +21,31 @@ import org.gradle.plugins.ide.idea.IdeaPlugin
  * @author Allan Im
  *
  */
-class JavaLibraryPlugin implements Plugin<Project> {
+class JavaPlugin implements Plugin<Project> {
 
     @Override
     void apply(Project project) {
 
-        // apply java-library
-        project.plugins.apply(org.gradle.api.plugins.JavaLibraryPlugin)
+        // apply java
+        project.plugins.apply(org.gradle.api.plugins.JavaPlugin)
+        if (!project.plugins.hasPlugin(BasePlugin)) {
+            project.plugins.apply(BasePlugin)
+        }
+
         project.tasks.withType(AbstractCompile).each {
             it.options.encoding = 'UTF-8'
         }
 
-        if (BasePlugin.BuildType.DEBUG == project.ext.env) {
-            project.plugins.withType(IdeaPlugin) {
-                project.idea.module {
-                    downloadJavadoc = true
-                    downloadSources = true
-                }
+        project.plugins.withType(IdeaPlugin) {
+            project.idea.module {
+                downloadJavadoc = true
+                downloadSources = true
             }
-            project.plugins.withType(EclipsePlugin) {
-                project.eclipse.classpath {
-                    downloadSources = true
-                    downloadJavadoc = true
-                }
+        }
+        project.plugins.withType(EclipsePlugin) {
+            project.eclipse.classpath {
+                downloadSources = true
+                downloadJavadoc = true
             }
         }
 
@@ -72,5 +74,8 @@ class JavaLibraryPlugin implements Plugin<Project> {
         project.lombok {
             version = '1.+'
         }
+
+        project.sourceSets.main.allSource.srcDirs.flatten()*.mkdirs()
+        project.sourceSets.test.allSource.srcDirs.flatten()*.mkdirs()
     }
 }

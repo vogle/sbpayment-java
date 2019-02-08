@@ -1,8 +1,8 @@
-package com.vogle.gradle
+package com.vogle.gradle.javaproject
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.plugins.JavaPlugin
+import org.gradle.api.plugins.JavaBasePlugin
 import org.gradle.testing.jacoco.plugins.JacocoPlugin
 
 /**
@@ -19,7 +19,7 @@ class ReportPlugin implements Plugin<Project> {
 
     @Override
     void apply(Project project) {
-        project.plugins.withType(JavaPlugin) {
+        project.plugins.withType(JavaBasePlugin) {
             applyJacoco(project)
         }
     }

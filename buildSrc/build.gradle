@@ -11,6 +11,8 @@ repositories {
 dependencies {
     implementation 'io.spring.gradle:dependency-management-plugin:1.+'
     implementation 'io.franzbecker:gradle-lombok:1.+'
+    implementation 'com.netflix.nebula:gradle-info-plugin:5.+'
+    
     implementation 'com.netflix.nebula:nebula-publishing-plugin:9.+'
 }
 
@@ -19,23 +21,31 @@ gradlePlugin {
     plugins {
         base {
             id = 'vogle.base'
-            implementationClass = 'com.vogle.gradle.BasePlugin'
+            implementationClass = 'com.vogle.gradle.javaproject.BasePlugin'
+        }
+        java {
+            id = 'vogle.java'
+            implementationClass = 'com.vogle.gradle.javaproject.JavaPlugin'
         }
         javaLibrary {
             id = 'vogle.java-library'
-            implementationClass = 'com.vogle.gradle.JavaLibraryPlugin'
+            implementationClass = 'com.vogle.gradle.javaproject.JavaLibraryPlugin'
+        }
+        integrationTest {
+            id = 'vogle.integration-test'
+            implementationClass = 'com.vogle.gradle.javaproject.IntegrationTestPlugin'
         }
         codeQuality {
             id = 'vogle.code-quality'
-            implementationClass = 'com.vogle.gradle.CodeQualityPlugin'
+            implementationClass = 'com.vogle.gradle.javaproject.CodeQualityPlugin'
         }
         reportPlugin {
             id = 'vogle.report'
-            implementationClass = 'com.vogle.gradle.ReportPlugin'
+            implementationClass = 'com.vogle.gradle.javaproject.ReportPlugin'
         }
         archivePlugin {
             id = 'vogle.archive'
-            implementationClass = 'com.vogle.gradle.ArchivePlugin'
+            implementationClass = 'com.vogle.gradle.javaproject.ArchivePlugin'
         }
         nexusPublishPlugin {
             id = 'vogle.nexus-publish'
