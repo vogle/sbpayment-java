@@ -2,6 +2,7 @@ plugins {
     id 'com.diffplug.gradle.spotless' version '3.17.0' apply false
     id 'com.github.kt3k.coveralls' version '2.8.2' apply false
     id "org.sonarqube" version "2.6"
+    id 'com.gradle.build-scan' version '2.1'
 }
 
 description 'Softbank Payment for JAVA'
@@ -16,11 +17,8 @@ ext {
 // Configuration to apply to all the projects
 allprojects {
 
-    group GROUP
-    version VERSION_NAME
-
     apply plugin: 'vogle.base'
-    
+
     // Set the maven repository that looks for plugin dependencies.
     repositories {
         mavenCentral()
@@ -156,7 +154,7 @@ configure(publishedprojects) {
         }
     }
 
-    
+
     // Make distribution files
     apply plugin: 'distribution'
     distributions {
@@ -170,3 +168,5 @@ configure(publishedprojects) {
 
 }
 
+// Root Project
+apply plugin: 'vogle.report'
