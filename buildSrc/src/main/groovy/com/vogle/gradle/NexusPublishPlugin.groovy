@@ -1,8 +1,10 @@
 package com.vogle.gradle
 
+import nebula.plugin.contacts.ContactsPlugin
 import nebula.plugin.info.scm.GitScmProvider
 import nebula.plugin.info.scm.ScmInfoPlugin
 import nebula.plugin.publishing.maven.*
+import org.gradle.api.GradleException
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.publish.maven.MavenPublication
@@ -30,6 +32,8 @@ class NexusPublishPlugin implements Plugin<Project> {
     void apply(Project project) {
         // apply gradle maven publish
         project.plugins.apply(org.gradle.api.publish.maven.plugins.MavenPublishPlugin)
+
+        project.plugins.apply(ContactsPlugin)
 
         // apply nebula.maven-publish
         project.plugins.with {
@@ -72,10 +76,11 @@ class NexusPublishPlugin implements Plugin<Project> {
                 it.repository == project.publishing.repositories.nexus
             }
 
-            doLast {
+            doFirst {
                 if (!project.publishing.repositories.hasProperty('nexus')) {
-                    project.logger.error('** You can not publish to NEXUS, If you want it is working,' +
-                            ' you MUST enter {} and {} at a gradle.properties file', USERNAME_KEY, PASSWORD_KEY)
+                    throw new GradleException(
+                            String.format("You don't have NEXUS credentials('%s', '%s') in your gradle.properties",
+                                    USERNAME_KEY, PASSWORD_KEY))
                 }
             }
         }
@@ -144,7 +149,7 @@ class NexusPublishPlugin implements Plugin<Project> {
     }
 
     def configureRemoteRepository = { Project project ->
-        
+
         // register repository
         if (project.hasProperty(USERNAME_KEY) && project.hasProperty(PASSWORD_KEY)) {
             project.publishing {

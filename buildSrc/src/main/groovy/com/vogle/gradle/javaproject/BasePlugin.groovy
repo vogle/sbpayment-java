@@ -1,6 +1,6 @@
-package com.vogle.gradle
+package com.vogle.gradle.javaproject
 
-import nebula.plugin.contacts.ContactsPlugin
+
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.invocation.Gradle
@@ -15,8 +15,7 @@ import org.gradle.util.VersionNumber
  * <pre>
  *     Include below
  *     - The Base Plugin: https://docs.gradle.org/current/userguide/base_plugin.html
- *     - The Project Report: nebula.source-jar: https://docs.gradle.org/current/userguide/project_report_plugin.html
- *     - nebula.contacts: https://plugins.gradle.org/plugin/nebula.contacts
+ *     - The Project Report: https://docs.gradle.org/current/userguide/project_report_plugin.html
  *     - The IDEA Plugin: https://docs.gradle.org/current/userguide/idea_plugin.html
  *     - The Eclipse Plugin: https://docs.gradle.org/current/userguide/eclipse_plugin.html
  * </pre>
@@ -46,12 +45,6 @@ class BasePlugin implements Plugin<Project> {
                     "Plugin requires Gradle $requiredVersion+")
         }
 
-        if (System.getProperty('env')) {
-            project.ext.env = System.getProperty('env')
-        } else {
-            project.ext.env = BuildType.DEBUG
-        }
-
         updatePluginCount()
 
         if (firstPlugin) {
@@ -61,12 +54,11 @@ class BasePlugin implements Plugin<Project> {
             def logLine = "+----------------------------------------------------------+"
 
             project.logger.quiet "${logLine}"
-            project.logger.quiet " .-.-. .-.-. .-.-. .-.-. .-.-.          Gradle Vogle Plugin "
-            project.logger.quiet " '. V )'. O )'. G )'. L )'. E )                by vogle.com "
+            project.logger.quiet " .-.-. .-.-. .-.-. .-.-. .-.-.          Java Project Plugin "
+            project.logger.quiet " '. V )'. O )'. G )'. L )'. E )               by vogle labs "
             project.logger.quiet "   ).'   ).'   ).'   ).'   ).' ${new Date()} "
             project.logger.quiet "${logLine}"
 
-            project.logger.quiet " Build Environement Profile : ${project.ext.env}"
             if (System.getProperty('os.name')) {
                 project.logger.quiet " OS : ${System.getProperty('os.name')} (${System.getProperty('os.version')})"
             }
@@ -78,7 +70,7 @@ class BasePlugin implements Plugin<Project> {
             }
             project.logger.quiet " Gradle : v${project.gradle.gradleVersion}"
             if (thisPluginVersion) {
-                project.logger.quiet " vogle-build-plugin : v${thisPluginVersion}"
+                project.logger.quiet " vogle-javaproject-plugin : v${thisPluginVersion}"
             }
             project.logger.quiet "${logLine}"
         }
@@ -86,21 +78,13 @@ class BasePlugin implements Plugin<Project> {
         // Apply base, project-report and contacts
         project.plugins.apply(org.gradle.api.plugins.BasePlugin)
         project.plugins.apply(ProjectReportsPlugin)
-        project.plugins.apply(ContactsPlugin)
 
-        // ADD IDE if local env
-        if (BuildType.DEBUG == project.ext.env) {
+        // Apply IDEA
+        project.plugins.apply(IdeaPlugin)
 
-            // Apply IDEA
-            project.plugins.apply(IdeaPlugin)
+        // Apply Eclipse
+        project.plugins.apply(EclipsePlugin)
 
-            // Apply Eclipse
-            project.plugins.apply(EclipsePlugin)
-
-        }
     }
 
-    enum BuildType {
-        DEBUG, TEST, CI, RELEASE
-    }
 }

@@ -23,11 +23,6 @@ import com.vogle.sbpayment.client.responses.SpsResponse;
 
 import org.junit.Test;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.Properties;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -93,7 +88,7 @@ public class DefaultSpsClientTest {
 
         // when
         TestRequest request = client.newRequest(TestRequest.class);
-        SpsResult responseEntity = client.execute(request);
+        SpsResult<SpsResponse> responseEntity = client.execute(request);
 
         // then
         assertThat(responseEntity.getStatus()).isEqualTo(405);

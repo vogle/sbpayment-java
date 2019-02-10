@@ -1,6 +1,9 @@
 description 'Pay-Easy Payment'
 
-apply from: "$gradleDir/integration-test.gradle"
+apply plugin: 'vogle.integration-test'
+integrationTest{
+    maxHeapSize = '1024m'
+}
 
 dependencies {
     api project(':sbpayment-client')

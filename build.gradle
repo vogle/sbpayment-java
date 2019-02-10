@@ -1,6 +1,8 @@
 plugins {
     id 'com.diffplug.gradle.spotless' version '3.17.0' apply false
     id 'com.github.kt3k.coveralls' version '2.8.2' apply false
+    id "org.sonarqube" version "2.7"
+    id 'com.gradle.build-scan' version '2.1'
 }
 
 description 'Softbank Payment for JAVA'
@@ -15,16 +17,7 @@ ext {
 // Configuration to apply to all the projects
 allprojects {
 
-    group GROUP
-    version VERSION_NAME
-
     apply plugin: 'vogle.base'
-    contacts {
-        'allan@vogle.com' {
-            moniker 'Allan Im'
-            github 'allanim'
-        }
-    }
 
     // Set the maven repository that looks for plugin dependencies.
     repositories {
@@ -67,7 +60,7 @@ configure(javaprojects) {
 
     // Sets common dependencies in java project
     dependencies {
-        
+
         // test modules
         testImplementation 'ch.qos.logback:logback-classic'
         testImplementation 'junit:junit'
@@ -86,13 +79,13 @@ configure(javaprojects) {
     }
 
     // Spotless is a general-purpose formatting plugin
-    apply plugin: "com.diffplug.gradle.spotless"
+    apply plugin: 'com.diffplug.gradle.spotless'
     spotless {
         java {
             licenseHeaderFile "$rootDir/config/license.java"
         }
     }
-    
+
 }
 
 // Configuration to apply to JAVA Projects
@@ -104,7 +97,7 @@ configure(publishedprojects) {
         options.stylesheetFile = new File(rootProject.rootDir, "config/dracula-javadoc8.css")
         options.links("http://docs.oracle.com/javase/8/docs/api/")
     }
-    
+
     // Provides code coverage metrics for Java code
     apply plugin: 'vogle.report'
     jacocoTestCoverageVerification {
@@ -128,30 +121,50 @@ configure(publishedprojects) {
             }
         }
     }
-    
-    // Coveralls
-    apply plugin: "com.github.kt3k.coveralls"
-    coveralls {
-        sourceDirs = publishedprojects.sourceSets.main.allSource.srcDirs.flatten()
-        jacocoReportPath "${buildDir}/reports/jacoco/jacocoTestReport/jacocoTestReport.xml"
-    }
-    tasks.coveralls {
-        group = 'Coverage reports'
-        description = 'Uploads the aggregated coverage report to Coveralls'
 
-        dependsOn project.task('jacocoRootReport')
-    }
-    
     // Archive task used to create a sources jar and a javadoc jar
-    apply plugin: "vogle.archive"
+    apply plugin: 'vogle.archive'
 
 
     // Publish to maven repository
-    apply plugin: "vogle.nexus-publish"
+    apply plugin: 'vogle.nexus-publish'
     nexus {
         orgName = 'Vogle Labs.'
         orgUrl = 'http://vogle.com'
         license = 'apache2'
     }
+    contacts {
+        'allan@vogle.com' {
+            moniker 'Allan Im'
+            github 'allanim'
+        }
+    }
+
+
+    // Make distribution files
+    apply plugin: 'distribution'
+    distributions {
+        sbpayment {
+            baseName = project.name
+            contents {
+                from "$rootDir/LICENSE", jar, sourceJar, javadocJar
+            }
+        }
+    }
+
 }
 
+// report tools
+apply plugin: 'vogle.report'
+
+// Coveralls
+apply plugin: 'com.github.kt3k.coveralls'
+coveralls {
+    sourceDirs = publishedprojects.sourceSets.main.allSource.srcDirs.flatten()
+    jacocoReportPath = "${buildDir}/reports/jacoco/jacocoRootReport/jacocoRootReport.xml"
+}
+tasks.coveralls {
+    group = 'reporting'
+    description = 'Uploads the aggregated coverage report to Coveralls'
+    dependsOn jacocoRootReport
+}
