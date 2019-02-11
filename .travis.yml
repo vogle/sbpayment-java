@@ -1,28 +1,18 @@
 language: java
 jdk: oraclejdk8
-# install: true
-# dist: trusty
-jobs:
-  include:
-    - stage: build
-      script: "./gradlew clean build -x integrationTest"
-      if: type IN (pull_request)
-    - script: "./gradlew clean build"
-      if: NOT type IN (pull_request)
-    - stage: deploy
-      script: "./gradlew publishToNexus -PnexusUsername=${NEXUS_USERNAME} -PnexusPassword=${NEXUS_PASSWORD}
-      -Psigning.keyId=${GPG_KEY_ID} -Psigning.password=${GPG_KEY_PASSPHRASE} -Psigning.secretKeyRingFile=${TRAVIS_BUILD_DIR}/config/allanim.gpg"
-      if: (NOT type IN (pull_request)) AND (branch = master) OR (tag = true)
-      after_success:
-        # sonarcloud
-        - "./gradlew sonarqube"
-        # codeclimate
-        - JACOCO_SOURCE_PATH=src/main/java ./cc-test-reporter format-coverage build/reports/jacoco/jacocoRootReport/jacocoRootReport.xml -t jacoco
-        - ./cc-test-reporter upload-coverage
-        - sed -i 's_com/_server/src/main/java/com/_g' jacoco.xml
-        - ./cc-test-reporter after-build -t jacoco --exit-code $TRAVIS_TEST_RESULT
-        # coveralls
-        - ./gradlew coveralls
+dist: trusty
+
+env:
+  global:
+    - secure: agQaJ/328iOQnRDuh6HH3fXaTvEwgmrarwcQDpGuJanFpfuN+dM0j+IGLbvdyJPtK1Tmrb5mRvvhbGXF9TuegDG1p023XJr9/sYNu+gOmclqSkyQi/C0XVqkU/1J1bn5ckqf9/sG6MultYgxkhNUjT7wW4e+tC6Ljw6NE/2WjhAVMNdsuiUaGeisrWD0EzlI/y4luHWlfQY3BcXIE0Xagqmh1WTa0GUcVbpBSEGJDqaMY+JF3Fq29TIFGyQeUqKPlfMpmv01KoOiIhZmiDQGKWy2Zk20uz01vPqIqd6Wl+zgjwBUc1ga+IQIgq1IvPyI7JfvT5dTQv74RK+NQYN+Pq3AViKrGWqE6SgQrCNecciqSkKusdU68mAiXyLT6Dp6X7h7PcI7q5jSPvVvnfzLxNqO5WsoBVPInaRIbvcARESoKeUa2RaMHxBFqBL+N7/zFuxm47cGJWa8YHyd7DuivcJ/rXmdJPuFivMiEKySJ2GTe6elD7D7Bk9HdpfN+/dKgbHwzduf17KY7it0K1TbAXyJQNVAL2b/csr6QoUzSfuR1QJvHPtLAOV6UBqoyBj5sXDIWtcm0qIjZpXUihOUAgqTxVs9XUWM8UGE2bGg24BpK7Uii01utWnj58zWscTZ+Nen1cunhYHXU/UiFxcC29iNMrJaonovabv9i/tBxB8=
+    - secure: Xr3HtG6Ny11n8vcU3NcMvLLJmv18ld4tPq/xyDa6JNRaFkPyWitVO6s61vrfjkg0tM3E9g/K4CaT5gtzoMnoPOBXZ11QWBOGvgqGvHQNKSaJAh3Plr5+Yyt2jEWcSysEVo7oqpZFhck14T6EWsf0CoUACVQThgb5Ieg3UIGDVTXT2HC6eE1Z0dmGEAiKvK1nYO/pNfqm4DvAKz9If/fKW+rsKJZC9Vlipci91FB1+LX86hA4HlPpTmBKGH9J5d//0IZ2Tt9W/j2Toxa9OjrCZBU6FmJbs0mxQaRJ65Rar0QFyD4LIIXvXxtbSSj0w//awBwiOI2a6tqIRVMuJfYEaQmavwgfNDuGeLljjovYaIdxrTzfewLBSjI5+3lrROP8NRejTDxvD86QG3+w/GfiYb1IHwSCvEHnvwbRqf/3WEAs2W8ZAT+1rh+RJYH2g/SjTaw8owT0VJThHV+a/AxJR528Wc1yis50mGURbHikGICZQv7W+yPf0djUVpKWplkKyyWZ/rmFfJVgljJfU01bB7/rbZAwMLv7QWpVKNNsvQbUC9rgCZuDJ7M6X/OaY9hW5nTxDX6QJf3lk/UB0ba3mJ9G08rt55+gTYqxzlRznPgsh9Xkh8kf+tnPma0Ie7ctTNKx1Vm0Oma5jU1i+WavyzhhIia+l5GNKnlaCfDDPsE=
+    - secure: JN+w6Sn46dPMJd67CTnHcYDDGqjIUR9lmH1sPuX8hyfSzHtuA7zMIQLZvu6DuGy9RcCLNbXe9zpRrsZhQefvG3yzEyihi4MErNAZNeoKs+g4QZ8G/EaxzDGeOJIQ1wMjRvzGPhKs0wiOYXsXks2vW4ilB4n/9QAGd+k6pOuxz/XjDcGife2sUue7MnNRy1jxdClxjD22Mkza/aH1+lh9DCsKJM5hNhZW6uv8RcHntdFTy1tl/bvVmu+IvycmOJN8nUnaVRyXIAT+dReitdi+czm1zjacyCcwrPW3azY6ArpooeiCP9UI2C07QIaWoPSmVj6U+kApNsIAT76XQU9HIrxqjHiGv4De0lJtuN4B946DvLQf53e983oKprJITPl6Pi3kqfzfTwGBTu72oTM1yRd2A43VPra+tP0SY2NhC5LSnHqo5bEYp7ycGUjqTpqig44jjHbS1Z0d1bPmjubDZUQzOq0Y2sulLQGFzkCWLvOTLc9JKQoZ2gZJRx4F1nlPGjBC1S71JmCDeKKYXddPccscb5mZRKOByoEtdiMHCNbRcY2ReOnkDtz6DLQHZOY9KhoEHXpfkfRtbilVddvg5FLXgrwJkspJ4zqOOo82kJLcLF0ud1EfzDmjCKRF2XH169JcXka03lEZbwASfkCZ6VjVYD4r7n57sNp/AMjufVM=
+    - secure: HseTecOhcI9kXu/hRXCmhuCrXgZ4l+TYjQew0aF/cpOYi6f4yFsqvRB4B+mOv+zaMnQl2/MwXI7pRMc1euQ4hemFEdskoCNp1dz3G2boGyzsHKWoXq8FTLp9by3hiAXiSKasy5fSGf2BpYmuYjCEfomtvswOF5HUJZCA+u9U0oHmtTTayZq2OkBNAwpqg/Dnn3+EtdPaAxvIT599KboC5dufwAVSe17RV02y2j1x87maRTYj6aEmhzcUH6jWN/Jh0m6o+xewVgBkmcPThao/HAeopZcePQhJM5QIdgieKRxEhje/VfEXEiQYNoGNYzf+lanzBVbvmqVnSk21FIBobrlPlzv3kcdet7hiZaFHm/mOdcwpQ5z8xomX4vnbg20AU6Ys8LTLRVRaTEWKPA6xUzeKRZDg7on9GwOKFjWvvyFXBBDXqzSzwKVHI0xoF0Lilc7RnXpCtTg6JwsKzwXmWUkGIaO5GhNVaSF14WNYWvIcQf7iDyKmfy2O4puIc7445y4pXbnMD4YjUBd+48Dn9MvIRKeeZ0aAQBl5vdFudLwtZDV398w+pNqkIQEAXZS0nuujaobDVCZLB+DUc6vOOQCla9Ld3E6xblu47FzSKbl/OaVsOSImlqPglrVvMsh7iZasuNX/hrvIvcB6IVXRV59ioVFfx94yUYAUpdSE5Yc=
+addons:
+  sonarcloud:
+    organization: "vogle"
+    token:
+      secure: ${SONAR_TOKEN}
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
   - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
@@ -30,25 +20,33 @@ cache:
   directories:
     - "$HOME/.gradle/caches/"
     - "$HOME/.gradle/wrapper/"
-env:
-  global:
-    - secure: agQaJ/328iOQnRDuh6HH3fXaTvEwgmrarwcQDpGuJanFpfuN+dM0j+IGLbvdyJPtK1Tmrb5mRvvhbGXF9TuegDG1p023XJr9/sYNu+gOmclqSkyQi/C0XVqkU/1J1bn5ckqf9/sG6MultYgxkhNUjT7wW4e+tC6Ljw6NE/2WjhAVMNdsuiUaGeisrWD0EzlI/y4luHWlfQY3BcXIE0Xagqmh1WTa0GUcVbpBSEGJDqaMY+JF3Fq29TIFGyQeUqKPlfMpmv01KoOiIhZmiDQGKWy2Zk20uz01vPqIqd6Wl+zgjwBUc1ga+IQIgq1IvPyI7JfvT5dTQv74RK+NQYN+Pq3AViKrGWqE6SgQrCNecciqSkKusdU68mAiXyLT6Dp6X7h7PcI7q5jSPvVvnfzLxNqO5WsoBVPInaRIbvcARESoKeUa2RaMHxBFqBL+N7/zFuxm47cGJWa8YHyd7DuivcJ/rXmdJPuFivMiEKySJ2GTe6elD7D7Bk9HdpfN+/dKgbHwzduf17KY7it0K1TbAXyJQNVAL2b/csr6QoUzSfuR1QJvHPtLAOV6UBqoyBj5sXDIWtcm0qIjZpXUihOUAgqTxVs9XUWM8UGE2bGg24BpK7Uii01utWnj58zWscTZ+Nen1cunhYHXU/UiFxcC29iNMrJaonovabv9i/tBxB8=
-    - secure: Xr3HtG6Ny11n8vcU3NcMvLLJmv18ld4tPq/xyDa6JNRaFkPyWitVO6s61vrfjkg0tM3E9g/K4CaT5gtzoMnoPOBXZ11QWBOGvgqGvHQNKSaJAh3Plr5+Yyt2jEWcSysEVo7oqpZFhck14T6EWsf0CoUACVQThgb5Ieg3UIGDVTXT2HC6eE1Z0dmGEAiKvK1nYO/pNfqm4DvAKz9If/fKW+rsKJZC9Vlipci91FB1+LX86hA4HlPpTmBKGH9J5d//0IZ2Tt9W/j2Toxa9OjrCZBU6FmJbs0mxQaRJ65Rar0QFyD4LIIXvXxtbSSj0w//awBwiOI2a6tqIRVMuJfYEaQmavwgfNDuGeLljjovYaIdxrTzfewLBSjI5+3lrROP8NRejTDxvD86QG3+w/GfiYb1IHwSCvEHnvwbRqf/3WEAs2W8ZAT+1rh+RJYH2g/SjTaw8owT0VJThHV+a/AxJR528Wc1yis50mGURbHikGICZQv7W+yPf0djUVpKWplkKyyWZ/rmFfJVgljJfU01bB7/rbZAwMLv7QWpVKNNsvQbUC9rgCZuDJ7M6X/OaY9hW5nTxDX6QJf3lk/UB0ba3mJ9G08rt55+gTYqxzlRznPgsh9Xkh8kf+tnPma0Ie7ctTNKx1Vm0Oma5jU1i+WavyzhhIia+l5GNKnlaCfDDPsE=
-    - secure: JN+w6Sn46dPMJd67CTnHcYDDGqjIUR9lmH1sPuX8hyfSzHtuA7zMIQLZvu6DuGy9RcCLNbXe9zpRrsZhQefvG3yzEyihi4MErNAZNeoKs+g4QZ8G/EaxzDGeOJIQ1wMjRvzGPhKs0wiOYXsXks2vW4ilB4n/9QAGd+k6pOuxz/XjDcGife2sUue7MnNRy1jxdClxjD22Mkza/aH1+lh9DCsKJM5hNhZW6uv8RcHntdFTy1tl/bvVmu+IvycmOJN8nUnaVRyXIAT+dReitdi+czm1zjacyCcwrPW3azY6ArpooeiCP9UI2C07QIaWoPSmVj6U+kApNsIAT76XQU9HIrxqjHiGv4De0lJtuN4B946DvLQf53e983oKprJITPl6Pi3kqfzfTwGBTu72oTM1yRd2A43VPra+tP0SY2NhC5LSnHqo5bEYp7ycGUjqTpqig44jjHbS1Z0d1bPmjubDZUQzOq0Y2sulLQGFzkCWLvOTLc9JKQoZ2gZJRx4F1nlPGjBC1S71JmCDeKKYXddPccscb5mZRKOByoEtdiMHCNbRcY2ReOnkDtz6DLQHZOY9KhoEHXpfkfRtbilVddvg5FLXgrwJkspJ4zqOOo82kJLcLF0ud1EfzDmjCKRF2XH169JcXka03lEZbwASfkCZ6VjVYD4r7n57sNp/AMjufVM=
-    - secure: HseTecOhcI9kXu/hRXCmhuCrXgZ4l+TYjQew0aF/cpOYi6f4yFsqvRB4B+mOv+zaMnQl2/MwXI7pRMc1euQ4hemFEdskoCNp1dz3G2boGyzsHKWoXq8FTLp9by3hiAXiSKasy5fSGf2BpYmuYjCEfomtvswOF5HUJZCA+u9U0oHmtTTayZq2OkBNAwpqg/Dnn3+EtdPaAxvIT599KboC5dufwAVSe17RV02y2j1x87maRTYj6aEmhzcUH6jWN/Jh0m6o+xewVgBkmcPThao/HAeopZcePQhJM5QIdgieKRxEhje/VfEXEiQYNoGNYzf+lanzBVbvmqVnSk21FIBobrlPlzv3kcdet7hiZaFHm/mOdcwpQ5z8xomX4vnbg20AU6Ys8LTLRVRaTEWKPA6xUzeKRZDg7on9GwOKFjWvvyFXBBDXqzSzwKVHI0xoF0Lilc7RnXpCtTg6JwsKzwXmWUkGIaO5GhNVaSF14WNYWvIcQf7iDyKmfy2O4puIc7445y4pXbnMD4YjUBd+48Dn9MvIRKeeZ0aAQBl5vdFudLwtZDV398w+pNqkIQEAXZS0nuujaobDVCZLB+DUc6vOOQCla9Ld3E6xblu47FzSKbl/OaVsOSImlqPglrVvMsh7iZasuNX/hrvIvcB6IVXRV59ioVFfx94yUYAUpdSE5Yc=
+    - "$HOME/.m2/repository"
+    - "$HOME/.sonar/cache"
+    - ".gradle"
+
 before_install:
-  - if [ "$TRAVIS_PULL_REQUEST" = "false" ] ; then
-    openssl aes-256-cbc -K $encrypted_f13efdfcd46f_key -iv $encrypted_f13efdfcd46f_iv -in config.tar.enc -out ./config/config.tar -d;
-    cd config; tar xvf config.tar; cd ../;
-    fi
-addons:
-  sonarcloud:
-    organization: "vogle"
-    token:
-      secure: ${SONAR_TOKEN}
-before_script:
-  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-  - chmod +x ./cc-test-reporter
-  - ./cc-test-reporter before-build
+  - openssl aes-256-cbc -K $encrypted_f13efdfcd46f_key -iv $encrypted_f13efdfcd46f_iv -in config.tar.enc -out ./config/config.tar -d
+  - cd config; tar xvf config.tar; cd ../;
+#before_script:
+#      - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+#      - chmod +x ./cc-test-reporter
+#      - ./cc-test-reporter before-build
+
+script: "./gradlew clean build"
+
+after_success:
+  # nexus
+  - "./gradlew publishToNexus -PnexusUsername=${NEXUS_USERNAME} -PnexusPassword=${NEXUS_PASSWORD}
+          -Psigning.keyId=${GPG_KEY_ID} -Psigning.password=${GPG_KEY_PASSPHRASE} -Psigning.secretKeyRingFile=${TRAVIS_BUILD_DIR}/config/allanim.gpg"
+  # sonarcloud
+  - "./gradlew sonarqube"
+  # coveralls
+  - "./gradlew coveralls"
+  # codeclimate
+#  - "JACOCO_SOURCE_PATH=src/main/java ./cc-test-reporter format-coverage build/reports/jacoco/jacocoRootReport/jacocoRootReport.xml -t jacoco"
+#  - "./cc-test-reporter upload-coverage"
+#  - "./cc-test-reporter after-build -t jacoco --exit-code $TRAVIS_TEST_RESULT"
+  - "chmod +x ./.codeclimate.sh"
+
 notifications:
   slack: vogle:GGoPmsbXOS88yTxPGoUlwGTg

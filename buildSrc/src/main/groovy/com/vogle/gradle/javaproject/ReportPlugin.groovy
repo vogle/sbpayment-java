@@ -47,6 +47,7 @@ class ReportPlugin implements Plugin<Project> {
                     xml.enabled = true
                     csv.enabled = false
                 }
+                executionData project.tasks.withType(Test)
             }
             project.test.finalizedBy(project.tasks.jacocoTestReport)
         }
@@ -65,8 +66,6 @@ class ReportPlugin implements Plugin<Project> {
                 destinationDir = project.file("$project.buildDir/reports/tests")
                 reportOn project.subprojects*.tasks*.withType(Test)
             }
-
-            project.check.dependsOn project.testRootReport
         }
     }
 
@@ -100,10 +99,6 @@ class ReportPlugin implements Plugin<Project> {
                     xml.enabled = true
                 }
             }
-
-            project.check.dependsOn project.jacocoRootReport
         }
     }
-
-
 }
