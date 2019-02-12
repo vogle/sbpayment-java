@@ -12,6 +12,8 @@ dependencies {
     implementation 'io.spring.gradle:dependency-management-plugin:1.+'
     implementation 'io.franzbecker:gradle-lombok:1.+'
     implementation 'com.netflix.nebula:gradle-info-plugin:5.+'
+
+    implementation 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.+'
     
     implementation 'com.netflix.nebula:nebula-publishing-plugin:9.+'
 }
@@ -50,6 +52,14 @@ gradlePlugin {
         nexusPublishPlugin {
             id = 'vogle.nexus-publish'
             implementationClass = 'com.vogle.gradle.NexusPublishPlugin'
+        }
+        codacyPlugin {
+            id = 'vogle.codacy'
+            implementationClass = 'com.vogle.gradle.CodacyPlugin'
+        }
+        coverallsPlugin {
+            id = 'vogle.coveralls'
+            implementationClass = 'com.vogle.gradle.CoverallsPlugin'
         }
     }
 }

@@ -43,6 +43,7 @@ class ArchivePlugin implements Plugin<Project> {
     def configureSourceJar = { Project project ->
         project.tasks.create('sourceJar', Jar) {
             group 'build'
+            description = 'Assembles a jar archive containing the project sources.'
             from project.sourceSets.main.allSource
             classifier 'sources'
             extension 'jar'
@@ -55,6 +56,7 @@ class ArchivePlugin implements Plugin<Project> {
         Javadoc javadocTask = (Javadoc) project.tasks.getByName('javadoc')
         project.tasks.create('javadocJar', Jar) {
             group 'build'
+            description = 'Assembles a jar archive containing the Javadocs.'
             from javadocTask.destinationDir
             classifier 'javadoc'
             extension 'jar'
