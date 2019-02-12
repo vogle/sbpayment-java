@@ -3,15 +3,12 @@ package com.vogle.gradle
 import org.gradle.api.Action
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.Task
 import org.gradle.api.artifacts.Configuration
 import org.gradle.api.artifacts.DependencySet
 import org.gradle.api.internal.project.ProjectInternal
 import org.gradle.api.tasks.JavaExec
 import org.gradle.testing.jacoco.plugins.JacocoPlugin
 import org.gradle.testing.jacoco.tasks.JacocoReport
-import org.kt3k.gradle.plugin.CoverallsPluginExtension
-import org.kt3k.gradle.plugin.coveralls.CoverallsTask
 
 /**
  * Upload jacoco coverage to the codacy

@@ -1,6 +1,7 @@
 package com.vogle.gradle
+
 /**
- * Sets Nexus information
+ * Sets Codacy information
  *
  * @author Allan Im
  *
