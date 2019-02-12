@@ -1,7 +1,6 @@
 plugins {
     id 'com.diffplug.gradle.spotless' version '3.17.0' apply false
-    id 'com.github.kt3k.coveralls' version '2.8.2' apply false
-    id "org.sonarqube" version "2.7" apply false
+    id "org.sonarqube" version "2.7"
     id 'com.gradle.build-scan' version '2.1'
 }
 
@@ -160,13 +159,14 @@ configure(publishedprojects) {
 apply plugin: 'vogle.report'
 
 // Coveralls
-apply plugin: 'com.github.kt3k.coveralls'
+apply plugin: 'vogle.coveralls'
 coveralls {
     sourceDirs = publishedprojects.sourceSets.main.allSource.srcDirs.flatten()
-    jacocoReportPath = "${buildDir}/reports/jacoco/jacocoRootReport/jacocoRootReport.xml"
+    jacocoReportPath = "${buildDir}/reports/jacoco/jacocoCoverageReport/jacocoCoverageReport.xml"
 }
-tasks.coveralls {
-    group = 'reporting'
-    description = 'Uploads the aggregated coverage report to Coveralls'
-    dependsOn jacocoRootReport
+
+// Codacy
+apply plugin: 'vogle.codacy'
+codacy {
+    jacocoReportPath = "${buildDir}/reports/jacoco/jacocoCoverageReport/jacocoCoverageReport.xml"
 }
