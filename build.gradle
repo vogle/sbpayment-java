@@ -48,7 +48,7 @@ configure(javaprojects) {
             dependency 'org.mockito:mockito-core:2.24.0'
             dependency 'org.powermock:powermock-api-mockito2:2.0.0'
 
-            dependency 'org.springframework:spring-core:5.1.4.RELEASE'
+            dependency 'org.springframework:spring-core:5.1.5.RELEASE'
             dependency 'org.springframework:spring-context:5.1.4.RELEASE'
 
             dependency 'org.springframework.boot:spring-boot-autoconfigure:2.1.2.RELEASE'
