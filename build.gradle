@@ -97,9 +97,6 @@ configure(publishedprojects) {
         options.links("http://docs.oracle.com/javase/8/docs/api/")
     }
 
-    // Apply sonarqube
-    apply plugin: 'org.sonarqube'
-
     // Provides code coverage metrics for Java code
     apply plugin: 'vogle.report'
     jacocoTestCoverageVerification {
@@ -141,7 +138,6 @@ configure(publishedprojects) {
         }
     }
 
-
     // Make distribution files
     apply plugin: 'distribution'
     distributions {
@@ -152,6 +148,9 @@ configure(publishedprojects) {
             }
         }
     }
+
+    // Apply sonarqube
+    apply plugin: 'org.sonarqube'
 
 }
 

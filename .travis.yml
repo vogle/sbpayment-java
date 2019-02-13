@@ -31,18 +31,20 @@ before_install:
 script: "./gradlew clean build"
 
 after_success:
-  # nexus
+  # deploy jar to nexus
   - "./gradlew publishToNexus -PnexusUsername=${NEXUS_USERNAME} -PnexusPassword=${NEXUS_PASSWORD}
           -Psigning.keyId=${GPG_KEY_ID} -Psigning.password=${GPG_KEY_PASSPHRASE} -Psigning.secretKeyRingFile=${TRAVIS_BUILD_DIR}/config/allanim.gpg"
-  # sonarcloud
-  - "./gradlew sonarqube"
-  # coveralls
-  - "./gradlew uploadJacocoToCoveralls"
-  # codeclimate
+  # make jacocoCoverageReport
+  - "./gradlew jacocoCoverageReport"
+  # upload coverage to coveralls
+  - "./gradlew uploadJacocoToCoveralls -x jacocoCoverageReport"
+  # upload coverage to codacy
+  - "./gradlew uploadJacocoToCodacy -x jacocoCoverageReport"
+  # upload coverage & code analysis to sonarcloud
+  - "./gradlew sonarqube -x jacocoTestReport"
+  # upload coverage to codeclimate
   - "chmod +x ./.codeclimate.sh; ./.codeclimate.sh"
-  # codacy
-  - "./gradlew uploadJacocoToCodacy"
-  # codecov
+  # upload coverage to codecov
   - "bash <(curl -s https://codecov.io/bash)"
 
 notifications:
