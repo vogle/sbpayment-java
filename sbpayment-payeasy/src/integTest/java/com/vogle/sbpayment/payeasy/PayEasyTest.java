@@ -16,9 +16,6 @@
 
 package com.vogle.sbpayment.payeasy;
 
-import com.vogle.sbpayment.client.DefaultSbpayment;
-import com.vogle.sbpayment.client.SpsConfig;
-import com.vogle.sbpayment.client.Sbpayment;
 import com.vogle.sbpayment.client.SpsMapper;
 import com.vogle.sbpayment.client.SpsResult;
 import com.vogle.sbpayment.client.convert.SpsDataConverter;
@@ -47,13 +44,10 @@ public class PayEasyTest extends AbstractSettings {
 
     private static int BILL_LIMIT_DAY = 5;
     private PayEasyPayment payment;
-    private SpsConfig config;
     private SpsMapper mapper;
 
     @Before
     public void init() {
-        config = getConfig();
-        Sbpayment sbpayment = new DefaultSbpayment(config);
         mapper = sbpayment.getMapper();
         payment = new DefaultPayEasyPayment(sbpayment, "株式会社", "カブシキガイシャ");
         ((DefaultPayEasyPayment) payment).updateBillLimitDay(BILL_LIMIT_DAY);
@@ -90,8 +84,8 @@ public class PayEasyTest extends AbstractSettings {
         // given test data
         PayEasyDepositReceived temp = new PayEasyDepositReceived();
         temp.setId("NT01-00103-703");
-        temp.setMerchantId(config.getMerchantId());
-        temp.setServiceId(config.getServiceId());
+        temp.setMerchantId(merchantId);
+        temp.setServiceId(serviceId);
         temp.setSpsTransactionId("xxxxxxxxxxxxxxxxxxxxx");
         temp.setTrackingId("1234567890");
         temp.setRecDatetime("20171010");
@@ -153,8 +147,8 @@ public class PayEasyTest extends AbstractSettings {
         // test data
         PayEasyExpiredCancelReceived temp = new PayEasyExpiredCancelReceived();
         temp.setId("NT01-00104-703");
-        temp.setMerchantId(config.getMerchantId());
-        temp.setServiceId(config.getServiceId());
+        temp.setMerchantId(merchantId);
+        temp.setServiceId(serviceId);
         temp.setSpsTransactionId("xxxxxxxxxxxxxxxxxxxxx");
         temp.setTrackingId("1234567890");
         temp.setRecDatetime("20171010");

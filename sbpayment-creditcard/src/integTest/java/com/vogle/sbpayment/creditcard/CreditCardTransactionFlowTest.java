@@ -46,7 +46,7 @@ public class CreditCardTransactionFlowTest extends AbstractSettings {
 
     @Before
     public void init() {
-        payment = new DefaultCreditCardPayment(sbpayment(), RETURN_CARD_BRAND, RETURN_CUSTOMER_INFO);
+        payment = new DefaultCreditCardPayment(sbpayment, RETURN_CARD_BRAND, RETURN_CUSTOMER_INFO);
     }
 
     private String authorize() {
