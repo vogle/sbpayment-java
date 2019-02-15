@@ -29,8 +29,6 @@ class CoverallsPlugin implements Plugin<ProjectInternal> {
         project.plugins.withType(JacocoPlugin) {
             // create coveralls project extension
             project.extensions.create('coveralls', CoverallsPluginExtension)
-            project.coveralls.service = 'LOCAL'
-            println(project.coveralls)
 
             // register coveralls task
             Task task = project.task('uploadJacocoToCoveralls', type: CoverallsTask)
