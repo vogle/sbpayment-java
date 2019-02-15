@@ -159,7 +159,7 @@ class NexusPublishPlugin implements Plugin<Project> {
                         def snapshotRepoUrl = project.nexus.snapshotRepo
 
                         name = 'nexus'
-                        url = project.version.endsWith('SNAPSHOT') ? snapshotRepoUrl : releasesRepoUrl
+                        url = project.version.toString().endsWith('SNAPSHOT') ? snapshotRepoUrl : releasesRepoUrl
                         credentials {
                             username = project.property(USERNAME_KEY)
                             password = project.property(PASSWORD_KEY)
