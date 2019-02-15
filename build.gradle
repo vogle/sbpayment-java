@@ -1,7 +1,8 @@
 plugins {
     id 'com.diffplug.gradle.spotless' version '3.17.0' apply false
-    id "org.sonarqube" version "2.7"
     id 'com.gradle.build-scan' version '2.1'
+    id "org.sonarqube" version '2.7'
+    id 'nebula.release' version '9.2.0'
 }
 
 description 'Softbank Payment for JAVA'
@@ -123,7 +124,7 @@ configure(publishedprojects) {
 
     // Archive task used to create a sources jar and a javadoc jar
     apply plugin: 'vogle.archive'
-    
+
     // Publish to maven repository
     apply plugin: 'vogle.nexus-publish'
     nexus {
@@ -169,3 +170,6 @@ apply plugin: 'vogle.codacy'
 codacy {
     jacocoReportPath = "${buildDir}/reports/jacoco/jacocoCoverageReport/jacocoCoverageReport.xml"
 }
+
+// release version
+apply plugin: 'nebula.release'
