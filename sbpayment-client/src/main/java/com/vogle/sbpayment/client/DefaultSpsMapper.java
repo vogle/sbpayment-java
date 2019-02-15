@@ -27,6 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 
 /**
  * Implements for {@link SpsMapper}
@@ -38,7 +39,7 @@ public class DefaultSpsMapper implements SpsMapper {
 
     private final XmlMapper xmlMapper;
 
-    private final String charset;
+    private final Charset charset;
     private final String hashKey;
     private final String desKey;
     private final String desInitKey;
@@ -50,11 +51,11 @@ public class DefaultSpsMapper implements SpsMapper {
      *
      * @param config The Softbank Payment configuration
      */
-    public DefaultSpsMapper(SpsConfig config) {
+    public DefaultSpsMapper(SpsConfig.CipherInfo config) {
+        this.charset = config.getCharset();
         this.hashKey = config.getHashKey();
         this.desKey = config.getDesKey();
         this.desInitKey = config.getDesInitKey();
-        this.charset = config.getCharset();
 
         this.cipherEnabled = config.isCipherEnabled() && isNotEmpty(desKey) && isNotEmpty(desInitKey);
 
@@ -64,7 +65,7 @@ public class DefaultSpsMapper implements SpsMapper {
     }
 
     @Override
-    public String getCharset() {
+    public Charset getCharset() {
         return this.charset;
     }
 

@@ -45,7 +45,7 @@ public class SbpaymentProperties {
     private final PayEasy payeasy = new PayEasy();
 
     /**
-     * Softbank client configuration
+     * Softbank getClient configuration
      */
     @Data
     public static class Client {
@@ -131,7 +131,7 @@ public class SbpaymentProperties {
     public static class CreditCard {
 
         /**
-         * Alternate client properties
+         * Alternate getClient properties
          */
         @NestedConfigurationProperty
         private final Client alternateClient = new Client();
@@ -145,7 +145,7 @@ public class SbpaymentProperties {
          */
         private boolean cardbrandReturn;
         /**
-         * Alternate client enabled, テスト以外はFalseにしてください。<br/>
+         * Alternate getClient enabled, テスト以外はFalseにしてください。<br/>
          * Trueにしたら、本alternateClientの情報を利用する。
          */
         private boolean alternateClientEnabled;
@@ -159,7 +159,7 @@ public class SbpaymentProperties {
     public static class PayEasy {
 
         /**
-         * Alternate client properties
+         * Alternate getClient properties
          */
         @NestedConfigurationProperty
         private final Client alternateClient = new Client();
@@ -184,7 +184,7 @@ public class SbpaymentProperties {
          */
         private int billLimitDay = 3;
         /**
-         * Alternate client enabled, テスト以外はFalseにしてください。<br/>
+         * Alternate getClient enabled, テスト以外はFalseにしてください。<br/>
          * Trueにしたら、本alternateClientの情報を利用する。
          */
         private boolean alternateClientEnabled;

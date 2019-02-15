@@ -64,8 +64,8 @@ public class DefaultPayEasyPayment implements PayEasyPayment {
      */
     public DefaultPayEasyPayment(Sbpayment sbpayment, String payCsv) {
         this.type = PayEasyType.LINK;
-        this.client = sbpayment.client();
-        this.receiver = sbpayment.receiver();
+        this.client = sbpayment.getClient();
+        this.receiver = sbpayment.getReceiver();
         this.payCsv = payCsv;
     }
 
@@ -78,8 +78,8 @@ public class DefaultPayEasyPayment implements PayEasyPayment {
      */
     public DefaultPayEasyPayment(Sbpayment sbpayment, String billInfo, String billInfoKana) {
         this.type = PayEasyType.ONLINE;
-        this.client = sbpayment.client();
-        this.receiver = sbpayment.receiver();
+        this.client = sbpayment.getClient();
+        this.receiver = sbpayment.getReceiver();
         this.billInfo = billInfo;
         this.billInfoKana = billInfoKana;
     }

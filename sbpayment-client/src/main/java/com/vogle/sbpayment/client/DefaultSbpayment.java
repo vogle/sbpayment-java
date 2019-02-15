@@ -16,6 +16,10 @@
 
 package com.vogle.sbpayment.client;
 
+import java.nio.charset.Charset;
+import java.util.Properties;
+import java.util.TimeZone;
+
 /**
  * Softbank payment<br/>
  * It has Mapper, Client & Receiver
@@ -23,6 +27,7 @@ package com.vogle.sbpayment.client;
  * @author Allan Im
  */
 public class DefaultSbpayment implements Sbpayment {
+
     private final SpsConfig config;
 
     private SpsMapper mapper;
@@ -31,49 +36,137 @@ public class DefaultSbpayment implements Sbpayment {
 
     /**
      * Create Sbpayment
-     *
-     * @param config The Softbank Payment Configuration
      */
-    public DefaultSbpayment(SpsConfig config) {
-        this.config = config;
+    public DefaultSbpayment() {
+        this.config = new SpsConfig();
     }
 
     /**
-     * Gets made mapper
+     * Create Sbpayment from properties
+     */
+    public DefaultSbpayment(Properties properties) {
+        this.config = SpsConfig.from(properties);
+    }
+
+    /**
+     * Softbank payment data charset, Default is "Shift_JIS".<br/>
+     * 基本"Shift_JIS"で使用
+     */
+    public void setCharset(String charset) {
+        this.config.setCharset(Charset.forName(charset));
+    }
+
+    /**
+     * Softbank Payment Server TimeZone, Default is "JST".<br/>
+     * "JST"を使用
+     */
+    public void setTimeZone(String timeZone) {
+        this.config.setTimeZone(TimeZone.getTimeZone(timeZone));
+    }
+
+    /**
+     * API Service URL. <br/>
+     * API サビースの接続先
+     */
+    public void setApiUrl(String apiUrl) {
+        this.config.setApiUrl(apiUrl);
+    }
+
+    /**
+     * Softbank Payment Information
+     *
+     * @param merchantId        MerchantId from Softbank Payment.
+     * @param serviceId         ServiceId from Softbank Payment.
+     * @param basicAuthId       Basic authentication ID.
+     * @param basicAuthPassword Basic authentication password.
+     */
+    public void setCredentials(String merchantId, String serviceId, String basicAuthId, String basicAuthPassword) {
+        this.config.setMerchantId(merchantId);
+        this.config.setServiceId(serviceId);
+        this.config.setBasicAuthId(basicAuthId);
+        this.config.setBasicAuthPassword(basicAuthPassword);
+    }
+
+    /**
+     * Hash key, ハッシュキー
+     */
+    public void setHashKey(String hashKey) {
+        this.config.setHashKey(hashKey);
+    }
+
+    /**
+     * Allowable time on request.(Second)<br/>
+     * リクエスト時の許容時間(秒)
+     */
+    public void setAllowableSecondOnRequest(int allowableSecondOnRequest) {
+        this.config.setAllowableSecondOnRequest(allowableSecondOnRequest);
+    }
+
+    /**
+     * If set enable Cipher, It have to set 'desKey' & 'desInitKey'<br/>
+     * 3DES 暗号化使用
+     */
+    public void enableCipher() {
+        this.config.setCipherEnabled(true);
+    }
+
+    /**
+     * If set disable Cipher <br/>
+     * 3DES 暗号化使用しない
+     */
+    public void disableCipher() {
+        this.config.setCipherEnabled(false);
+    }
+
+    /**
+     * 3DES cipher
+     *
+     * @param desKey     3DES cipher key. / 3DES 暗号化キー
+     * @param desInitKey 3DES initialization key. / 3DES 初期化キー
+     */
+    public void setDesEncryptKey(String desKey, String desInitKey) {
+        this.config.setDesKey(desKey);
+        this.config.setDesInitKey(desInitKey);
+    }
+
+
+    /**
+     * Gets made getMapper
      *
      * @return SpsMapper
      */
     @Override
-    public SpsMapper mapper() {
+    public SpsMapper getMapper() {
         if (mapper == null) {
-            mapper = new DefaultSpsMapper(config);
+            mapper = new DefaultSpsMapper(config.getCipherInfo());
         }
-        return mapper;
+        return new DefaultSpsMapper(config.getCipherInfo());
     }
 
     /**
-     * Gets made client
+     * Gets made getClient
      *
      * @return SpsClient
      */
     @Override
-    public SpsClient client() {
+    public SpsClient getClient() {
         if (client == null) {
-            client = new DefaultSpsClient(config, mapper());
+            client = new DefaultSpsClient(config.getClientInfo(), getMapper());
         }
         return client;
     }
 
     /**
-     * Gets made receiver
+     * Gets made getReceiver
      *
      * @return SpsReceiver
      */
     @Override
-    public SpsReceiver receiver() {
+    public SpsReceiver getReceiver() {
         if (receiver == null) {
-            receiver = new DefaultSpsReceiver(config, mapper());
+            receiver = new DefaultSpsReceiver(config.getSpsInfo(), getMapper());
         }
         return receiver;
     }
+
 }

@@ -54,7 +54,7 @@ public class PayEasyTest extends AbstractSettings {
     public void init() {
         config = getConfig();
         Sbpayment sbpayment = new DefaultSbpayment(config);
-        mapper = sbpayment.mapper();
+        mapper = sbpayment.getMapper();
         payment = new DefaultPayEasyPayment(sbpayment, "株式会社", "カブシキガイシャ");
         ((DefaultPayEasyPayment) payment).updateBillLimitDay(BILL_LIMIT_DAY);
     }

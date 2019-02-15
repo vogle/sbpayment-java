@@ -86,7 +86,7 @@ public class DefaultCreditCardPayment implements CreditCardPayment {
      * @param enableFeatures {@link Feature}s
      */
     public DefaultCreditCardPayment(Sbpayment sbpayment, Feature... enableFeatures) {
-        this.client = sbpayment.client();
+        this.client = sbpayment.getClient();
 
         List<Feature> featureList = Arrays.asList(enableFeatures);
         this.returnCustomerInfo = featureList.contains(Feature.RETURN_CUSTOMER_INFO) ? "1" : "0";

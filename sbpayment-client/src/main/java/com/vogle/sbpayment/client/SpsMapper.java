@@ -18,8 +18,10 @@ package com.vogle.sbpayment.client;
 
 import com.vogle.sbpayment.client.requests.SpsRequest;
 
+import java.nio.charset.Charset;
+
 /**
- * Softbank payment mapper
+ * Softbank payment getMapper
  *
  * @author Allan Im
  */
@@ -30,7 +32,7 @@ public interface SpsMapper {
      *
      * @return Charset
      */
-    String getCharset();
+    Charset getCharset();
 
     /**
      * Gets The HashKey

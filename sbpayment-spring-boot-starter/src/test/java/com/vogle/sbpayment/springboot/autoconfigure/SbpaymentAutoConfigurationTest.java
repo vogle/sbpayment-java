@@ -43,10 +43,10 @@ public class SbpaymentAutoConfigurationTest {
     private static Set<String> required = new HashSet<>();
 
     static {
-        required.add("sbpayment.client.api-url:http://test.vogle.com");
-        required.add("sbpayment.client.hash-key:HASH_KEY");
-        required.add("sbpayment.client.merchant-id:MERCHANT_ID");
-        required.add("sbpayment.client.service-id:SERVICE_ID");
+        required.add("sbpayment.getClient.api-url:http://test.vogle.com");
+        required.add("sbpayment.getClient.hash-key:HASH_KEY");
+        required.add("sbpayment.getClient.merchant-id:MERCHANT_ID");
+        required.add("sbpayment.getClient.service-id:SERVICE_ID");
     }
 
     @Rule
@@ -78,7 +78,7 @@ public class SbpaymentAutoConfigurationTest {
 
     @Test
     public void checkPropertiesEnabled() {
-        TestPropertyValues.of("sbpayment.client.api-url:http://test.vogle.com").applyTo(this.context);
+        TestPropertyValues.of("sbpayment.getClient.api-url:http://test.vogle.com").applyTo(this.context);
         this.context.register(SbpaymentAutoConfiguration.class);
         this.context.refresh();
 

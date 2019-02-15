@@ -25,23 +25,23 @@ package com.vogle.sbpayment.client;
 public interface Sbpayment {
 
     /**
-     * Gets made mapper
+     * Gets made getMapper
      *
      * @return SpsMapper
      */
-    SpsMapper mapper();
+    SpsMapper getMapper();
 
     /**
-     * Gets made client
+     * Gets made getClient
      *
      * @return SpsClient
      */
-    SpsClient client();
+    SpsClient getClient();
 
     /**
-     * Gets made receiver
+     * Gets made getReceiver
      *
      * @return SpsReceiver
      */
-    SpsReceiver receiver();
+    SpsReceiver getReceiver();
 }

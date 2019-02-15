@@ -18,7 +18,7 @@ package com.vogle.sbpayment.client.convert;
 
 import org.apache.http.util.Asserts;
 
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -52,8 +52,8 @@ public class SpsSecurity {
      * @return the encrypted data
      */
     public static String encrypt(final String desKey, final String initKey,
-                                 final String charsetName, final String source) {
-        Asserts.notBlank(charsetName, "charsetName");
+                                 final Charset charsetName, final String source) {
+        Asserts.notNull(charsetName, "charsetName");
         Asserts.notNull(source, "source");
 
         try {
@@ -71,8 +71,7 @@ public class SpsSecurity {
             return Base64.getEncoder().encodeToString(encryptedByte);
 
         } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException
-                | InvalidAlgorithmParameterException | BadPaddingException | IllegalBlockSizeException
-                | UnsupportedEncodingException ex) {
+                | InvalidAlgorithmParameterException | BadPaddingException | IllegalBlockSizeException ex) {
             throw new SecurityException("3DES-CBC encrypt fail", ex);
         }
     }
@@ -87,8 +86,8 @@ public class SpsSecurity {
      * @return The decrypted data
      */
     public static String decrypt(final String desKey, final String initKey,
-                                 final String charsetName, final String source) {
-        Asserts.notBlank(charsetName, "charsetName");
+                                 final Charset charsetName, final String source) {
+        Asserts.notNull(charsetName, "charsetName");
         Asserts.notNull(source, "source");
 
         try {
@@ -105,8 +104,7 @@ public class SpsSecurity {
             return new String(decryptedByte, charsetName).trim();
 
         } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException
-                | InvalidAlgorithmParameterException | BadPaddingException | IllegalBlockSizeException
-                | UnsupportedEncodingException ex) {
+                | InvalidAlgorithmParameterException | BadPaddingException | IllegalBlockSizeException ex) {
             throw new SecurityException("3DES-CBC decrypt fail", ex);
         }
     }

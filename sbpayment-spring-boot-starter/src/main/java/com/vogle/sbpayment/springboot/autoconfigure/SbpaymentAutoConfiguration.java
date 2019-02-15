@@ -54,7 +54,7 @@ import static com.vogle.sbpayment.springboot.autoconfigure.SbpaymentProperties.P
 public class SbpaymentAutoConfiguration {
 
     /**
-     * {@link Sbpayment} in sbpayment-client
+     * {@link Sbpayment} in sbpayment-getClient
      */
     @Bean
     @ConditionalOnMissingBean
