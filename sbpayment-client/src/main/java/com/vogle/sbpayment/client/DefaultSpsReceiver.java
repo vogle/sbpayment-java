@@ -42,7 +42,7 @@ public class DefaultSpsReceiver implements SpsReceiver {
      * @param config The Softbank Payment configuration
      * @param mapper The {@link SpsMapper}
      */
-    public DefaultSpsReceiver(SpsConfig config, SpsMapper mapper) {
+    public DefaultSpsReceiver(SpsConfig.SpsInfo config, SpsMapper mapper) {
         this.merchantId = config.getMerchantId();
         this.serviceId = config.getServiceId();
         this.mapper = mapper;

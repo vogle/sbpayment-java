@@ -31,8 +31,8 @@ import com.vogle.sbpayment.creditcard.responses.TransactionStatus;
 import org.junit.Before;
 import org.junit.Test;
 
-import static com.vogle.sbpayment.creditcard.DefaultCreditCardPayment.Feature.RETURN_CARD_BRAND;
-import static com.vogle.sbpayment.creditcard.DefaultCreditCardPayment.Feature.RETURN_CUSTOMER_INFO;
+import static com.vogle.sbpayment.creditcard.CardPayFeature.RETURN_CARD_BRAND;
+import static com.vogle.sbpayment.creditcard.CardPayFeature.RETURN_CUSTOMER_INFO;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -46,7 +46,7 @@ public class CreditCardTransactionFlowTest extends AbstractSettings {
 
     @Before
     public void init() {
-        payment = new DefaultCreditCardPayment(sbpayment(), RETURN_CARD_BRAND, RETURN_CUSTOMER_INFO);
+        payment = CreditCardPayment.newInstance(sbpayment, RETURN_CARD_BRAND, RETURN_CUSTOMER_INFO);
     }
 
     private String authorize() {

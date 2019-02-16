@@ -16,9 +16,6 @@
 
 package com.vogle.sbpayment.payeasy;
 
-import com.vogle.sbpayment.client.DefaultSbpayment;
-import com.vogle.sbpayment.client.SpsConfig;
-import com.vogle.sbpayment.client.Sbpayment;
 import com.vogle.sbpayment.client.SpsMapper;
 import com.vogle.sbpayment.client.SpsResult;
 import com.vogle.sbpayment.client.convert.SpsDataConverter;
@@ -41,22 +38,22 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * Tests for {@link DefaultPayEasyPayment}
  *
- * @author Nes Im
+ * @author Allan Im
  **/
 public class PayEasyTest extends AbstractSettings {
 
     private static int BILL_LIMIT_DAY = 5;
     private PayEasyPayment payment;
-    private SpsConfig config;
     private SpsMapper mapper;
 
     @Before
     public void init() {
-        config = getConfig();
-        Sbpayment sbpayment = new DefaultSbpayment(config);
-        mapper = sbpayment.mapper();
-        payment = new DefaultPayEasyPayment(sbpayment, "株式会社", "カブシキガイシャ");
-        ((DefaultPayEasyPayment) payment).updateBillLimitDay(BILL_LIMIT_DAY);
+        mapper = sbpayment.getMapper();
+        OnlineType onlineType = new OnlineType();
+        onlineType.setBillInfo("株式会社");
+        onlineType.setBillInfoKana("カブシキガイシャ");
+        onlineType.setBillLimitDay(BILL_LIMIT_DAY);
+        payment = PayEasyPayment.newInstance(sbpayment, onlineType);
     }
 
     @Test
@@ -90,8 +87,8 @@ public class PayEasyTest extends AbstractSettings {
         // given test data
         PayEasyDepositReceived temp = new PayEasyDepositReceived();
         temp.setId("NT01-00103-703");
-        temp.setMerchantId(config.getMerchantId());
-        temp.setServiceId(config.getServiceId());
+        temp.setMerchantId(merchantId);
+        temp.setServiceId(serviceId);
         temp.setSpsTransactionId("xxxxxxxxxxxxxxxxxxxxx");
         temp.setTrackingId("1234567890");
         temp.setRecDatetime("20171010");
@@ -100,7 +97,7 @@ public class PayEasyTest extends AbstractSettings {
         depositInfo.setType("1");
         depositInfo.setAmount("1000");
         depositInfo.setAmountTotal("1000");
-        depositInfo.setMail("nes@uzen.io");
+        depositInfo.setMail("email@vogle.com");
         temp.setDepositInfo(depositInfo);
 
         temp.setRequestDate("20171010101010");
@@ -123,7 +120,7 @@ public class PayEasyTest extends AbstractSettings {
         assertThat(received.getDepositInfo().getType()).isEqualTo("1");
         assertThat(received.getDepositInfo().getAmount()).isEqualTo("1000");
         assertThat(received.getDepositInfo().getAmountTotal()).isEqualTo("1000");
-        assertThat(received.getDepositInfo().getMail()).isEqualTo("nes@uzen.io");
+        assertThat(received.getDepositInfo().getMail()).isEqualTo("email@vogle.com");
 
     }
 
@@ -153,8 +150,8 @@ public class PayEasyTest extends AbstractSettings {
         // test data
         PayEasyExpiredCancelReceived temp = new PayEasyExpiredCancelReceived();
         temp.setId("NT01-00104-703");
-        temp.setMerchantId(config.getMerchantId());
-        temp.setServiceId(config.getServiceId());
+        temp.setMerchantId(merchantId);
+        temp.setServiceId(serviceId);
         temp.setSpsTransactionId("xxxxxxxxxxxxxxxxxxxxx");
         temp.setTrackingId("1234567890");
         temp.setRecDatetime("20171010");
@@ -215,7 +212,7 @@ public class PayEasyTest extends AbstractSettings {
                 .lastName("株式").firstName("会社")
                 .lastNameKana("カブシキ").firstNameKana("カイシャ")
                 .tel("08011112222")
-                .mail("nes@uzen.io")
+                .mail("email@vogle.com")
                 .terminalValue(TerminalValue.PC)
                 .build();
     }

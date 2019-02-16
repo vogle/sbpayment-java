@@ -16,6 +16,7 @@
 
 package com.vogle.sbpayment.creditcard;
 
+import com.vogle.sbpayment.client.Sbpayment;
 import com.vogle.sbpayment.client.SpsResult;
 import com.vogle.sbpayment.client.params.PaymentInfo;
 import com.vogle.sbpayment.creditcard.params.ByCreditCard;
@@ -42,6 +43,10 @@ import com.vogle.sbpayment.creditcard.responses.LegacyCardInfoUpdateResponse;
  * @author Allan Im
  **/
 public interface CreditCardPayment {
+
+    static CreditCardPayment newInstance(Sbpayment sbpayment, CardPayFeature... enableFeatures) {
+        return new DefaultCreditCardPayment(sbpayment, enableFeatures);
+    }
 
     /**
      * ST01-00131-101: Authorize with token<br/>

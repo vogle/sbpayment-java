@@ -21,6 +21,7 @@ import com.vogle.sbpayment.client.responses.SpsResponse;
 
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
@@ -36,16 +37,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
- * Default Softbank payment client
+ * Default Softbank payment getClient
  *
  * @author Allan Im
  **/
@@ -53,7 +56,7 @@ public class DefaultSpsClient implements SpsClient {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DefaultSpsClient.class);
 
-    private final SpsConfig config;
+    private final SpsConfig.ClientInfo config;
     private final HttpClient httpClient;
     private final SpsMapper mapper;
 
@@ -63,7 +66,7 @@ public class DefaultSpsClient implements SpsClient {
      * @param config The Softbank Payment configuration
      * @param mapper The {@link SpsMapper}
      */
-    public DefaultSpsClient(SpsConfig config, SpsMapper mapper) {
+    public DefaultSpsClient(SpsConfig.ClientInfo config, SpsMapper mapper) {
         Asserts.notNull(config, "The Configuration");
         ValidationHelper.beanValidate(config);
 
@@ -103,7 +106,7 @@ public class DefaultSpsClient implements SpsClient {
     public <T extends SpsResponse> SpsResult<T> execute(SpsRequest<T> request) {
         Asserts.notNull(request, "The request");
 
-        String charset = mapper.getCharset();
+        Charset charset = mapper.getCharset();
         try {
             if (LOGGER.isDebugEnabled()) {
                 LOGGER.debug("SPS Client request object : {}", request);
@@ -126,7 +129,8 @@ public class DefaultSpsClient implements SpsClient {
             // success
             if (statusCode == 200) {
                 // response header
-                Map<String, String> headerMap = new HashMap<>();
+                Map<String, String> headerMap = Arrays.stream(response.getAllHeaders())
+                        .collect(Collectors.toMap(NameValuePair::getName, NameValuePair::getValue));
 
                 // response body
                 String body = EntityUtils.toString(response.getEntity(), mapper.getCharset());
@@ -163,8 +167,8 @@ public class DefaultSpsClient implements SpsClient {
                 LOGGER.error("SPS Client Internal Error : {}({})",
                         ex.getClass().getSimpleName(), ex.getMessage());
             }
+            throw new IllegalStateException(ex.getMessage(), ex);
         }
-        return new SpsResult<>();
     }
 
     /**
@@ -206,7 +210,7 @@ public class DefaultSpsClient implements SpsClient {
      * Create HttpClient
      */
     private HttpClient createHttpClient() {
-        // http client
+        // http getClient
         HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
 
         // basic authorize information
@@ -218,10 +222,7 @@ public class DefaultSpsClient implements SpsClient {
         }
 
         // headers
-        String charset = mapper.getCharset();
-        if (isEmpty(charset)) {
-            charset = "Shift_JIS";
-        }
+        Charset charset = mapper.getCharset();
         List<Header> headers = new ArrayList<>();
         headers.add(new BasicHeader("Content-Type", "text/xml; charset=" + charset));
         httpClientBuilder.setDefaultHeaders(headers);

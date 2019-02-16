@@ -18,10 +18,12 @@ package com.vogle.sbpayment.client;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.nio.charset.Charset;
 import java.util.Properties;
 import java.util.TimeZone;
 
@@ -34,25 +36,21 @@ import javax.validation.constraints.NotNull;
  *
  * @author Allan Im
  **/
-@Builder
 @ToString
+@Builder
 public class SpsConfig {
 
     /**
      * Softbank payment data charset, Default is "Shift_JIS".<br/>
      * 基本"Shift_JIS"で使用
      */
-    @NotEmpty
-    @Getter
     @Builder.Default
-    private String charset = "Shift_JIS";
+    private Charset charset = Charset.forName("Shift_JIS");
 
     /**
      * Softbank Payment Server TimeZone, Default is "JST".<br/>
      * "JST"を使用
      */
-    @NotNull
-    @Getter
     @Builder.Default
     private TimeZone timeZone = TimeZone.getTimeZone("JST");
 
@@ -60,72 +58,58 @@ public class SpsConfig {
      * API Service URL. <br/>
      * API サビースの接続先
      */
-    @NotEmpty
-    @Getter
     private String apiUrl;
 
     /**
      * MerchantId from Softbank Payment.
      */
-    @NotEmpty
-    @Getter
     private String merchantId;
 
     /**
      * ServiceId from Softbank Payment.
      */
-    @NotEmpty
-    @Getter
     private String serviceId;
 
     /**
      * Basic authentication ID. <br/>
      * ベージック認証ID
      */
-    @Getter
     private String basicAuthId;
 
     /**
      * Basic authentication password. <br/>
      * ベージック認証パースワード
      */
-    @Getter
     private String basicAuthPassword;
 
     /**
      * Allowable time on request.(Second)<br/>
      * リクエスト時の許容時間(秒)
      */
-    @Getter
     @Builder.Default
     private int allowableSecondOnRequest = 600;
 
     /**
      * Hash key, ハッシュキー
      */
-    @NotEmpty
-    @Getter
     private String hashKey;
 
     /**
      * If set enable Cipher, Must set 'desKey' & 'desInitKey'<br/>
      * 3DES 暗号化使用可否
      */
-    @Getter
     private boolean cipherEnabled;
 
     /**
      * 3DES cipher key.<br/>
      * 3DES 暗号化キー
      */
-    @Getter
     private String desKey;
 
     /**
      * 3DES initialization key.<br/>
      * 3DES 初期化キー
      */
-    @Getter
     private String desInitKey;
 
     /**
@@ -136,25 +120,25 @@ public class SpsConfig {
      */
     public static SpsConfig from(final Properties properties) {
 
-        SpsConfigBuilder builder = builder();
-        properties.forEach((key, value) -> {
-            if (key.toString().startsWith("sbpayment.")) {
-                String name = key.toString().substring("sbpayment.".length());
+        SpsConfig.SpsConfigBuilder builder = SpsConfig.builder();
+        properties.forEach((keyObject, valueObject) -> {
+            if (keyObject.toString().startsWith("sbpayment.")) {
+                String key = keyObject.toString().substring("sbpayment.".length());
+                String value = (String) valueObject;
 
-                if ("timeZone".equalsIgnoreCase(name)) {
-                    builder.timeZone(TimeZone.getTimeZone((String) value));
-                } else if ("allowableSecondOnRequest".equalsIgnoreCase(name)) {
-                    builder.allowableSecondOnRequest((Integer) value);
-                } else if ("cipherEnabled".equalsIgnoreCase(name)) {
-                    builder.cipherEnabled(Boolean.valueOf((String) value));
+                if ("charset".equalsIgnoreCase(key)) {
+                    builder.charset(Charset.forName(value));
+                } else if ("timeZone".equalsIgnoreCase(key)) {
+                    builder.timeZone(TimeZone.getTimeZone(value));
+                } else if ("allowableSecondOnRequest".equalsIgnoreCase(key)) {
+                    builder.allowableSecondOnRequest(Integer.parseInt(value));
+                } else if ("cipherEnabled".equalsIgnoreCase(key)) {
+                    builder.cipherEnabled(Boolean.valueOf(value));
                 } else {
                     try {
-                        Method method = SpsConfigBuilder.class.getMethod(name, String.class);
+                        Method method = SpsConfigBuilder.class.getMethod(key, String.class);
                         method.invoke(builder, (String) value);
-                    } catch (NoSuchMethodException ex) {
-                        throw new IllegalArgumentException("Don't have the config field: " + key, ex);
-                    } catch (IllegalAccessException | InvocationTargetException ex) {
-                        throw new IllegalArgumentException("Failed to invoke field: " + key, ex);
+                    } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException ignored) {
                     }
                 }
             }
@@ -163,4 +147,107 @@ public class SpsConfig {
         return builder.build();
     }
 
+    /**
+     * Gets getClient configuration
+     */
+    public SpsInfo getSpsInfo() {
+        SpsInfo spsInfo = SpsInfo.builder()
+                .merchantId(this.merchantId)
+                .serviceId(this.serviceId)
+                .build();
+
+        ValidationHelper.beanValidate(spsInfo);
+
+        return spsInfo;
+    }
+
+    /**
+     * Gets getClient configuration
+     */
+    public ClientInfo getClientInfo() {
+        ClientInfo clientInfo = ClientInfo.builder()
+                .timeZone(this.timeZone)
+                .apiUrl(this.apiUrl)
+                .merchantId(this.merchantId)
+                .serviceId(this.serviceId)
+                .basicAuthId(this.basicAuthId)
+                .basicAuthPassword(this.basicAuthPassword)
+                .allowableSecondOnRequest(this.allowableSecondOnRequest)
+                .build();
+
+        ValidationHelper.beanValidate(clientInfo);
+
+        return clientInfo;
+    }
+
+    /**
+     * Gets cipher configuration
+     */
+    public CipherInfo getCipherInfo() {
+        CipherInfo cipherInfo = CipherInfo.builder()
+                .charset(this.charset).hashKey(this.hashKey)
+                .desKey(this.desKey).desInitKey(this.desInitKey)
+                .cipherEnabled(this.cipherEnabled)
+                .build();
+
+        ValidationHelper.beanValidate(cipherInfo);
+        if (this.cipherEnabled) {
+            ValidationHelper.assertsNotEmpty("desKey", this.desKey);
+            ValidationHelper.assertsNotEmpty("desInitKey", this.desInitKey);
+        }
+
+        return cipherInfo;
+    }
+
+    @Builder
+    @Getter
+    public static class SpsInfo {
+        @NotEmpty
+        private String merchantId;
+
+        @NotEmpty
+        private String serviceId;
+    }
+
+    @Builder
+    @Getter
+    public static class ClientInfo {
+
+        @NotNull
+        private TimeZone timeZone;
+
+        @NotEmpty
+        private String apiUrl;
+
+        @NotEmpty
+        private String merchantId;
+
+        @NotEmpty
+        private String serviceId;
+
+        private String basicAuthId;
+
+        private String basicAuthPassword;
+
+        private int allowableSecondOnRequest;
+
+    }
+
+    @Builder
+    @Getter
+    public static class CipherInfo {
+
+        @NotNull
+        private Charset charset;
+
+        @NotEmpty
+        private String hashKey;
+
+        private boolean cipherEnabled;
+
+        private String desKey;
+
+        private String desInitKey;
+
+    }
 }

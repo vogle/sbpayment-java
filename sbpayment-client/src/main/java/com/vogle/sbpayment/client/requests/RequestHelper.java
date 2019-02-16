@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Request mapper
+ * Request getMapper
  *
  * @author Allan Im
  **/

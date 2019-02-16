@@ -25,7 +25,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 /**
- * Result for receiver
+ * Result for getReceiver
  *
  * @author Allan Im
  **/

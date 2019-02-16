@@ -16,6 +16,8 @@
 
 package com.vogle.sbpayment.client;
 
+import java.util.Properties;
+
 /**
  * Softbank payment<br/>
  * It has Mapper, Client & Receiver
@@ -25,23 +27,57 @@ package com.vogle.sbpayment.client;
 public interface Sbpayment {
 
     /**
-     * Gets made mapper
+     * Create Default sbpayment with sbpayment.properties in resource
+     */
+    static Sbpayment newInstance() {
+        return new DefaultSbpayment();
+    }
+
+    /**
+     * Create Default sbpayment with the file path in resource
+     *
+     * @param filePath properties file path in resource
+     */
+    static Sbpayment newInstance(String filePath) {
+        return new DefaultSbpayment(filePath);
+    }
+
+    /**
+     * Create Default sbpayment with properties object
+     *
+     * @param properties The {@link Properties}
+     */
+    static Sbpayment newInstance(Properties properties) {
+        return new DefaultSbpayment(SpsConfig.from(properties));
+    }
+
+    /**
+     * Create Default sbpayment with config object
+     *
+     * @param config The {@link SpsConfig}
+     */
+    static Sbpayment newInstance(SpsConfig config) {
+        return new DefaultSbpayment(config);
+    }
+
+    /**
+     * Gets made getMapper
      *
      * @return SpsMapper
      */
-    SpsMapper mapper();
+    SpsMapper getMapper();
 
     /**
-     * Gets made client
+     * Gets made getClient
      *
      * @return SpsClient
      */
-    SpsClient client();
+    SpsClient getClient();
 
     /**
-     * Gets made receiver
+     * Gets made getReceiver
      *
      * @return SpsReceiver
      */
-    SpsReceiver receiver();
+    SpsReceiver getReceiver();
 }

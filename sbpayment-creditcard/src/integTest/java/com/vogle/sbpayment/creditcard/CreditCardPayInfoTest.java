@@ -34,8 +34,8 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.vogle.sbpayment.creditcard.DefaultCreditCardPayment.Feature.RETURN_CARD_BRAND;
-import static com.vogle.sbpayment.creditcard.DefaultCreditCardPayment.Feature.RETURN_CUSTOMER_INFO;
+import static com.vogle.sbpayment.creditcard.CardPayFeature.RETURN_CARD_BRAND;
+import static com.vogle.sbpayment.creditcard.CardPayFeature.RETURN_CUSTOMER_INFO;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -49,13 +49,13 @@ public class CreditCardPayInfoTest extends AbstractSettings {
 
     @Before
     public void init() {
-        payment = new DefaultCreditCardPayment(sbpayment(), RETURN_CARD_BRAND, RETURN_CUSTOMER_INFO);
+        payment = CreditCardPayment.newInstance(sbpayment, RETURN_CARD_BRAND, RETURN_CUSTOMER_INFO);
     }
 
     @Test
     public void payLumpSumAndNumberLower4() throws Exception {
         PaymentInfo paymentInfo = getDefaultPaymentInfo();
-        ByCreditCard creditCard = getDefaultPayCreditCard();
+        ByCreditCard creditCard = getDefaultPayCreditCard().build();
 
         // test pay
         SpsResult<CardTranLookupResponse> lookup = testPay(paymentInfo, creditCard, CardInfoResponseType.LOWER4);
@@ -74,9 +74,10 @@ public class CreditCardPayInfoTest extends AbstractSettings {
     @Test
     public void payInstallmentAndNumberMask() throws Exception {
         PaymentInfo paymentInfo = getDefaultPaymentInfo();
-        ByCreditCard creditCard = getDefaultPayCreditCard();
-        creditCard.setDealingsType(DealingsType.INSTALLMENT);
-        creditCard.setDivideTimes(3);
+        ByCreditCard creditCard = getDefaultPayCreditCard()
+                .dealingsType(DealingsType.INSTALLMENT)
+                .divideTimes(3)
+                .build();
 
         // test pay
         SpsResult<CardTranLookupResponse> lookup = testPay(paymentInfo, creditCard, CardInfoResponseType.ALL_MASK);
@@ -95,9 +96,10 @@ public class CreditCardPayInfoTest extends AbstractSettings {
     @Test
     public void payBonusLumpSumAndNumberMask() throws Exception {
         PaymentInfo paymentInfo = getDefaultPaymentInfo();
-        ByCreditCard creditCard = getDefaultPayCreditCard();
-        creditCard.setDealingsType(DealingsType.BONUS_LUMP_SUM);
-        creditCard.setDivideTimes(3);
+        ByCreditCard creditCard = getDefaultPayCreditCard()
+                .dealingsType(DealingsType.BONUS_LUMP_SUM)
+                .divideTimes(3)
+                .build();
 
         // test pay
         SpsResult<CardTranLookupResponse> lookup = testPay(paymentInfo, creditCard, CardInfoResponseType.ALL_MASK);
@@ -116,9 +118,10 @@ public class CreditCardPayInfoTest extends AbstractSettings {
     @Test
     public void payRevolvingAndNumberMask() throws Exception {
         PaymentInfo paymentInfo = getDefaultPaymentInfo();
-        ByCreditCard creditCard = getDefaultPayCreditCard();
-        creditCard.setDealingsType(DealingsType.REVOLVING);
-        creditCard.setDivideTimes(3);
+        ByCreditCard creditCard = getDefaultPayCreditCard()
+                .dealingsType(DealingsType.REVOLVING)
+                .divideTimes(3)
+                .build();
 
         // test pay
         SpsResult<CardTranLookupResponse> lookup = testPay(paymentInfo, creditCard, CardInfoResponseType.ALL_MASK);
@@ -137,7 +140,7 @@ public class CreditCardPayInfoTest extends AbstractSettings {
     @Test
     public void payAddItems() throws Exception {
         PaymentInfo paymentInfo = getDefaultPaymentInfo();
-        ByCreditCard creditCard = getDefaultPayCreditCard();
+        ByCreditCard creditCard = getDefaultPayCreditCard().build();
 
         paymentInfo.setAmount(0);
         paymentInfo.setTax(0);
@@ -170,12 +173,11 @@ public class CreditCardPayInfoTest extends AbstractSettings {
                 .build();
     }
 
-    private ByCreditCard getDefaultPayCreditCard() {
+    private ByCreditCard.Builder getDefaultPayCreditCard() {
         return ByCreditCard.builder()
                 .number("4123450131003312")
                 .expiration("202412")
-                .securityCode("123")
-                .build();
+                .securityCode("123");
     }
 
     private SpsResult<CardTranLookupResponse> testPay(PaymentInfo paymentInfo, ByCreditCard creditCard,

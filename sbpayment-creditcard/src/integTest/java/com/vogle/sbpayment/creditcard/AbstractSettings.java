@@ -18,7 +18,6 @@ package com.vogle.sbpayment.creditcard;
 
 import com.vogle.sbpayment.client.DefaultSbpayment;
 import com.vogle.sbpayment.client.Sbpayment;
-import com.vogle.sbpayment.client.SpsConfig;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -34,7 +33,7 @@ import java.util.Random;
  * @author Allan Im
  **/
 abstract class AbstractSettings {
-    private SpsConfig config;
+    Sbpayment sbpayment;
 
     AbstractSettings() {
         Properties p = new Properties();
@@ -44,12 +43,9 @@ abstract class AbstractSettings {
         } catch (IOException ignored) {
         }
 
-        config = SpsConfig.from(p);
+        sbpayment = Sbpayment.newInstance(p);
     }
 
-    Sbpayment sbpayment() {
-        return new DefaultSbpayment(config);
-    }
 
     String orderNo() {
         Random random = new Random();

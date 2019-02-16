@@ -16,9 +16,7 @@
 
 package com.vogle.sbpayment.payeasy;
 
-import com.vogle.sbpayment.client.DefaultSbpayment;
 import com.vogle.sbpayment.client.Sbpayment;
-import com.vogle.sbpayment.client.SpsConfig;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -34,7 +32,9 @@ import java.util.Random;
  * @author Allan Im
  **/
 abstract class AbstractSettings {
-    private SpsConfig config;
+    Sbpayment sbpayment;
+    String merchantId;
+    String serviceId;
 
     AbstractSettings() {
         Properties p = new Properties();
@@ -44,15 +44,10 @@ abstract class AbstractSettings {
         } catch (IOException ignored) {
         }
 
-        config = SpsConfig.from(p);
-    }
+        merchantId = (String) p.get("sbpayment.merchantId");
+        serviceId = (String) p.get("sbpayment.serviceId");
 
-    SpsConfig getConfig() {
-        return config;
-    }
-
-    Sbpayment sbpayment() {
-        return new DefaultSbpayment(config);
+        sbpayment = Sbpayment.newInstance(p);
     }
 
     String orderNo() {

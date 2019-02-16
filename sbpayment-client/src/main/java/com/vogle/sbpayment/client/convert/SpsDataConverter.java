@@ -25,9 +25,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collections;
@@ -57,7 +57,7 @@ public class SpsDataConverter {
      * @param source      Target source
      * @param charsetName charset name (Shift_JIS)
      */
-    public static <T> void encode(String charsetName, T source) {
+    public static <T> void encode(Charset charsetName, T source) {
         base64Encode(charsetName, false, source);
     }
 
@@ -70,12 +70,12 @@ public class SpsDataConverter {
      * @param source      Target source
      * @param charsetName charset name (Shift_JIS)
      */
-    public static <T> void encodeWithoutCipherString(String charsetName, T source) {
+    public static <T> void encodeWithoutCipherString(Charset charsetName, T source) {
         base64Encode(charsetName, true, source);
     }
 
-    private static <T> void base64Encode(String charsetName, boolean enableCipher, T source) {
-        ValidationHelper.assertsNotEmpty("charsetName", charsetName);
+    private static <T> void base64Encode(Charset charsetName, boolean enableCipher, T source) {
+        ValidationHelper.assertsNotNull("charsetName", charsetName);
         ValidationHelper.assertsNotNull("source", source);
 
         // for supper class
@@ -122,8 +122,8 @@ public class SpsDataConverter {
      * @param source      The source
      * @param <T>         String or Iterable object
      */
-    public static <T> void encrypt(String desKey, String initKey, String charsetName, T source) {
-        ValidationHelper.assertsNotEmpty("charsetName", charsetName);
+    public static <T> void encrypt(String desKey, String initKey, Charset charsetName, T source) {
+        ValidationHelper.assertsNotNull("charsetName", charsetName);
         ValidationHelper.assertsNotNull("source", source);
 
         // for supper class
@@ -157,13 +157,8 @@ public class SpsDataConverter {
         }
     }
 
-    private static String encodeToString(String charsetName, String value) {
-        try {
-            return Base64.getEncoder().encodeToString(value.getBytes(charsetName));
-        } catch (UnsupportedEncodingException ex) {
-            LOGGER.error("Do not encode because Unsupported encoding '{}' ", charsetName);
-            throw new InvalidRequestException(ex);
-        }
+    private static String encodeToString(Charset charsetName, String value) {
+        return Base64.getEncoder().encodeToString(value.getBytes(charsetName));
     }
 
     /**
@@ -175,8 +170,8 @@ public class SpsDataConverter {
      * @param source      The source
      * @param <T>         String or Iterable object
      */
-    public static <T> void decrypt(String desKey, String initKey, String charsetName, T source) {
-        ValidationHelper.assertsNotEmpty("charsetName", charsetName);
+    public static <T> void decrypt(String desKey, String initKey, Charset charsetName, T source) {
+        ValidationHelper.assertsNotNull("charsetName", charsetName);
         ValidationHelper.assertsNotNull("source", source);
 
         // for supper class
@@ -245,10 +240,10 @@ public class SpsDataConverter {
      * @param hashKey     Sbpayment Hash-Key
      * @param charsetName Sbpayment charset
      */
-    public static String makeSpsHashCode(Object value, String hashKey, String charsetName) {
+    public static String makeSpsHashCode(Object value, String hashKey, Charset charsetName) {
         ValidationHelper.assertsNotNull("value", value);
         ValidationHelper.assertsNotEmpty("hashKey", hashKey);
-        ValidationHelper.assertsNotEmpty("charsetName", charsetName);
+        ValidationHelper.assertsNotNull("charsetName", charsetName);
 
         try {
             byte[] json = MAPPER.writeValueAsBytes(value);

@@ -17,7 +17,9 @@
 package com.vogle.sbpayment.payeasy.params;
 
 import lombok.Builder;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
@@ -28,14 +30,16 @@ import javax.validation.constraints.Pattern;
  *
  * @author Allan Im
  **/
-@Data
-@Builder
+@Getter
+@ToString
+@EqualsAndHashCode
+@Builder(builderClassName = "Builder")
 public class PayEasy {
 
     /**
      * 請求書発行区分
      */
-    @Builder.Default
+    @lombok.Builder.Default
     private IssueType issueType = IssueType.ISSUED;
 
     /**
@@ -113,6 +117,6 @@ public class PayEasy {
     /**
      * 端末種別
      */
-    @Builder.Default
+    @lombok.Builder.Default
     private TerminalValue terminalValue = TerminalValue.PC;
 }

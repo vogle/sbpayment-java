@@ -16,6 +16,9 @@
 
 package com.vogle.sbpayment.client;
 
+import java.io.IOException;
+import java.util.Properties;
+
 /**
  * Softbank payment<br/>
  * It has Mapper, Client & Receiver
@@ -23,6 +26,8 @@ package com.vogle.sbpayment.client;
  * @author Allan Im
  */
 public class DefaultSbpayment implements Sbpayment {
+
+    private static final String PROPERTY_FILE = "sbpayment.properties";
     private final SpsConfig config;
 
     private SpsMapper mapper;
@@ -30,50 +35,80 @@ public class DefaultSbpayment implements Sbpayment {
     private SpsReceiver receiver;
 
     /**
-     * Create Sbpayment
-     *
-     * @param config The Softbank Payment Configuration
+     * Create Default sbpayment with sbpayment.properties in resource
      */
-    public DefaultSbpayment(SpsConfig config) {
+    protected DefaultSbpayment() {
+        this(PROPERTY_FILE);
+    }
+
+    /**
+     * Create Default sbpayment with the file path in resource
+     *
+     * @param filePath properties file path in resource
+     */
+    protected DefaultSbpayment(String filePath) {
+        Properties properties = new Properties();
+        try {
+            properties.load(this.getClass().getClassLoader().getResourceAsStream(filePath));
+        } catch (NullPointerException | IOException ex) {
+            throw new IllegalStateException("Must be existed 'sbpayment.properties' file in Resource", ex);
+        }
+        this.config = SpsConfig.from(properties);
+    }
+
+    /**
+     * Create Default sbpayment with config object
+     *
+     * @param config The {@link SpsConfig}
+     */
+    protected DefaultSbpayment(SpsConfig config) {
         this.config = config;
     }
 
     /**
-     * Gets made mapper
+     * Gets made getMapper
      *
      * @return SpsMapper
      */
     @Override
-    public SpsMapper mapper() {
+    public SpsMapper getMapper() {
         if (mapper == null) {
-            mapper = new DefaultSpsMapper(config);
+            mapper = new DefaultSpsMapper(config.getCipherInfo());
         }
-        return mapper;
+        return new DefaultSpsMapper(config.getCipherInfo());
     }
 
     /**
-     * Gets made client
+     * Gets made getClient
      *
      * @return SpsClient
      */
     @Override
-    public SpsClient client() {
+    public SpsClient getClient() {
         if (client == null) {
-            client = new DefaultSpsClient(config, mapper());
+            client = new DefaultSpsClient(config.getClientInfo(), getMapper());
         }
         return client;
     }
 
     /**
-     * Gets made receiver
+     * Gets made getReceiver
      *
      * @return SpsReceiver
      */
     @Override
-    public SpsReceiver receiver() {
+    public SpsReceiver getReceiver() {
         if (receiver == null) {
-            receiver = new DefaultSpsReceiver(config, mapper());
+            receiver = new DefaultSpsReceiver(config.getSpsInfo(), getMapper());
         }
         return receiver;
+    }
+
+    /**
+     * return config information
+     */
+    @Override
+    public String toString() {
+        return config.toString();
     }
 }
