@@ -43,7 +43,7 @@ abstract class AbstractSettings {
         } catch (IOException ignored) {
         }
 
-        sbpayment = new DefaultSbpayment(p);
+        sbpayment = Sbpayment.newInstance(p);
     }
 
 

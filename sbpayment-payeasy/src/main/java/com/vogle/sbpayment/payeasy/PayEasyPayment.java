@@ -17,6 +17,7 @@
 package com.vogle.sbpayment.payeasy;
 
 import com.vogle.sbpayment.client.InvalidAccessException;
+import com.vogle.sbpayment.client.Sbpayment;
 import com.vogle.sbpayment.client.SpsResult;
 import com.vogle.sbpayment.client.params.PaymentInfo;
 import com.vogle.sbpayment.payeasy.params.PayEasy;
@@ -26,11 +27,19 @@ import com.vogle.sbpayment.payeasy.responses.PayEasyPaymentResponse;
 
 /**
  * Pay-Easy Service Payment API<br/>
- * Pay-easy 決済API
+ * Pay-Easy 決済API
  *
  * @author Allan Im
  **/
 public interface PayEasyPayment {
+
+    static PayEasyPayment newInstance(Sbpayment sbpayment, LinkType linkType) {
+        return new DefaultPayEasyPayment(sbpayment, linkType);
+    }
+
+    static PayEasyPayment newInstance(Sbpayment sbpayment, OnlineType onlineType) {
+        return new DefaultPayEasyPayment(sbpayment, onlineType);
+    }
 
     /**
      * ST01-00101-703: Payment by the PayEasy<br/>

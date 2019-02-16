@@ -36,20 +36,22 @@ import javax.validation.constraints.NotNull;
  *
  * @author Allan Im
  **/
-@Setter
 @ToString
-class SpsConfig {
+@Builder
+public class SpsConfig {
 
     /**
      * Softbank payment data charset, Default is "Shift_JIS".<br/>
      * 基本"Shift_JIS"で使用
      */
+    @Builder.Default
     private Charset charset = Charset.forName("Shift_JIS");
 
     /**
      * Softbank Payment Server TimeZone, Default is "JST".<br/>
      * "JST"を使用
      */
+    @Builder.Default
     private TimeZone timeZone = TimeZone.getTimeZone("JST");
 
     /**
@@ -84,6 +86,7 @@ class SpsConfig {
      * Allowable time on request.(Second)<br/>
      * リクエスト時の許容時間(秒)
      */
+    @Builder.Default
     private int allowableSecondOnRequest = 600;
 
     /**
@@ -115,42 +118,39 @@ class SpsConfig {
      * @param properties The Properties information
      * @return new SpsConfig
      */
-    static SpsConfig from(final Properties properties) {
+    public static SpsConfig from(final Properties properties) {
 
-        SpsConfig config = new SpsConfig();
-        properties.forEach((key, value) -> {
-            if (key.toString().startsWith("sbpayment.")) {
-                String name = key.toString().substring("sbpayment.".length());
+        SpsConfig.SpsConfigBuilder builder = SpsConfig.builder();
+        properties.forEach((keyObject, valueObject) -> {
+            if (keyObject.toString().startsWith("sbpayment.")) {
+                String key = keyObject.toString().substring("sbpayment.".length());
+                String value = (String) valueObject;
 
-                if ("charset".equalsIgnoreCase(name)) {
-                    config.setCharset(Charset.forName((String) value));
-                } else if ("timeZone".equalsIgnoreCase(name)) {
-                    config.setTimeZone(TimeZone.getTimeZone((String) value));
-                } else if ("allowableSecondOnRequest".equalsIgnoreCase(name)) {
-                    config.setAllowableSecondOnRequest((Integer) value);
-                } else if ("cipherEnabled".equalsIgnoreCase(name)) {
-                    config.setCipherEnabled(Boolean.valueOf((String) value));
+                if ("charset".equalsIgnoreCase(key)) {
+                    builder.charset(Charset.forName(value));
+                } else if ("timeZone".equalsIgnoreCase(key)) {
+                    builder.timeZone(TimeZone.getTimeZone(value));
+                } else if ("allowableSecondOnRequest".equalsIgnoreCase(key)) {
+                    builder.allowableSecondOnRequest(Integer.parseInt(value));
+                } else if ("cipherEnabled".equalsIgnoreCase(key)) {
+                    builder.cipherEnabled(Boolean.valueOf(value));
                 } else {
                     try {
-                        Method method = SpsConfig.class.getMethod(getSetterMethod(name), String.class);
-                        method.invoke(config, (String) value);
+                        Method method = SpsConfigBuilder.class.getMethod(key, String.class);
+                        method.invoke(builder, (String) value);
                     } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException ignored) {
                     }
                 }
             }
         });
 
-        return config;
-    }
-
-    private static String getSetterMethod(String name) {
-        return "set" + name.substring(0, 1).toUpperCase() + name.substring(1);
+        return builder.build();
     }
 
     /**
      * Gets getClient configuration
      */
-    SpsInfo getSpsInfo() {
+    public SpsInfo getSpsInfo() {
         SpsInfo spsInfo = SpsInfo.builder()
                 .merchantId(this.merchantId)
                 .serviceId(this.serviceId)
@@ -164,7 +164,7 @@ class SpsConfig {
     /**
      * Gets getClient configuration
      */
-    ClientInfo getClientInfo() {
+    public ClientInfo getClientInfo() {
         ClientInfo clientInfo = ClientInfo.builder()
                 .timeZone(this.timeZone)
                 .apiUrl(this.apiUrl)
@@ -183,7 +183,7 @@ class SpsConfig {
     /**
      * Gets cipher configuration
      */
-    CipherInfo getCipherInfo() {
+    public CipherInfo getCipherInfo() {
         CipherInfo cipherInfo = CipherInfo.builder()
                 .charset(this.charset).hashKey(this.hashKey)
                 .desKey(this.desKey).desInitKey(this.desInitKey)
@@ -201,7 +201,7 @@ class SpsConfig {
 
     @Builder
     @Getter
-    static class SpsInfo {
+    public static class SpsInfo {
         @NotEmpty
         private String merchantId;
 
@@ -211,7 +211,7 @@ class SpsConfig {
 
     @Builder
     @Getter
-    static class ClientInfo {
+    public static class ClientInfo {
 
         @NotNull
         private TimeZone timeZone;
@@ -235,7 +235,7 @@ class SpsConfig {
 
     @Builder
     @Getter
-    static class CipherInfo {
+    public static class CipherInfo {
 
         @NotNull
         private Charset charset;

@@ -16,9 +16,8 @@
 
 package com.vogle.sbpayment.client;
 
-import java.nio.charset.Charset;
+import java.io.IOException;
 import java.util.Properties;
-import java.util.TimeZone;
 
 /**
  * Softbank payment<br/>
@@ -28,6 +27,7 @@ import java.util.TimeZone;
  */
 public class DefaultSbpayment implements Sbpayment {
 
+    private static final String PROPERTY_FILE = "sbpayment.properties";
     private final SpsConfig config;
 
     private SpsMapper mapper;
@@ -35,100 +35,35 @@ public class DefaultSbpayment implements Sbpayment {
     private SpsReceiver receiver;
 
     /**
-     * Create Sbpayment
+     * Create Default sbpayment with sbpayment.properties in resource
      */
-    public DefaultSbpayment() {
-        this.config = new SpsConfig();
+    protected DefaultSbpayment() {
+        this(PROPERTY_FILE);
     }
 
     /**
-     * Create Sbpayment from properties
+     * Create Default sbpayment with the file path in resource
+     *
+     * @param filePath properties file path in resource
      */
-    public DefaultSbpayment(Properties properties) {
+    protected DefaultSbpayment(String filePath) {
+        Properties properties = new Properties();
+        try {
+            properties.load(this.getClass().getClassLoader().getResourceAsStream(filePath));
+        } catch (NullPointerException | IOException ex) {
+            throw new IllegalStateException("Must be existed 'sbpayment.properties' file in Resource", ex);
+        }
         this.config = SpsConfig.from(properties);
     }
 
     /**
-     * Softbank payment data charset, Default is "Shift_JIS".<br/>
-     * 基本"Shift_JIS"で使用
-     */
-    public void setCharset(String charset) {
-        this.config.setCharset(Charset.forName(charset));
-    }
-
-    /**
-     * Softbank Payment Server TimeZone, Default is "JST".<br/>
-     * "JST"を使用
-     */
-    public void setTimeZone(String timeZone) {
-        this.config.setTimeZone(TimeZone.getTimeZone(timeZone));
-    }
-
-    /**
-     * API Service URL. <br/>
-     * API サビースの接続先
-     */
-    public void setApiUrl(String apiUrl) {
-        this.config.setApiUrl(apiUrl);
-    }
-
-    /**
-     * Softbank Payment Information
+     * Create Default sbpayment with config object
      *
-     * @param merchantId        MerchantId from Softbank Payment.
-     * @param serviceId         ServiceId from Softbank Payment.
-     * @param basicAuthId       Basic authentication ID.
-     * @param basicAuthPassword Basic authentication password.
+     * @param config The {@link SpsConfig}
      */
-    public void setCredentials(String merchantId, String serviceId, String basicAuthId, String basicAuthPassword) {
-        this.config.setMerchantId(merchantId);
-        this.config.setServiceId(serviceId);
-        this.config.setBasicAuthId(basicAuthId);
-        this.config.setBasicAuthPassword(basicAuthPassword);
+    protected DefaultSbpayment(SpsConfig config) {
+        this.config = config;
     }
-
-    /**
-     * Hash key, ハッシュキー
-     */
-    public void setHashKey(String hashKey) {
-        this.config.setHashKey(hashKey);
-    }
-
-    /**
-     * Allowable time on request.(Second)<br/>
-     * リクエスト時の許容時間(秒)
-     */
-    public void setAllowableSecondOnRequest(int allowableSecondOnRequest) {
-        this.config.setAllowableSecondOnRequest(allowableSecondOnRequest);
-    }
-
-    /**
-     * If set enable Cipher, It have to set 'desKey' & 'desInitKey'<br/>
-     * 3DES 暗号化使用
-     */
-    public void enableCipher() {
-        this.config.setCipherEnabled(true);
-    }
-
-    /**
-     * If set disable Cipher <br/>
-     * 3DES 暗号化使用しない
-     */
-    public void disableCipher() {
-        this.config.setCipherEnabled(false);
-    }
-
-    /**
-     * 3DES cipher
-     *
-     * @param desKey     3DES cipher key. / 3DES 暗号化キー
-     * @param desInitKey 3DES initialization key. / 3DES 初期化キー
-     */
-    public void setDesEncryptKey(String desKey, String desInitKey) {
-        this.config.setDesKey(desKey);
-        this.config.setDesInitKey(desInitKey);
-    }
-
 
     /**
      * Gets made getMapper
@@ -169,4 +104,11 @@ public class DefaultSbpayment implements Sbpayment {
         return receiver;
     }
 
+    /**
+     * return config information
+     */
+    @Override
+    public String toString() {
+        return config.toString();
+    }
 }

@@ -23,6 +23,7 @@ import com.vogle.sbpayment.client.SpsReceiver;
 import com.vogle.sbpayment.client.SpsResult;
 import com.vogle.sbpayment.client.ValidationHelper;
 import com.vogle.sbpayment.client.params.PaymentInfo;
+import com.vogle.sbpayment.client.requests.RequestHelper;
 import com.vogle.sbpayment.payeasy.params.IssueType;
 import com.vogle.sbpayment.payeasy.params.PayEasy;
 import com.vogle.sbpayment.payeasy.params.TerminalValue;
@@ -32,7 +33,6 @@ import com.vogle.sbpayment.payeasy.requests.PayEasyMethod;
 import com.vogle.sbpayment.payeasy.requests.PayEasyPaymentRequest;
 import com.vogle.sbpayment.payeasy.responses.PayEasyPaymentResponse;
 
-import static com.vogle.sbpayment.client.requests.RequestHelper.avoidNull;
 import static com.vogle.sbpayment.client.requests.RequestHelper.dateOnly;
 import static com.vogle.sbpayment.client.requests.RequestHelper.mapItem;
 
@@ -54,45 +54,36 @@ public class DefaultPayEasyPayment implements PayEasyPayment {
     private String payCsv;
     private String billInfo;
     private String billInfoKana;
-    private int billLimitDay = 3;
+    private int billLimitDay;
 
     /**
      * Make LinkType Pay-Easy
      *
      * @param sbpayment The {@link Sbpayment}
-     * @param payCsv    金融機関コード、情報リンク方式の場合のみ必須です。ただし、電算システムを利用の場合は不要です。
+     * @param linkType  LinkType info：情報リンク方式（インターネットでの支払い）
      */
-    public DefaultPayEasyPayment(Sbpayment sbpayment, String payCsv) {
+    protected DefaultPayEasyPayment(Sbpayment sbpayment, LinkType linkType) {
         this.type = PayEasyType.LINK;
         this.client = sbpayment.getClient();
         this.receiver = sbpayment.getReceiver();
-        this.payCsv = payCsv;
+        this.payCsv = linkType.getPayCsv();
+        this.billLimitDay = linkType.getBillLimitDay();
     }
 
     /**
      * Make OnlineType Pay-Easy
      *
-     * @param sbpayment    The {@link Sbpayment}
-     * @param billInfo     請求内容漢字、ATM 等に表示されます。（全角）
-     * @param billInfoKana 請求内容カナ、ATM 等に表示されます。（全角英数カナ）
+     * @param sbpayment  The {@link Sbpayment}
+     * @param onlineType OnlineType info：オンライン（ATM）方式
      */
-    public DefaultPayEasyPayment(Sbpayment sbpayment, String billInfo, String billInfoKana) {
+    protected DefaultPayEasyPayment(Sbpayment sbpayment, OnlineType onlineType) {
         this.type = PayEasyType.ONLINE;
         this.client = sbpayment.getClient();
         this.receiver = sbpayment.getReceiver();
-        this.billInfo = billInfo;
-        this.billInfoKana = billInfoKana;
+        this.billInfo = onlineType.getBillInfo();
+        this.billInfoKana = onlineType.getBillInfoKana();
+        this.billLimitDay = onlineType.getBillLimitDay();
     }
-
-    /**
-     * 支払期限、受注日時からデフォルトの支払期限の設定値内での指定が可能です。
-     * ウェルネットを利用されている加盟店の場合、支払期限は当日指定が可能です。
-     * 本日は「0」を基準として、日数を加算。デフォルトは「３日」
-     */
-    public void updateBillLimitDay(int billLimitDay) {
-        this.billLimitDay = billLimitDay;
-    }
-
 
     @Override
     public SpsResult<PayEasyPaymentResponse> payment(PaymentInfo paymentInfo, PayEasy payEasy) {
@@ -125,21 +116,21 @@ public class DefaultPayEasyPayment implements PayEasyPayment {
 
         // pay-easy info
         PayEasyMethod payInfo = new PayEasyMethod();
-        payInfo.setIssueType(avoidIssueType(payEasy.getIssueType()));
+        payInfo.setIssueType(avoidNull(payEasy.getIssueType()));
         payInfo.setLastName(payEasy.getLastName());
         payInfo.setFirstName(payEasy.getFirstName());
         payInfo.setLastNameKana(payEasy.getLastNameKana());
         payInfo.setFirstNameKana(payEasy.getFirstNameKana());
-        payInfo.setFirstZip(avoidNull(payEasy.getFirstZip(), "000"));
-        payInfo.setSecondZip(avoidNull(payEasy.getSecondZip(), "0000"));
-        payInfo.setAdd1(avoidNull(payEasy.getAdd1(), "\u3000"));
-        payInfo.setAdd2(avoidNull(payEasy.getAdd2(), "\u3000"));
+        payInfo.setFirstZip(RequestHelper.avoidNull(payEasy.getFirstZip(), "000"));
+        payInfo.setSecondZip(RequestHelper.avoidNull(payEasy.getSecondZip(), "0000"));
+        payInfo.setAdd1(RequestHelper.avoidNull(payEasy.getAdd1(), "\u3000"));
+        payInfo.setAdd2(RequestHelper.avoidNull(payEasy.getAdd2(), "\u3000"));
         payInfo.setAdd3(payEasy.getAdd3());
         payInfo.setTel(payEasy.getTel());
         payInfo.setMail(payEasy.getMail());
         payInfo.setSeiyakudate(dateOnly(request.getRequestDate()));
         payInfo.setPayeasyType(this.type.code());
-        payInfo.setTerminalValue(avoidTerminalValue(payEasy.getTerminalValue()));
+        payInfo.setTerminalValue(avoidNull(payEasy.getTerminalValue()));
         payInfo.setPayCsv(this.payCsv);
         payInfo.setBillInfoKana(this.billInfoKana);
         payInfo.setBillInfo(this.billInfo);
@@ -197,11 +188,11 @@ public class DefaultPayEasyPayment implements PayEasyPayment {
         return receiver.resultFailed(expiredId, errorMessage);
     }
 
-    private String avoidIssueType(IssueType origin) {
+    private String avoidNull(IssueType origin) {
         return (origin == null) ? IssueType.ISSUED.code() : origin.code();
     }
 
-    private String avoidTerminalValue(TerminalValue origin) {
+    private String avoidNull(TerminalValue origin) {
         return (origin == null) ? TerminalValue.PC.code() : origin.code();
     }
 

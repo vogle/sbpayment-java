@@ -38,7 +38,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * Tests for {@link DefaultPayEasyPayment}
  *
- * @author Nes Im
+ * @author Allan Im
  **/
 public class PayEasyTest extends AbstractSettings {
 
@@ -49,8 +49,11 @@ public class PayEasyTest extends AbstractSettings {
     @Before
     public void init() {
         mapper = sbpayment.getMapper();
-        payment = new DefaultPayEasyPayment(sbpayment, "株式会社", "カブシキガイシャ");
-        ((DefaultPayEasyPayment) payment).updateBillLimitDay(BILL_LIMIT_DAY);
+        OnlineType onlineType = new OnlineType();
+        onlineType.setBillInfo("株式会社");
+        onlineType.setBillInfoKana("カブシキガイシャ");
+        onlineType.setBillLimitDay(BILL_LIMIT_DAY);
+        payment = PayEasyPayment.newInstance(sbpayment, onlineType);
     }
 
     @Test
@@ -94,7 +97,7 @@ public class PayEasyTest extends AbstractSettings {
         depositInfo.setType("1");
         depositInfo.setAmount("1000");
         depositInfo.setAmountTotal("1000");
-        depositInfo.setMail("nes@uzen.io");
+        depositInfo.setMail("email@vogle.com");
         temp.setDepositInfo(depositInfo);
 
         temp.setRequestDate("20171010101010");
@@ -117,7 +120,7 @@ public class PayEasyTest extends AbstractSettings {
         assertThat(received.getDepositInfo().getType()).isEqualTo("1");
         assertThat(received.getDepositInfo().getAmount()).isEqualTo("1000");
         assertThat(received.getDepositInfo().getAmountTotal()).isEqualTo("1000");
-        assertThat(received.getDepositInfo().getMail()).isEqualTo("nes@uzen.io");
+        assertThat(received.getDepositInfo().getMail()).isEqualTo("email@vogle.com");
 
     }
 
@@ -209,7 +212,7 @@ public class PayEasyTest extends AbstractSettings {
                 .lastName("株式").firstName("会社")
                 .lastNameKana("カブシキ").firstNameKana("カイシャ")
                 .tel("08011112222")
-                .mail("nes@uzen.io")
+                .mail("email@vogle.com")
                 .terminalValue(TerminalValue.PC)
                 .build();
     }

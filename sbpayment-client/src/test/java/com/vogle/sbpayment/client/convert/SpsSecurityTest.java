@@ -50,13 +50,13 @@ public class SpsSecurityTest {
         assertThat(decrypted).isEqualTo(source);
     }
 
-//    @Test(expected = SecurityException.class)
+    //    @Test(expected = SecurityException.class)
     public void encryptWithWrongCharsetName() {
         // when
         SpsSecurity.encrypt(desKey, desInitKey + "222", charsetName, "Allan");
     }
 
-//    @Test(expected = SecurityException.class)
+    //    @Test(expected = SecurityException.class)
     public void decryptWithWrongCharsetName() {
         // when
         String encrypted = SpsSecurity.encrypt(desKey, desInitKey + "222", charsetName, "Allan");
@@ -81,5 +81,6 @@ public class SpsSecurityTest {
 
         // when
         SpsSecurity.encrypt(desKey, wrongDesInitKey, charsetName, source);
+
     }
 }

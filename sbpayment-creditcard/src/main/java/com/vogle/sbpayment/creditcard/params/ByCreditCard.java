@@ -20,6 +20,9 @@ import com.vogle.sbpayment.creditcard.DealingsType;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -33,8 +36,10 @@ import javax.validation.constraints.Size;
  *
  * @author Allan Im
  **/
-@Data
-@Builder
+@Getter
+@ToString
+@EqualsAndHashCode
+@Builder(builderClassName = "Builder")
 public class ByCreditCard {
 
     /**

@@ -20,9 +20,11 @@ import com.vogle.sbpayment.client.DefaultSbpayment;
 import com.vogle.sbpayment.client.Sbpayment;
 import com.vogle.sbpayment.client.SpsClient;
 import com.vogle.sbpayment.client.SpsConfig;
+import com.vogle.sbpayment.creditcard.CardPayFeature;
 import com.vogle.sbpayment.creditcard.CreditCardPayment;
 import com.vogle.sbpayment.creditcard.DefaultCreditCardPayment;
-import com.vogle.sbpayment.payeasy.DefaultPayEasyPayment;
+import com.vogle.sbpayment.payeasy.LinkType;
+import com.vogle.sbpayment.payeasy.OnlineType;
 import com.vogle.sbpayment.payeasy.PayEasyPayment;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -33,11 +35,12 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.nio.charset.Charset;
 import java.util.HashSet;
+import java.util.Properties;
 import java.util.Set;
 import java.util.TimeZone;
 
-import static com.vogle.sbpayment.creditcard.DefaultCreditCardPayment.Feature;
 import static com.vogle.sbpayment.springboot.autoconfigure.SbpaymentProperties.Client;
 import static com.vogle.sbpayment.springboot.autoconfigure.SbpaymentProperties.CreditCard;
 import static com.vogle.sbpayment.springboot.autoconfigure.SbpaymentProperties.PayEasy;
@@ -65,8 +68,8 @@ public class SbpaymentAutoConfiguration {
     }
 
     private Sbpayment createSbpayment(Client client) {
-        return new DefaultSbpayment(SpsConfig.builder()
-                .charset(client.getCharset())
+        return Sbpayment.newInstance(SpsConfig.builder()
+                .charset(Charset.forName(client.getCharset()))
                 .timeZone(TimeZone.getTimeZone(client.getTimeZone()))
                 .apiUrl(client.getApiUrl())
                 .merchantId(client.getMerchantId())
@@ -93,19 +96,19 @@ public class SbpaymentAutoConfiguration {
     public CreditCardPayment creditCardPayment(SbpaymentProperties properties, Sbpayment sbpayment) {
         CreditCard creditCard = properties.getCreditcard();
 
-        Set<Feature> enableFeatures = new HashSet<>();
+        Set<CardPayFeature> enableFeatures = new HashSet<>();
         if (creditCard.isCustomerInfoReturn()) {
-            enableFeatures.add(Feature.RETURN_CUSTOMER_INFO);
+            enableFeatures.add(CardPayFeature.RETURN_CUSTOMER_INFO);
         }
         if (creditCard.isCardbrandReturn()) {
-            enableFeatures.add(Feature.RETURN_CARD_BRAND);
+            enableFeatures.add(CardPayFeature.RETURN_CARD_BRAND);
         }
 
         if (creditCard.isAlternateClientEnabled()) {
             Sbpayment privatePayment = createSbpayment(creditCard.getAlternateClient());
-            return new DefaultCreditCardPayment(privatePayment, enableFeatures.toArray(new Feature[0]));
+            return CreditCardPayment.newInstance(privatePayment, enableFeatures.toArray(new CardPayFeature[0]));
         } else {
-            return new DefaultCreditCardPayment(sbpayment, enableFeatures.toArray(new Feature[0]));
+            return CreditCardPayment.newInstance(sbpayment, enableFeatures.toArray(new CardPayFeature[0]));
         }
     }
 
@@ -131,9 +134,16 @@ public class SbpaymentAutoConfiguration {
 
     private PayEasyPayment createPayEasyService(Sbpayment sbpayment, PayEasy payEasy) {
         if (PayEasy.Type.ONLINE.equals(payEasy.getType())) {
-            return new DefaultPayEasyPayment(sbpayment, payEasy.getBillInfo(), payEasy.getBillInfoKana());
+            OnlineType onlineType = new OnlineType();
+            onlineType.setBillInfo(payEasy.getBillInfo());
+            onlineType.setBillInfoKana(payEasy.getBillInfoKana());
+            onlineType.setBillLimitDay(payEasy.getBillLimitDay());
+            return PayEasyPayment.newInstance(sbpayment, onlineType);
         } else {
-            return new DefaultPayEasyPayment(sbpayment, payEasy.getPayCsv());
+            LinkType linkType = new LinkType();
+            linkType.setPayCsv(payEasy.getPayCsv());
+            linkType.setBillLimitDay(payEasy.getBillLimitDay());
+            return PayEasyPayment.newInstance(sbpayment, linkType);
         }
     }
 }

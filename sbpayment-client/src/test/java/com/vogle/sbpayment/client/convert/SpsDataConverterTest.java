@@ -193,7 +193,7 @@ public class SpsDataConverterTest {
         assertThat(result).isEqualTo("2004fd019ce9e4bec52e7e5b74a4adad09dbed7d");
     }
 
-//    @Test(expected = MakeHashCodeException.class)
+    //    @Test(expected = MakeHashCodeException.class)
     public void makeSpsHashCodeWithFail() {
         SpsDataConverter.makeSpsHashCode(new Object(), "key", charsetName);
     }

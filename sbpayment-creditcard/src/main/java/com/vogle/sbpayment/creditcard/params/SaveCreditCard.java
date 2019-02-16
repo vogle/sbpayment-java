@@ -18,6 +18,9 @@ package com.vogle.sbpayment.creditcard.params;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
@@ -28,8 +31,10 @@ import javax.validation.constraints.Size;
  *
  * @author Allan Im
  **/
-@Data
-@Builder
+@Getter
+@ToString
+@EqualsAndHashCode
+@Builder(builderClassName = "Builder")
 public class SaveCreditCard {
 
     /**

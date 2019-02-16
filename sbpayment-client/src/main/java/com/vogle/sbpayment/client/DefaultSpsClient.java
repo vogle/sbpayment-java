@@ -21,6 +21,7 @@ import com.vogle.sbpayment.client.responses.SpsResponse;
 
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
@@ -40,10 +41,11 @@ import java.nio.charset.Charset;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Default Softbank payment getClient
@@ -127,7 +129,8 @@ public class DefaultSpsClient implements SpsClient {
             // success
             if (statusCode == 200) {
                 // response header
-                Map<String, String> headerMap = new HashMap<>();
+                Map<String, String> headerMap = Arrays.stream(response.getAllHeaders())
+                        .collect(Collectors.toMap(NameValuePair::getName, NameValuePair::getValue));
 
                 // response body
                 String body = EntityUtils.toString(response.getEntity(), mapper.getCharset());
@@ -164,8 +167,8 @@ public class DefaultSpsClient implements SpsClient {
                 LOGGER.error("SPS Client Internal Error : {}({})",
                         ex.getClass().getSimpleName(), ex.getMessage());
             }
+            throw new IllegalStateException(ex.getMessage(), ex);
         }
-        return new SpsResult<>();
     }
 
     /**

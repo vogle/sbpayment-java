@@ -16,7 +16,6 @@
 
 package com.vogle.sbpayment.payeasy;
 
-import com.vogle.sbpayment.client.DefaultSbpayment;
 import com.vogle.sbpayment.client.Sbpayment;
 
 import java.io.File;
@@ -48,7 +47,7 @@ abstract class AbstractSettings {
         merchantId = (String) p.get("sbpayment.merchantId");
         serviceId = (String) p.get("sbpayment.serviceId");
 
-        sbpayment = new DefaultSbpayment(p);
+        sbpayment = Sbpayment.newInstance(p);
     }
 
     String orderNo() {

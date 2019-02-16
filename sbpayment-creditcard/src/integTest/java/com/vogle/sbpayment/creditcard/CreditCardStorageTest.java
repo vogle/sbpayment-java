@@ -32,8 +32,8 @@ import com.vogle.sbpayment.creditcard.responses.LegacyCardInfoUpdateResponse;
 import org.junit.Before;
 import org.junit.Test;
 
-import static com.vogle.sbpayment.creditcard.DefaultCreditCardPayment.Feature.RETURN_CARD_BRAND;
-import static com.vogle.sbpayment.creditcard.DefaultCreditCardPayment.Feature.RETURN_CUSTOMER_INFO;
+import static com.vogle.sbpayment.creditcard.CardPayFeature.RETURN_CARD_BRAND;
+import static com.vogle.sbpayment.creditcard.CardPayFeature.RETURN_CUSTOMER_INFO;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -47,24 +47,23 @@ public class CreditCardStorageTest extends AbstractSettings {
 
     @Before
     public void init() {
-        payment = new DefaultCreditCardPayment(sbpayment, RETURN_CARD_BRAND, RETURN_CUSTOMER_INFO);
+        payment = CreditCardPayment.newInstance(sbpayment, RETURN_CARD_BRAND, RETURN_CUSTOMER_INFO);
     }
 
     @Test
     public void storage() {
         // given
         String customerCode = customerCode();
-        SaveCreditCard creditCard = SaveCreditCard.builder()
+        SaveCreditCard.Builder creditCard = SaveCreditCard.builder()
                 .number("4123450131003312")
                 .expiration("202412")
                 .securityCode("123")
                 .resrv1("テスト１")
                 .resrv2("テスト２")
-                .resrv3("テスト３")
-                .build();
+                .resrv3("テスト３");
 
         // when save
-        SpsResult<LegacyCardInfoSaveResponse> save = payment.saveCard(customerCode, creditCard);
+        SpsResult<LegacyCardInfoSaveResponse> save = payment.saveCard(customerCode, creditCard.build());
         assertCommon(save);
         assertThat(save.getBody().isSuccess()).isTrue();
         assertThat(save.getBody().getSpsTransactionId()).isNotBlank();
@@ -73,7 +72,7 @@ public class CreditCardStorageTest extends AbstractSettings {
         assertThat(save.getBody().getSpsInfo()).isNotNull();
 
         // when save 2nd fail
-        SpsResult<LegacyCardInfoSaveResponse> save2 = payment.saveCard(customerCode, creditCard);
+        SpsResult<LegacyCardInfoSaveResponse> save2 = payment.saveCard(customerCode, creditCard.build());
         assertCommon(save2);
         assertThat(save2.getBody().isSuccess()).isFalse();
 
@@ -92,10 +91,8 @@ public class CreditCardStorageTest extends AbstractSettings {
         assertThat(cardInfoNormal.getResrv3()).isEqualTo("テスト３");
 
         // update
-        creditCard.setResrv1("更新１");
-        creditCard.setResrv2("更新２");
-        creditCard.setResrv3("更新３");
-        SpsResult<LegacyCardInfoUpdateResponse> update = payment.updateCard(customerCode, creditCard);
+        creditCard.resrv1("更新１").resrv2("更新２").resrv3("更新３");
+        SpsResult<LegacyCardInfoUpdateResponse> update = payment.updateCard(customerCode, creditCard.build());
         assertCommon(update);
         assertThat(update.getBody().getSpsTransactionId()).isNotBlank();
         assertThat(update.getBody().isSuccess()).isTrue();
