@@ -54,7 +54,7 @@ jobs:
       if: NOT type IN (pull_request) AND branch = master
     - stage: Publish to Maven Center
       script: "./gradlew final publishToNexus -Prelease.useLastTag=true -PnexusUsername=${NEXUS_USERNAME} -PnexusPassword=${NEXUS_PASSWORD} -Psigning.keyId=${GPG_KEY_ID} -Psigning.password=${GPG_KEY_PASSPHRASE} -Psigning.secretKeyRingFile=${TRAVIS_BUILD_DIR}/config/allanim.gpg"
-      if: type IN (push) AND tag = true
+      if: NOT type IN (pull_request) AND tag IS present
     - stage: Publish to Snapshot
       script: "./gradlew snapshot publishToNexus -Prelease.scope=patch -PnexusUsername=${NEXUS_USERNAME} -PnexusPassword=${NEXUS_PASSWORD} -Psigning.keyId=${GPG_KEY_ID} -Psigning.password=${GPG_KEY_PASSPHRASE} -Psigning.secretKeyRingFile=${TRAVIS_BUILD_DIR}/config/allanim.gpg"
       if: type IN (push) AND branch = master
