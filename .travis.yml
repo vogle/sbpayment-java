@@ -24,8 +24,8 @@ cache:
     - ".gradle"
 
 before_install:
-  - "$TRAVIS_PULL_REQUEST" = "false" && openssl aes-256-cbc -K $encrypted_f13efdfcd46f_key -iv $encrypted_f13efdfcd46f_iv -in config.tar.enc -out ./config/config.tar -d
-  - "$TRAVIS_PULL_REQUEST" = "false" && cd config; tar xvf config.tar; cd ../;
+  - $TRAVIS_PULL_REQUEST = false && openssl aes-256-cbc -K $encrypted_f13efdfcd46f_key -iv $encrypted_f13efdfcd46f_iv -in config.tar.enc -out ./config/config.tar -d
+  - $TRAVIS_PULL_REQUEST = false && cd config; tar xvf config.tar; cd ../;
 
 jobs:
   include:
