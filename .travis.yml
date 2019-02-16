@@ -53,10 +53,10 @@ jobs:
         - "bash <(curl -s https://codecov.io/bash)"
       if: NOT type IN (pull_request) AND branch = master
     - stage: Publish to Maven Center
-      script: "./gradlew final publishToNexus -PnexusUsername=${NEXUS_USERNAME} -PnexusPassword=${NEXUS_PASSWORD} -Psigning.keyId=${GPG_KEY_ID} -Psigning.password=${GPG_KEY_PASSPHRASE} -Psigning.secretKeyRingFile=${TRAVIS_BUILD_DIR}/config/allanim.gpg"
+      script: "./gradlew final publishToNexus -Prelease.useLastTag=true -PnexusUsername=${NEXUS_USERNAME} -PnexusPassword=${NEXUS_PASSWORD} -Psigning.keyId=${GPG_KEY_ID} -Psigning.password=${GPG_KEY_PASSPHRASE} -Psigning.secretKeyRingFile=${TRAVIS_BUILD_DIR}/config/allanim.gpg"
       if: type IN (push) AND tag = true
     - stage: Publish to Snapshot
-      script: "./gradlew snapshot publishToNexus -PnexusUsername=${NEXUS_USERNAME} -PnexusPassword=${NEXUS_PASSWORD} -Psigning.keyId=${GPG_KEY_ID} -Psigning.password=${GPG_KEY_PASSPHRASE} -Psigning.secretKeyRingFile=${TRAVIS_BUILD_DIR}/config/allanim.gpg"
+      script: "./gradlew snapshot publishToNexus -Prelease.scope=patch -PnexusUsername=${NEXUS_USERNAME} -PnexusPassword=${NEXUS_PASSWORD} -Psigning.keyId=${GPG_KEY_ID} -Psigning.password=${GPG_KEY_PASSPHRASE} -Psigning.secretKeyRingFile=${TRAVIS_BUILD_DIR}/config/allanim.gpg"
       if: type IN (push) AND branch = master
 
 notifications:
