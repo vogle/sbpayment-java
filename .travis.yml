@@ -30,7 +30,7 @@ jobs:
     - stage: Build
       script: "./gradlew clean build -x integrationTest"
       if: type IN (pull_request) AND branch = master
-    - stage: Build Test
+    - stage: Test & Build
       dist: trusty
       addons:
         sonarcloud:
@@ -39,7 +39,7 @@ jobs:
             secure: $SONAR_TOKEN
       script:
         # check
-        - "./gradlew check"
+        - "./gradlew build"
         # make testReport & jacocoCoverageReport
         - "./gradlew allTestReport jacocoCoverageReport"
         # upload coverage to coveralls
@@ -53,10 +53,10 @@ jobs:
         # upload coverage to codecov
         - "bash <(curl -s https://codecov.io/bash)"
       if: NOT type IN (pull_request) AND branch = master
-    - stage: Publish to Maven Center
+    - stage: Publish to Maven Centeral
       script: "./gradlew final publishToNexus -Prelease.useLastTag=true -PnexusUsername=${NEXUS_USERNAME} -PnexusPassword=${NEXUS_PASSWORD} -Psigning.keyId=${GPG_KEY_ID} -Psigning.password=${GPG_KEY_PASSPHRASE} -Psigning.secretKeyRingFile=${TRAVIS_BUILD_DIR}/config/allanim.gpg"
       if: NOT type IN (pull_request) AND tag IS present
-    - stage: Publish to Snapshot
+    - stage: Publish to Nexus Snapshot
       script: "./gradlew snapshot publishToNexus -Prelease.scope=patch -PnexusUsername=${NEXUS_USERNAME} -PnexusPassword=${NEXUS_PASSWORD} -Psigning.keyId=${GPG_KEY_ID} -Psigning.password=${GPG_KEY_PASSPHRASE} -Psigning.secretKeyRingFile=${TRAVIS_BUILD_DIR}/config/allanim.gpg"
       if: type IN (push) AND branch = master
 
