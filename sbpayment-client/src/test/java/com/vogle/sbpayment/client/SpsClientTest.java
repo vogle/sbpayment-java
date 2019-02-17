@@ -49,7 +49,7 @@ public class SpsClientTest {
         String serviceId = "Allan Im";
 
         // when
-        SpsClient client = client(merchantId, serviceId);
+        SpsClient client = createClient(merchantId, serviceId);
 
         // then
         assertThat(client).isNotNull();
@@ -61,7 +61,7 @@ public class SpsClientTest {
         // given
         String merchantId = "VOGLE Labs";
         String serviceId = "Allan Im";
-        SpsClient client = client(merchantId, serviceId);
+        SpsClient client = createClient(merchantId, serviceId);
 
         // when
         TestRequest request = client.newRequest(TestRequest.class);
@@ -80,7 +80,7 @@ public class SpsClientTest {
         // given
         String merchantId = "VOGLE Labs";
         String serviceId = "Allan Im";
-        SpsClient client = client(merchantId, serviceId);
+        SpsClient client = createClient(merchantId, serviceId);
 
         // when
         client.newRequest(SpsRequest.class);
@@ -93,7 +93,7 @@ public class SpsClientTest {
         // given
         String merchantId = "VOGLE Labs";
         String serviceId = "Allan Im";
-        SpsClient client = client(merchantId, serviceId);
+        SpsClient client = createClient(merchantId, serviceId);
 
         HttpResponse mockResponse = mock(HttpResponse.class);
         when(mockResponse.getStatusLine()).thenReturn(getStatusLine(200));
@@ -124,7 +124,7 @@ public class SpsClientTest {
         // given
         String merchantId = "VOGLE Labs";
         String serviceId = "Allan Im";
-        SpsClient client = client(merchantId, serviceId);
+        SpsClient client = createClient(merchantId, serviceId);
 
         HttpResponse mockResponse = mock(HttpResponse.class);
         when(mockResponse.getStatusLine()).thenReturn(getStatusLine(200));
@@ -145,7 +145,7 @@ public class SpsClientTest {
         // given
         String merchantId = "VOGLE Labs";
         String serviceId = "Allan Im";
-        SpsClient client = client(merchantId, serviceId);
+        SpsClient client = createClient(merchantId, serviceId);
 
         HttpClient mockClient = mock(HttpClient.class);
         when(mockClient.execute(Mockito.any())).thenThrow(IOException.class);
@@ -170,7 +170,7 @@ public class SpsClientTest {
         // given
         String merchantId = "VOGLE Labs";
         String serviceId = "Allan Im";
-        SpsClient client = client(merchantId, serviceId);
+        SpsClient client = createClient(merchantId, serviceId);
 
         HttpResponse mockResponse = mock(HttpResponse.class);
         when(mockResponse.getStatusLine()).thenReturn(getStatusLine(status));
@@ -216,7 +216,7 @@ public class SpsClientTest {
                 .build());
     }
 
-    private SpsClient client(String merchantId, String serviceId) {
+    private SpsClient createClient(String merchantId, String serviceId) {
         Sbpayment sbpayment = settings(merchantId, serviceId);
         return sbpayment.getClient();
     }
