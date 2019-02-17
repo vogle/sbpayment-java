@@ -9,3 +9,19 @@ dependencies {
     api project(':sbpayment-client')
 }
 
+// Apply sonarqube
+apply plugin: 'org.sonarqube'
+sonarqube {
+    properties {
+        property "sonar.sourceEncoding", "UTF-8"
+        property "sonar.sources", "src/main/java"
+        property "sonar.tests", "src/test/java,src/integTest/java"
+
+        property "sonar.java.coveragePlugin", "jacoco"
+        property "sonar.jacoco.reportPaths", "build/jacoco/test.exec,build/jacoco/integrationTest.exec"
+        property "sonar.junit.reportPaths", "build/test-results/test,build/test-results/integrationTest"
+
+        property "sonar.java.pmd.reportPaths", "build/reports/pmd/main.xml"
+        property "sonar.java.checkstyle.reportPaths", "build/reports/checkstyle/main.xml"
+    }
+}

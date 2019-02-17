@@ -147,9 +147,6 @@ configure(publishedprojects) {
         }
     }
 
-    // Apply sonarqube
-    apply plugin: 'org.sonarqube'
-
 }
 
 // report tools
