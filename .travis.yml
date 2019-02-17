@@ -29,7 +29,8 @@ jobs:
   include:
     - stage: Build
       script: "./gradlew clean build -x integrationTest"
-    - stage: Test
+      if: type IN (pull_request) AND branch = master
+    - stage: Build Test
       dist: trusty
       addons:
         sonarcloud:
