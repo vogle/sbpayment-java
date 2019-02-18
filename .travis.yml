@@ -1,5 +1,6 @@
 language: java
 jdk: oraclejdk8
+
 env:
   global:
   - secure: TmU7p1wI/h5iYYRZtOfwqyb65KITYh9F6VyPybCsOSCIClEkoVcc+1QGOdi9f/Sl7fftbNYkMH4nuJpMTeCvuCBatOEAHXv+Q1+qHUHQgSPUAv0dWYs1ER24f+5e5imcirJbbOiby0bWYpNgYMJV/VXsNy8ykXADS0hRFPjIxUyCJCnOlHlAKdIUUsNl9HnV2IwzqEZAiT2aLGlvjVBxnDxg3DsVC/QqFx4JxNHnGtV3nmVFdZ9RPTT4Wscpp4Arvi/Szss1HpnscvHrjwOhLfnPh7k7CMqIjBGgN8ESlfyTFQf90FV5EE8JO3K2V+QhHvjkgPhW0nrojthUInZwOlMCbZWVDrsVh/nIqHOkLdhv1GN1RLYZb5JGeEAM57yrIJW17B24zlC9TSAyr3z8t1hPtudpAMmgqenFb3X9z8VuCZSaLzoBU4l5V5ecO+lwe78AzX5SfUrMmyxs6LynGGwFx+DHFqK2F+m8RSxYXyJJeBMSMikCWerPbsImTxQ1KQmVe6lmk14BCvJYgCzw2TyLn+2D8lTH29fzvbehlz6hU/FDHLDpHXov9EbH+fpyJDdpC7VUVoSrJj8QLAf0H4dMrWDO/9zyGIKHLenFXFDqrhAaj63+AHO7Tdgphg4pyEJhwq38Ny8jOdwacSFOPr+JHW6SW6DKOOjvbjkXkK4=
@@ -15,10 +16,7 @@ cache:
   - "$HOME/.m2/repository"
   - "$HOME/.sonar/cache"
   - ".gradle"
-
 before_install:
-- openssl aes-256-cbc -K $encrypted_f13efdfcd46f_key -iv $encrypted_f13efdfcd46f_iv
-  -in config.tar.enc -out ./config.tar -d
 - if [ "$TRAVIS_PULL_REQUEST" = "false" ] ; then openssl aes-256-cbc -K $encrypted_f13efdfcd46f_key
   -iv $encrypted_f13efdfcd46f_iv -in config.tar.enc -out ./config/config.tar -d; cd
   config; tar xvf config.tar; rm -rf config.tar; cd ../; fi
