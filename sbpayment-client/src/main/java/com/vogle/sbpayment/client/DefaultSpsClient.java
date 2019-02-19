@@ -141,16 +141,7 @@ public class DefaultSpsClient implements SpsClient {
 
                 // xml mapping
                 T bodyObject = mapper.xmlToObject(body, request.responseClass());
-
-                if (LOGGER.isInfoEnabled()) {
-                    LOGGER.info("SPS Client ({}) response : result = {}{}{}",
-                            bodyObject.getId() == null ? "FAIL" : bodyObject.getDescription(),
-                            bodyObject.getResult(),
-                            "OK".equalsIgnoreCase(bodyObject.getResult()) ? "" : ", errCode = "
-                                    + bodyObject.getErrCode(),
-                            bodyObject.getSpsTransactionId() == null ? "" : ", sps-transaction-id = "
-                                    + bodyObject.getSpsTransactionId());
-                }
+                printInfoLog(bodyObject);
 
                 if (LOGGER.isDebugEnabled()) {
                     LOGGER.debug("SPS Client response object : {}", bodyObject);
@@ -168,6 +159,18 @@ public class DefaultSpsClient implements SpsClient {
                         ex.getClass().getSimpleName(), ex.getMessage());
             }
             throw new IllegalStateException(ex.getMessage(), ex);
+        }
+    }
+
+    private <T extends SpsResponse> void printInfoLog(T bodyObject) {
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info("SPS Client ({}) response : result = {}{}{}",
+                    bodyObject.getId() == null ? "FAIL" : bodyObject.getDescription(),
+                    bodyObject.getResult(),
+                    "OK".equalsIgnoreCase(bodyObject.getResult()) ? "" : ", errCode = "
+                            + bodyObject.getErrCode(),
+                    bodyObject.getSpsTransactionId() == null ? "" : ", sps-transaction-id = "
+                            + bodyObject.getSpsTransactionId());
         }
     }
 

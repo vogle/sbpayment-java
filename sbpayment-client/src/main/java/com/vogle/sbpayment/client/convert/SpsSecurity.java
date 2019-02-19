@@ -41,6 +41,7 @@ import javax.crypto.spec.SecretKeySpec;
 public class SpsSecurity {
 
     private static final char SPACE = ' ';
+    private static final String ALGORITHM = "DESede/CBC/NoPadding";
 
     /**
      * Encrypt the source.
@@ -58,7 +59,7 @@ public class SpsSecurity {
 
         try {
             // アルゴリズム：3DES-CBC（Padding なし）
-            Cipher cipher = Cipher.getInstance("DESede/CBC/NoPadding");
+            Cipher cipher = Cipher.getInstance(ALGORITHM);
             cipher.init(Cipher.ENCRYPT_MODE, toSecretKey(desKey), toAlgorithmParameterSpec(initKey));
 
             // 自動Padding なしのため、最後の8バイトブロックに対し、補完文字列追加

@@ -58,7 +58,7 @@ public class SbpaymentTest {
         assertThat(sbpayment.toString()).isNotEmpty();
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void newInstanceWithNoProperties() {
         // when
         Sbpayment.newInstance("no.properties");

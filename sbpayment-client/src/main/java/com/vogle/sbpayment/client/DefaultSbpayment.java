@@ -17,6 +17,7 @@
 package com.vogle.sbpayment.client;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 /**
@@ -47,11 +48,15 @@ public class DefaultSbpayment implements Sbpayment {
      * @param filePath properties file path in resource
      */
     protected DefaultSbpayment(String filePath) {
+        InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(filePath);
+        if (inputStream == null) {
+            throw new IllegalArgumentException("Must be existed '" + filePath + "' file in Resource");
+        }
+
         Properties properties = new Properties();
         try {
-            properties.load(this.getClass().getClassLoader().getResourceAsStream(filePath));
-        } catch (NullPointerException | IOException ex) {
-            throw new IllegalStateException("Must be existed 'sbpayment.properties' file in Resource", ex);
+            properties.load(inputStream);
+        } catch (IOException ignored) {
         }
         this.config = SpsConfig.from(properties);
     }
