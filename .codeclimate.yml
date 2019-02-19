@@ -24,11 +24,11 @@ plugins:
   checkstyle:
     enabled: true
     config:
-      file: 'config/vogle-checkstyle.xml'
+      file: 'checkstyle.xml'
   pmd:
     enabled: true
     config:
-      file: 'config/vogle-ruleset-6.7.x.xml'
+      file: 'ruleset.xml'
   sonar-java:
     enabled: true
     config:
