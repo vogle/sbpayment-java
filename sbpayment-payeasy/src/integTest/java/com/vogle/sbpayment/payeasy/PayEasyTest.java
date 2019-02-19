@@ -16,6 +16,7 @@
 
 package com.vogle.sbpayment.payeasy;
 
+import com.vogle.sbpayment.client.Sbpayment;
 import com.vogle.sbpayment.client.SpsMapper;
 import com.vogle.sbpayment.client.SpsResult;
 import com.vogle.sbpayment.client.convert.SpsDataConverter;
@@ -28,10 +29,16 @@ import com.vogle.sbpayment.payeasy.receivers.PayEasyDepositReceived;
 import com.vogle.sbpayment.payeasy.receivers.PayEasyExpiredCancelReceived;
 import com.vogle.sbpayment.payeasy.responses.PayEasyPaymentResponse;
 
-import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Base64;
+import java.util.Date;
+import java.util.Properties;
+import java.util.Random;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -40,15 +47,30 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * @author Allan Im
  **/
-public class PayEasyTest extends AbstractSettings {
+public class PayEasyTest {
 
     private static int BILL_LIMIT_DAY = 5;
+
+    private String merchantId;
+    private String serviceId;
+
     private PayEasyPayment payment;
     private SpsMapper mapper;
 
-    @Before
-    public void init() {
+    public PayEasyTest() {
+        Properties p = new Properties();
+        try {
+            p.load(new FileInputStream(System.getProperty("user.dir") + File.separator
+                    + "../config/it2.properties"));
+        } catch (IOException ignored) {
+        }
+
+        merchantId = (String) p.get("sbpayment.merchantId");
+        serviceId = (String) p.get("sbpayment.serviceId");
+
+        Sbpayment sbpayment = Sbpayment.newInstance(p);
         mapper = sbpayment.getMapper();
+
         OnlineType onlineType = new OnlineType();
         onlineType.setBillInfo("株式会社");
         onlineType.setBillInfoKana("カブシキガイシャ");
@@ -215,5 +237,16 @@ public class PayEasyTest extends AbstractSettings {
                 .mail("email@vogle.com")
                 .terminalValue(TerminalValue.PC)
                 .build();
+    }
+
+    private String orderNo() {
+        Random random = new Random();
+        return "VO" + dayPattern() + random.nextInt(99_999);
+    }
+
+    private String dayPattern() {
+        SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMddHHmmss");
+        long time = System.currentTimeMillis();
+        return fmt.format(new Date(time));
     }
 }
