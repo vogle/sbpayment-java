@@ -1,13 +1,13 @@
 # <img src="https://www.sbpayment.jp/images/logo.png">&nbsp;<sub>for <img src="https://simpleicons.org/icons/java.svg" height="50"/>JAVA</sub>
 
 
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.vogle.sbpayment/sbpayment-client/badge.svg)](https://search.maven.org/search?q=g:com.vogle.sbpayment)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.vogle.sbpayment/sbpayment-client/badge.svg?service=github)](https://search.maven.org/search?q=g:com.vogle.sbpayment)
 [![Nexus Staging](https://img.shields.io/nexus/s/https/oss.sonatype.org/com.vogle.sbpayment/sbpayment-client.svg?style=flat)](https://oss.sonatype.org/#nexus-search;quick~com.vogle.sbpayment)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0)
 [![Join the chat at https://gitter.im/vogle/sbpayment](https://badges.gitter.im/vogle/sbpayment.svg)](https://gitter.im/vogle/sbpayment)
 
 [![Build Status](https://travis-ci.org/vogle/sbpayment-java.svg?branch=master)](https://travis-ci.org/vogle/sbpayment-java)
-[![Coverage Status](https://coveralls.io/repos/github/vogle/sbpayment-java/badge.svg?branch=master&service=github )](https://coveralls.io/github/vogle/sbpayment-java?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/vogle/sbpayment-java/badge.svg?branch=master&service=github)](https://coveralls.io/github/vogle/sbpayment-java?branch=master)
 [![codecov](https://codecov.io/gh/vogle/sbpayment-java/branch/master/graph/badge.svg)](https://codecov.io/gh/vogle/sbpayment-java)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/ff7cb7516ca248cfb798e6ab08faaacf)](https://www.codacy.com/app/vogle/sbpayment-java?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=vogle/sbpayment-java&amp;utm_campaign=Badge_Grade)
 [![CodeFactor](https://www.codefactor.io/repository/github/vogle/sbpayment-java/badge)](https://www.codefactor.io/repository/github/vogle/sbpayment-java)
