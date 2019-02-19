@@ -93,28 +93,33 @@ public class SpsClientTest {
         // given
         String merchantId = "VOGLE Labs";
         String serviceId = "Allan Im";
-        SpsClient client = createClient(merchantId, serviceId);
 
         HttpResponse mockResponse = mock(HttpResponse.class);
         when(mockResponse.getStatusLine()).thenReturn(getStatusLine(200));
         when(mockResponse.getAllHeaders()).thenReturn(new Header[0]);
         when(mockResponse.getEntity()).thenReturn(
-                new StringEntity("<sps-api-response id=\"ST02-00101-101\">\n" +
-                        "<res_result>OK</res_result>\n" +
-                        "<res_sps_transaction_id>X1234567890123456789012345678901</res_sps_transaction_id>\n" +
-                        "<res_process_date>20120620144317</res_process_date>\n" +
-                        "<res_date>20120620144318</res_date>\n" +
-                        "</sps-api-response>"));
+                new StringEntity("<sps-api-response id=\"ST02-00101-101\">\n"
+                        + "<res_result>OK</res_result>\n"
+                        + "<res_sps_transaction_id>X1234567890123456789012345678901</res_sps_transaction_id>\n"
+                        + "<res_process_date>20120620144317</res_process_date>\n"
+                        + "<res_date>20120620144318</res_date>\n"
+                        + "</sps-api-response>"));
         HttpClient mockClient = mock(HttpClient.class);
         when(mockClient.execute(Mockito.any())).thenReturn(mockResponse);
+
+        SpsClient client = createClient(merchantId, serviceId);
         Whitebox.setInternalState(client, "httpClient", mockClient);
 
         // when
         TestRequest request = client.newRequest(TestRequest.class);
-        SpsResult<TestResponse> responseEntity = client.execute(request);
+        SpsResult<TestResponse> result = client.execute(request);
 
         // then
-        assertThat(responseEntity.getStatus()).isEqualTo(200);
+        assertThat(result.getStatus()).isEqualTo(200);
+        assertThat(result.isSuccessfulConnection()).isTrue();
+        assertThat(result.isSuccess()).isTrue();
+        assertThat(result.getBody()).isNotNull();
+        assertThat(result.getHeaders()).isEmpty();
 
     }
 
@@ -124,7 +129,6 @@ public class SpsClientTest {
         // given
         String merchantId = "VOGLE Labs";
         String serviceId = "Allan Im";
-        SpsClient client = createClient(merchantId, serviceId);
 
         HttpResponse mockResponse = mock(HttpResponse.class);
         when(mockResponse.getStatusLine()).thenReturn(getStatusLine(200));
@@ -132,6 +136,8 @@ public class SpsClientTest {
         when(mockResponse.getEntity()).thenReturn(new StringEntity(""));
         HttpClient mockClient = mock(HttpClient.class);
         when(mockClient.execute(Mockito.any())).thenReturn(mockResponse);
+
+        SpsClient client = createClient(merchantId, serviceId);
         Whitebox.setInternalState(client, "httpClient", mockClient);
 
         // when
@@ -184,6 +190,17 @@ public class SpsClientTest {
 
         // then
         assertThat(responseEntity.getStatus()).isEqualTo(status);
+    }
+
+    @Test
+    public void spsResultDefault() {
+        // when
+        SpsResult result = new SpsResult();
+
+        // then
+        assertThat(result.isSuccessfulConnection()).isFalse();
+        assertThat(result.getStatus()).isEqualTo(999);
+        assertThat(result.toString()).isNotEmpty();
     }
 
     private StatusLine getStatusLine(int status) {

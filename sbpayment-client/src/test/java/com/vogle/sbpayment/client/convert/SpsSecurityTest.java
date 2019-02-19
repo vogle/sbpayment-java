@@ -50,17 +50,21 @@ public class SpsSecurityTest {
         assertThat(decrypted).isEqualTo(source);
     }
 
-    //    @Test(expected = SecurityException.class)
-    public void encryptWithWrongCharsetName() {
-        // when
-        SpsSecurity.encrypt(desKey, desInitKey + "222", charsetName, "Allan");
-    }
+    @Test
+    public void encryptAndDecrypt2() {
+        // given
+        String source = "Allan";
+        String encryptedSource = "JgWwkfxEzwM=";
 
-    //    @Test(expected = SecurityException.class)
-    public void decryptWithWrongCharsetName() {
         // when
-        String encrypted = SpsSecurity.encrypt(desKey, desInitKey + "222", charsetName, "Allan");
-        SpsSecurity.decrypt(desKey, desInitKey, charsetName, encrypted);
+        String encrypted = SpsSecurity.encrypt(desKey, desInitKey, charsetName, source);
+        String decrypted = SpsSecurity.decrypt(desKey, desInitKey, charsetName, encrypted);
+
+        // then
+        assertThat(encrypted).isNotEmpty();
+        assertThat(decrypted).isNotEmpty();
+        assertThat(encrypted).isEqualTo(encryptedSource);
+        assertThat(decrypted).isEqualTo(source);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -81,6 +85,6 @@ public class SpsSecurityTest {
 
         // when
         SpsSecurity.encrypt(desKey, wrongDesInitKey, charsetName, source);
-
     }
+
 }

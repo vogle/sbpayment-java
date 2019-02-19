@@ -18,7 +18,6 @@ package com.vogle.sbpayment.client;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 
 import java.lang.reflect.InvocationTargetException;
@@ -199,9 +198,13 @@ public class SpsConfig {
         return cipherInfo;
     }
 
+    /**
+     * Sps Information, it include MerchantId & serviceId
+     */
     @Builder
     @Getter
     public static class SpsInfo {
+
         @NotEmpty
         private String merchantId;
 
@@ -209,6 +212,9 @@ public class SpsConfig {
         private String serviceId;
     }
 
+    /**
+     * Client configuration information
+     */
     @Builder
     @Getter
     public static class ClientInfo {
@@ -233,6 +239,9 @@ public class SpsConfig {
 
     }
 
+    /**
+     * Cipher configuration information
+     */
     @Builder
     @Getter
     public static class CipherInfo {

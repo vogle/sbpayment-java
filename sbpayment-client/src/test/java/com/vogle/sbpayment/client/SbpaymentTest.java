@@ -58,7 +58,7 @@ public class SbpaymentTest {
         assertThat(sbpayment.toString()).isNotEmpty();
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void newInstanceWithNoProperties() {
         // when
         Sbpayment.newInstance("no.properties");
@@ -69,7 +69,8 @@ public class SbpaymentTest {
         // Given
         Properties properties = new Properties();
         try {
-            properties.load(this.getClass().getClassLoader().getResourceAsStream("test.properties"));
+            properties.load(Thread.currentThread().getContextClassLoader()
+                    .getResourceAsStream("test.properties"));
         } catch (IOException ignored) {
         }
 

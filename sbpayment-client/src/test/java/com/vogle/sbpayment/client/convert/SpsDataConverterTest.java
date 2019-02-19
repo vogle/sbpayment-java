@@ -34,6 +34,9 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class SpsDataConverterTest {
 
+    private static final String ORIGIN = "Allan Im";
+    private static final String ENCODED = "QWxsYW4gSW0=";
+    private static final String ENCRYPTED = "P8Rw2Jh3J6A=";
     private final Charset charsetName = Charset.forName("Shift_JIS");
     private final String desKey = "abcdefghyjklmn1234567890";
     private final String desInitKey = "12345678";
@@ -41,11 +44,9 @@ public class SpsDataConverterTest {
     @Test
     public void encode() {
         // given
-        String origin = "Allan Im";
-        String encoded = "QWxsYW4gSW0=";
-        SampleObject source = new SampleObject(origin, origin, origin);
-        source.setSubBasic64(origin);
-        source.setSubCipherString(origin);
+        SampleObject source = new SampleObject(ORIGIN, ORIGIN, ORIGIN);
+        source.setSubBasic64(ORIGIN);
+        source.setSubCipherString(ORIGIN);
 
         // when
         SpsDataConverter.encode(charsetName, source);
@@ -54,22 +55,20 @@ public class SpsDataConverterTest {
         assertThat(source).isNotNull();
         assertThat(source.getBasic64()).isNotNull();
         assertThat(source.getCipherString()).isNotNull();
-        assertThat(source.getBasic64()).isEqualTo(encoded);
-        assertThat(source.getCipherString()).isEqualTo(encoded);
-        assertThat(source.getSubBasic64()).isEqualTo(encoded);
-        assertThat(source.getSubCipherString()).isEqualTo(encoded);
-        assertThat(source.getItems().get(0).getName()).isEqualTo(encoded);
-        assertThat(source.getItem().getName()).isEqualTo(encoded);
+        assertThat(source.getBasic64()).isEqualTo(ENCODED);
+        assertThat(source.getCipherString()).isEqualTo(ENCODED);
+        assertThat(source.getSubBasic64()).isEqualTo(ENCODED);
+        assertThat(source.getSubCipherString()).isEqualTo(ENCODED);
+        assertThat(source.getItems().get(0).getName()).isEqualTo(ENCODED);
+        assertThat(source.getItem().getName()).isEqualTo(ENCODED);
     }
 
     @Test
     public void encodeWithoutCipherField() {
         // given
-        String origin = "Allan Im";
-        String encoded = "QWxsYW4gSW0=";
-        SampleObject source = new SampleObject(origin, origin, origin);
-        source.setSubBasic64(origin);
-        source.setSubCipherString(origin);
+        SampleObject source = new SampleObject(ORIGIN, ORIGIN, ORIGIN);
+        source.setSubBasic64(ORIGIN);
+        source.setSubCipherString(ORIGIN);
 
         // when
         SpsDataConverter.encodeWithoutCipherString(charsetName, source);
@@ -78,12 +77,12 @@ public class SpsDataConverterTest {
         assertThat(source).isNotNull();
         assertThat(source.getBasic64()).isNotNull();
         assertThat(source.getCipherString()).isNotNull();
-        assertThat(source.getBasic64()).isEqualTo(encoded);
-        assertThat(source.getCipherString()).isEqualTo(origin);
-        assertThat(source.getSubBasic64()).isEqualTo(encoded);
-        assertThat(source.getSubCipherString()).isEqualTo(origin);
-        assertThat(source.getItems().get(0).getName()).isEqualTo(encoded);
-        assertThat(source.getItem().getName()).isEqualTo(encoded);
+        assertThat(source.getBasic64()).isEqualTo(ENCODED);
+        assertThat(source.getCipherString()).isEqualTo(ORIGIN);
+        assertThat(source.getSubBasic64()).isEqualTo(ENCODED);
+        assertThat(source.getSubCipherString()).isEqualTo(ORIGIN);
+        assertThat(source.getItems().get(0).getName()).isEqualTo(ENCODED);
+        assertThat(source.getItem().getName()).isEqualTo(ENCODED);
     }
 
     @Test(expected = InvalidRequestException.class)
@@ -96,44 +95,49 @@ public class SpsDataConverterTest {
     }
 
     @Test
-    public void encryptAndDecrypt() {
-        String origin = "Allan Im";
-        String encrypted = "P8Rw2Jh3J6A=";
-        SampleObject source = new SampleObject(origin, origin, origin);
-        source.setSubBasic64(origin);
-        source.setSubCipherString(origin);
+    public void encrypt() {
+        SampleObject source = new SampleObject(ORIGIN, ORIGIN, ORIGIN);
+        source.setSubBasic64(ORIGIN);
+        source.setSubCipherString(ORIGIN);
 
         // encrypt
         SpsDataConverter.encrypt(desKey, desInitKey, charsetName, source);
 
-        assertThat(source).isNotNull();
         assertThat(source.getBasic64()).isNotNull();
         assertThat(source.getCipherString()).isNotNull();
-        assertThat(source.getBasic64()).isEqualTo(origin);
-        assertThat(source.getSubBasic64()).isEqualTo(origin);
-        assertThat(source.getItems().get(0).getName()).isEqualTo(origin);
-        assertThat(source.getItem().getName()).isEqualTo(origin);
+        assertThat(source.getBasic64()).isEqualTo(ORIGIN);
+        assertThat(source.getSubBasic64()).isEqualTo(ORIGIN);
+        assertThat(source.getItems().get(0).getName()).isEqualTo(ORIGIN);
+        assertThat(source.getItem().getName()).isEqualTo(ORIGIN);
 
-        assertThat(source.getCipherString()).isEqualTo(encrypted);
-        assertThat(source.getSubCipherString()).isEqualTo(encrypted);
-        assertThat(source.getItems().get(0).getCipherName()).isEqualTo(encrypted);
-        assertThat(source.getItem().getCipherName()).isEqualTo(encrypted);
+        assertThat(source.getCipherString()).isEqualTo(ENCRYPTED);
+        assertThat(source.getSubCipherString()).isEqualTo(ENCRYPTED);
+        assertThat(source.getItems().get(0).getCipherName()).isEqualTo(ENCRYPTED);
+        assertThat(source.getItem().getCipherName()).isEqualTo(ENCRYPTED);
+    }
 
+    @Test
+    public void decrypt() {
+        SampleObject source = new SampleObject(ORIGIN, ORIGIN, ORIGIN);
+        source.setSubBasic64(ORIGIN);
+        source.setSubCipherString(ORIGIN);
+
+        // encrypt
+        SpsDataConverter.encrypt(desKey, desInitKey, charsetName, source);
         // decrypt
         SpsDataConverter.decrypt(desKey, desInitKey, charsetName, source);
 
-        assertThat(source).isNotNull();
         assertThat(source.getBasic64()).isNotNull();
         assertThat(source.getCipherString()).isNotNull();
-        assertThat(source.getBasic64()).isEqualTo(origin);
-        assertThat(source.getSubBasic64()).isEqualTo(origin);
-        assertThat(source.getItems().get(0).getName()).isEqualTo(origin);
-        assertThat(source.getItem().getName()).isEqualTo(origin);
+        assertThat(source.getBasic64()).isEqualTo(ORIGIN);
+        assertThat(source.getSubBasic64()).isEqualTo(ORIGIN);
+        assertThat(source.getItems().get(0).getName()).isEqualTo(ORIGIN);
+        assertThat(source.getItem().getName()).isEqualTo(ORIGIN);
 
-        assertThat(source.getCipherString()).isEqualTo(origin);
-        assertThat(source.getSubCipherString()).isEqualTo(origin);
-        assertThat(source.getItems().get(0).getCipherName()).isEqualTo(origin);
-        assertThat(source.getItem().getCipherName()).isEqualTo(origin);
+        assertThat(source.getCipherString()).isEqualTo(ORIGIN);
+        assertThat(source.getSubCipherString()).isEqualTo(ORIGIN);
+        assertThat(source.getItems().get(0).getCipherName()).isEqualTo(ORIGIN);
+        assertThat(source.getItem().getCipherName()).isEqualTo(ORIGIN);
     }
 
     @Test(expected = InvalidRequestException.class)
@@ -193,7 +197,7 @@ public class SpsDataConverterTest {
         assertThat(result).isEqualTo("2004fd019ce9e4bec52e7e5b74a4adad09dbed7d");
     }
 
-    //    @Test(expected = MakeHashCodeException.class)
+    @Test(expected = MakeHashCodeException.class)
     public void makeSpsHashCodeWithFail() {
         SpsDataConverter.makeSpsHashCode(new Object(), "key", charsetName);
     }
@@ -201,7 +205,7 @@ public class SpsDataConverterTest {
     @Data
     @EqualsAndHashCode(callSuper = true)
     @ToString(callSuper = true)
-    public class SampleObject extends SuperObject {
+    private class SampleObject extends SuperObject {
 
         @MultiByteString
         private String subBasic64;
@@ -218,10 +222,11 @@ public class SpsDataConverterTest {
         @CipherString
         private Item item;
 
-        public SampleObject() {
+        SampleObject() {
+            super();
         }
 
-        public SampleObject(String basic64, String subCipherString, String itemName) {
+        SampleObject(String basic64, String subCipherString, String itemName) {
             super(basic64, subCipherString);
 
             Item item = new Item();
@@ -239,7 +244,7 @@ public class SpsDataConverterTest {
     }
 
     @Data
-    public class SuperObject {
+    private class SuperObject {
 
         @MultiByteString
         private String basic64;
@@ -250,17 +255,17 @@ public class SpsDataConverterTest {
 
         private String encryptedFlg;
 
-        public SuperObject() {
+        SuperObject() {
         }
 
-        public SuperObject(String basic64, String cipherString) {
+        SuperObject(String basic64, String cipherString) {
             this.basic64 = basic64;
             this.cipherString = cipherString;
         }
     }
 
     @Data
-    public class Item {
+    private class Item {
         @MultiByteString
         private String name;
 
@@ -272,7 +277,7 @@ public class SpsDataConverterTest {
         private int number;
     }
 
-    public class NoGetterObject {
+    private class NoGetterObject {
         @MultiByteString
         private String some;
 
@@ -280,5 +285,6 @@ public class SpsDataConverterTest {
         private String cipher;
 
         private String encryptedFlg;
+
     }
 }

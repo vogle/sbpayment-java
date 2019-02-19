@@ -46,5 +46,5 @@ public abstract class CommonElements implements SpsResponse {
     private String date;
 
     @Override
-    abstract public String getDescription();
+    public abstract String getDescription();
 }

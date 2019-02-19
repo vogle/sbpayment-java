@@ -52,7 +52,7 @@ public class ValidationHelper {
         for (T param : params) {
 
             if (param == null) {
-                throw new IllegalArgumentException("param is null");
+                throw new IllegalArgumentException("The param is null");
             }
 
             Set<ConstraintViolation<T>> constraintViolations = getValidator().validate(param);

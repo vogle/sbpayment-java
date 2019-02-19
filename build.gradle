@@ -48,6 +48,7 @@ configure(javaprojects) {
             dependency 'org.assertj:assertj-core:3.12.0'
             dependency 'org.mockito:mockito-core:2.24.0'
             dependency 'org.powermock:powermock-api-mockito2:2.0.0'
+            dependency 'org.powermock:powermock-module-junit4:2.0.0'
 
             dependency 'org.springframework.boot:spring-boot-autoconfigure:2.1.2.RELEASE'
             dependency 'org.springframework.boot:spring-boot-configuration-processor:2.1.2.RELEASE'
@@ -64,6 +65,7 @@ configure(javaprojects) {
         testImplementation 'org.assertj:assertj-core'
         testImplementation 'org.mockito:mockito-core'
         testImplementation 'org.powermock:powermock-api-mockito2'
+        testImplementation 'org.powermock:powermock-module-junit4'
     }
 
     // Performs quality checks on Java source files and generates reports
@@ -80,6 +82,34 @@ configure(javaprojects) {
     spotless {
         java {
             licenseHeaderFile "$rootDir/config/license.java"
+        }
+    }
+
+    // Apply sonarqube
+    apply plugin: 'org.sonarqube'
+    sonarqube {
+        properties {
+            def hasIntegTest = new File(projectDir, 'src/integTest/java').directory
+            
+            property "sonar.sourceEncoding", "UTF-8"
+            property "sonar.sources", "src/main/java"
+            if (hasIntegTest) {
+                property "sonar.tests", "src/test/java,src/integTest/java"
+            } else {
+                property "sonar.tests", "src/test/java"
+            }
+
+            property "sonar.java.coveragePlugin", "jacoco"
+            if (hasIntegTest) {
+                property "sonar.jacoco.reportPaths", "build/jacoco/test.exec,build/jacoco/integrationTest.exec"
+                property "sonar.junit.reportPaths", "build/test-results/test,build/test-results/integrationTest"
+            } else {
+                property "sonar.jacoco.reportPaths", "build/jacoco/test.exec"
+                property "sonar.junit.reportPaths", "build/test-results/test"
+            }
+
+            property "sonar.java.pmd.reportPaths", "build/reports/pmd/main.xml"
+            property "sonar.java.checkstyle.reportPaths", "build/reports/checkstyle/main.xml"
         }
     }
 
