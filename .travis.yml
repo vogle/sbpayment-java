@@ -3,62 +3,55 @@ jdk: oraclejdk8
 
 env:
   global:
-    - secure: agQaJ/328iOQnRDuh6HH3fXaTvEwgmrarwcQDpGuJanFpfuN+dM0j+IGLbvdyJPtK1Tmrb5mRvvhbGXF9TuegDG1p023XJr9/sYNu+gOmclqSkyQi/C0XVqkU/1J1bn5ckqf9/sG6MultYgxkhNUjT7wW4e+tC6Ljw6NE/2WjhAVMNdsuiUaGeisrWD0EzlI/y4luHWlfQY3BcXIE0Xagqmh1WTa0GUcVbpBSEGJDqaMY+JF3Fq29TIFGyQeUqKPlfMpmv01KoOiIhZmiDQGKWy2Zk20uz01vPqIqd6Wl+zgjwBUc1ga+IQIgq1IvPyI7JfvT5dTQv74RK+NQYN+Pq3AViKrGWqE6SgQrCNecciqSkKusdU68mAiXyLT6Dp6X7h7PcI7q5jSPvVvnfzLxNqO5WsoBVPInaRIbvcARESoKeUa2RaMHxBFqBL+N7/zFuxm47cGJWa8YHyd7DuivcJ/rXmdJPuFivMiEKySJ2GTe6elD7D7Bk9HdpfN+/dKgbHwzduf17KY7it0K1TbAXyJQNVAL2b/csr6QoUzSfuR1QJvHPtLAOV6UBqoyBj5sXDIWtcm0qIjZpXUihOUAgqTxVs9XUWM8UGE2bGg24BpK7Uii01utWnj58zWscTZ+Nen1cunhYHXU/UiFxcC29iNMrJaonovabv9i/tBxB8=
-    - secure: Xr3HtG6Ny11n8vcU3NcMvLLJmv18ld4tPq/xyDa6JNRaFkPyWitVO6s61vrfjkg0tM3E9g/K4CaT5gtzoMnoPOBXZ11QWBOGvgqGvHQNKSaJAh3Plr5+Yyt2jEWcSysEVo7oqpZFhck14T6EWsf0CoUACVQThgb5Ieg3UIGDVTXT2HC6eE1Z0dmGEAiKvK1nYO/pNfqm4DvAKz9If/fKW+rsKJZC9Vlipci91FB1+LX86hA4HlPpTmBKGH9J5d//0IZ2Tt9W/j2Toxa9OjrCZBU6FmJbs0mxQaRJ65Rar0QFyD4LIIXvXxtbSSj0w//awBwiOI2a6tqIRVMuJfYEaQmavwgfNDuGeLljjovYaIdxrTzfewLBSjI5+3lrROP8NRejTDxvD86QG3+w/GfiYb1IHwSCvEHnvwbRqf/3WEAs2W8ZAT+1rh+RJYH2g/SjTaw8owT0VJThHV+a/AxJR528Wc1yis50mGURbHikGICZQv7W+yPf0djUVpKWplkKyyWZ/rmFfJVgljJfU01bB7/rbZAwMLv7QWpVKNNsvQbUC9rgCZuDJ7M6X/OaY9hW5nTxDX6QJf3lk/UB0ba3mJ9G08rt55+gTYqxzlRznPgsh9Xkh8kf+tnPma0Ie7ctTNKx1Vm0Oma5jU1i+WavyzhhIia+l5GNKnlaCfDDPsE=
-    - secure: JN+w6Sn46dPMJd67CTnHcYDDGqjIUR9lmH1sPuX8hyfSzHtuA7zMIQLZvu6DuGy9RcCLNbXe9zpRrsZhQefvG3yzEyihi4MErNAZNeoKs+g4QZ8G/EaxzDGeOJIQ1wMjRvzGPhKs0wiOYXsXks2vW4ilB4n/9QAGd+k6pOuxz/XjDcGife2sUue7MnNRy1jxdClxjD22Mkza/aH1+lh9DCsKJM5hNhZW6uv8RcHntdFTy1tl/bvVmu+IvycmOJN8nUnaVRyXIAT+dReitdi+czm1zjacyCcwrPW3azY6ArpooeiCP9UI2C07QIaWoPSmVj6U+kApNsIAT76XQU9HIrxqjHiGv4De0lJtuN4B946DvLQf53e983oKprJITPl6Pi3kqfzfTwGBTu72oTM1yRd2A43VPra+tP0SY2NhC5LSnHqo5bEYp7ycGUjqTpqig44jjHbS1Z0d1bPmjubDZUQzOq0Y2sulLQGFzkCWLvOTLc9JKQoZ2gZJRx4F1nlPGjBC1S71JmCDeKKYXddPccscb5mZRKOByoEtdiMHCNbRcY2ReOnkDtz6DLQHZOY9KhoEHXpfkfRtbilVddvg5FLXgrwJkspJ4zqOOo82kJLcLF0ud1EfzDmjCKRF2XH169JcXka03lEZbwASfkCZ6VjVYD4r7n57sNp/AMjufVM=
-    - secure: HseTecOhcI9kXu/hRXCmhuCrXgZ4l+TYjQew0aF/cpOYi6f4yFsqvRB4B+mOv+zaMnQl2/MwXI7pRMc1euQ4hemFEdskoCNp1dz3G2boGyzsHKWoXq8FTLp9by3hiAXiSKasy5fSGf2BpYmuYjCEfomtvswOF5HUJZCA+u9U0oHmtTTayZq2OkBNAwpqg/Dnn3+EtdPaAxvIT599KboC5dufwAVSe17RV02y2j1x87maRTYj6aEmhzcUH6jWN/Jh0m6o+xewVgBkmcPThao/HAeopZcePQhJM5QIdgieKRxEhje/VfEXEiQYNoGNYzf+lanzBVbvmqVnSk21FIBobrlPlzv3kcdet7hiZaFHm/mOdcwpQ5z8xomX4vnbg20AU6Ys8LTLRVRaTEWKPA6xUzeKRZDg7on9GwOKFjWvvyFXBBDXqzSzwKVHI0xoF0Lilc7RnXpCtTg6JwsKzwXmWUkGIaO5GhNVaSF14WNYWvIcQf7iDyKmfy2O4puIc7445y4pXbnMD4YjUBd+48Dn9MvIRKeeZ0aAQBl5vdFudLwtZDV398w+pNqkIQEAXZS0nuujaobDVCZLB+DUc6vOOQCla9Ld3E6xblu47FzSKbl/OaVsOSImlqPglrVvMsh7iZasuNX/hrvIvcB6IVXRV59ioVFfx94yUYAUpdSE5Yc=
+  - secure: TmU7p1wI/h5iYYRZtOfwqyb65KITYh9F6VyPybCsOSCIClEkoVcc+1QGOdi9f/Sl7fftbNYkMH4nuJpMTeCvuCBatOEAHXv+Q1+qHUHQgSPUAv0dWYs1ER24f+5e5imcirJbbOiby0bWYpNgYMJV/VXsNy8ykXADS0hRFPjIxUyCJCnOlHlAKdIUUsNl9HnV2IwzqEZAiT2aLGlvjVBxnDxg3DsVC/QqFx4JxNHnGtV3nmVFdZ9RPTT4Wscpp4Arvi/Szss1HpnscvHrjwOhLfnPh7k7CMqIjBGgN8ESlfyTFQf90FV5EE8JO3K2V+QhHvjkgPhW0nrojthUInZwOlMCbZWVDrsVh/nIqHOkLdhv1GN1RLYZb5JGeEAM57yrIJW17B24zlC9TSAyr3z8t1hPtudpAMmgqenFb3X9z8VuCZSaLzoBU4l5V5ecO+lwe78AzX5SfUrMmyxs6LynGGwFx+DHFqK2F+m8RSxYXyJJeBMSMikCWerPbsImTxQ1KQmVe6lmk14BCvJYgCzw2TyLn+2D8lTH29fzvbehlz6hU/FDHLDpHXov9EbH+fpyJDdpC7VUVoSrJj8QLAf0H4dMrWDO/9zyGIKHLenFXFDqrhAaj63+AHO7Tdgphg4pyEJhwq38Ny8jOdwacSFOPr+JHW6SW6DKOOjvbjkXkK4=
+  - secure: LMNMz/dC5QMKCk9CsSWmr1v0t5FbJiUEZrv4XiMnKNidLxHD9kzURkQDxcC9eDRPZ1FcUDe8xlwvgaPwS09XsanQZEysTnRkFz3Dl9PA00Ts5HcHuOLVR59eRktHFod4unqAcMA5gFaJo/MlLoCx2nL0sbdUl2n/jRswblihBBSTBYnSPO69PrQWZMifkbbNQT6NSiJZTYb6LSki8OZdpFSPvcbsEbvrnC3DhGMA4Wm1TmhHWfnHN7rdlfOw4rAIQuHq3mcCBBCzEllsh64lAryyHxWL7d2oGqFB++UeCM23YyUjSrgaqFvGLUMyQLivGAp6LeR5j0sd+5+9cU6EwXntf9G4fTOv5nl5xz+K7JEWQZi9PheKPgK0WcICCmFQCRutOuySx5ALeAFnxCLP5lBrENx0wU2aPAOzC+tnSY2K1p2c2x0WD5pTuyZ84AvWq/hibZvInRFczlefyqT/hZ7YkJE2HuX8JEEfYj+RrPRRB92AwJrw1ONhHzz5fC5xdtnvqs7HuKc2fVEUSSJWnHIPssl07S/M684ceXgrXSVD1uDvIBowIiXxmUsXngnB5/ju682zSSyGPh8E9dawP2Jvhm/eVTjpv7IzQPtx5oR9NTcf1eeJCPwCVDwQWAZOTzc5J5ADvV/RpPuchvF1Glp3ngGAPWOoHK2szBSj4Gc=
 
 before_cache:
-  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
-  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+- rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+- rm -fr $HOME/.gradle/caches/*/plugin-resolution/
 cache:
   directories:
-    - "$HOME/.gradle/caches/"
-    - "$HOME/.gradle/wrapper/"
-    - "$HOME/.m2/repository"
-    - "$HOME/.sonar/cache"
-    - ".gradle"
-
+  - "$HOME/.gradle/caches/"
+  - "$HOME/.gradle/wrapper/"
+  - "$HOME/.m2/repository"
+  - "$HOME/.sonar/cache"
+  - ".gradle"
 before_install:
-  - if [ "$TRAVIS_PULL_REQUEST" = "false" ] ; then
-    openssl aes-256-cbc -K $encrypted_f13efdfcd46f_key -iv $encrypted_f13efdfcd46f_iv -in config.tar.enc -out ./config/config.tar -d;
-    cd config; tar xvf config.tar; rm -rf config.tar; cd ../;
-    fi
+- if [ "$TRAVIS_PULL_REQUEST" = "false" ] ; then openssl aes-256-cbc -K $encrypted_f13efdfcd46f_key
+  -iv $encrypted_f13efdfcd46f_iv -in config.tar.enc -out ./config/config.tar -d; cd
+  config; tar xvf config.tar; rm -rf config.tar; cd ../; fi
 
 jobs:
   include:
-    - stage: Build
-      script: "./gradlew clean build -x integrationTest"
-      if: type IN (pull_request) AND branch = master
-    - stage: Test & Build
-      dist: trusty
-      addons:
-        sonarcloud:
-          organization: "vogle"
-          token:
-            secure: $SONAR_TOKEN
-      script:
-        # check
-        - "./gradlew build"
-        # make testReport & jacocoCoverageReport
-        - "./gradlew allTestReport jacocoCoverageReport"
-        # upload coverage to coveralls
-        - "./gradlew uploadJacocoToCoveralls -x jacocoCoverageReport"
-        # upload coverage to codacy
-        - "./gradlew uploadJacocoToCodacy -x jacocoCoverageReport"
-        # upload coverage & code analysis to sonarcloud
-        - "./gradlew sonarqube -x jacocoTestReport"
-        # upload coverage to codeclimate
-        - "chmod +x ./.codeclimate.sh; ./.codeclimate.sh"
-        # upload coverage to codecov
-        - "bash <(curl -s https://codecov.io/bash)"
-      if: NOT type IN (pull_request) AND branch = master
-    - stage: Publish to Maven Centeral
-      script: "./gradlew final publishToNexus -Prelease.useLastTag=true -PnexusUsername=${NEXUS_USERNAME} -PnexusPassword=${NEXUS_PASSWORD} -Psigning.keyId=${GPG_KEY_ID} -Psigning.password=${GPG_KEY_PASSPHRASE} -Psigning.secretKeyRingFile=${TRAVIS_BUILD_DIR}/config/allanim.gpg"
-      if: NOT type IN (pull_request) AND tag IS present
-    - stage: Publish to Nexus Snapshot
-      script: "./gradlew snapshot publishToNexus -Prelease.scope=patch -PnexusUsername=${NEXUS_USERNAME} -PnexusPassword=${NEXUS_PASSWORD} -Psigning.keyId=${GPG_KEY_ID} -Psigning.password=${GPG_KEY_PASSPHRASE} -Psigning.secretKeyRingFile=${TRAVIS_BUILD_DIR}/config/allanim.gpg"
-      if: type IN (push) AND branch = master
+  - stage: Build
+    script: "./gradlew clean build -x integrationTest"
+    if: type IN (pull_request) AND branch = master
+  - stage: Test & Build
+    dist: trusty
+    addons:
+      sonarcloud:
+        organization: vogle
+        token:
+          secure: "$SONAR_TOKEN"
+    script:
+    - "./gradlew build"
+    - "./gradlew allTestReport jacocoCoverageReport"
+    - "./gradlew uploadJacocoToCoveralls -x jacocoCoverageReport"
+    - "./gradlew uploadJacocoToCodacy -x jacocoCoverageReport"
+    - "./gradlew sonarqube -x jacocoTestReport"
+    - chmod +x ./.codeclimate.sh; ./.codeclimate.sh
+    - bash <(curl -s https://codecov.io/bash)
+    if: NOT type IN (pull_request) AND branch = master
+  - stage: Publish to Maven Centeral
+    script: "./gradlew final publishToNexus -Prelease.useLastTag=true -PnexusUsername=${NEXUS_USERNAME}
+      -PnexusPassword=${NEXUS_PASSWORD} -Psigning.keyId=${GPG_KEY_ID} -Psigning.password=${GPG_KEY_PASSPHRASE}
+      -Psigning.secretKeyRingFile=${TRAVIS_BUILD_DIR}/config/allanim.gpg"
+    if: NOT type IN (pull_request) AND tag IS present
+  - stage: Publish to Nexus Snapshot
+    script: "./gradlew snapshot publishToNexus -Prelease.scope=patch -PnexusUsername=${NEXUS_USERNAME}
+      -PnexusPassword=${NEXUS_PASSWORD} -Psigning.keyId=${GPG_KEY_ID} -Psigning.password=${GPG_KEY_PASSPHRASE}
+      -Psigning.secretKeyRingFile=${TRAVIS_BUILD_DIR}/config/allanim.gpg"
+    if: type IN (push) AND branch = master
 
 notifications:
   slack: vogle:GGoPmsbXOS88yTxPGoUlwGTg
