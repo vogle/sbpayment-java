@@ -23,8 +23,8 @@ checks:
 plugins:
   checkstyle:
     enabled: true
-    config:
-      file: 'config/vogle-checkstyle.xml'
+#    config:
+#      file: 'config/vogle-checkstyle.xml'
   pmd:
     enabled: true
     config:
