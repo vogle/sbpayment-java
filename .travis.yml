@@ -35,12 +35,13 @@ jobs:
           secure: "$SONAR_TOKEN"
     script:
     - "./gradlew build"
-    - "./gradlew allTestReport jacocoCoverageReport"
-    - "./gradlew uploadJacocoToCoveralls -x jacocoCoverageReport"
-    - "./gradlew uploadJacocoToCodacy -x jacocoCoverageReport"
-    - "./gradlew sonarqube -x jacocoTestReport"
-    - chmod +x ./.codeclimate.sh; ./.codeclimate.sh
-    - bash <(curl -s https://codecov.io/bash)
+    after_success:
+      - "./gradlew allTestReport jacocoCoverageReport"
+      - "./gradlew uploadJacocoToCoveralls -x jacocoCoverageReport"
+      - "./gradlew uploadJacocoToCodacy -x jacocoCoverageReport"
+      - "./gradlew sonarqube -x jacocoTestReport"
+      - chmod +x ./.codeclimate.sh; ./.codeclimate.sh
+      - bash <(curl -s https://codecov.io/bash)
     if: NOT type IN (pull_request) AND branch = master
   - stage: Publish to Maven Centeral
     script: "./gradlew final publishToNexus -Prelease.useLastTag=true -PnexusUsername=${NEXUS_USERNAME}
