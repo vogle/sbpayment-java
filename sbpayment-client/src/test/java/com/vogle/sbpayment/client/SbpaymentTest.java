@@ -69,7 +69,8 @@ public class SbpaymentTest {
         // Given
         Properties properties = new Properties();
         try {
-            properties.load(this.getClass().getClassLoader().getResourceAsStream("test.properties"));
+            properties.load(Thread.currentThread().getContextClassLoader()
+                    .getResourceAsStream("test.properties"));
         } catch (IOException ignored) {
         }
 

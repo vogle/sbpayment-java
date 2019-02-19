@@ -24,6 +24,7 @@ import javax.validation.constraints.NotEmpty;
 
 /**
  * Tests for {@link ValidationHelper}
+ *
  * @author Allan Im
  */
 public class ValidationHelperTest {
@@ -40,32 +41,32 @@ public class ValidationHelperTest {
     }
 
     @Test
-    public  void assertsNotEmpty() {
+    public void assertsNotEmpty() {
         ValidationHelper.assertsNotEmpty("name", "Toronto");
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public  void assertsNotEmptyWithInvalid() {
+    public void assertsNotEmptyWithInvalid() {
         ValidationHelper.assertsNotEmpty("name", "");
     }
 
     @Test
-    public  void assertsNotNull() {
+    public void assertsNotNull() {
         ValidationHelper.assertsNotNull("name", "hello");
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public  void assertsNotNullWithInvalid() {
+    public void assertsNotNullWithInvalid() {
         ValidationHelper.assertsNotNull("name", null);
     }
 
     @Test
-    public  void assertsAmount() {
+    public void assertsAmount() {
         ValidationHelper.assertsAmount(1);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public  void assertsAmountWithInvalid() {
+    public void assertsAmountWithInvalid() {
         ValidationHelper.assertsAmount(0);
     }
 

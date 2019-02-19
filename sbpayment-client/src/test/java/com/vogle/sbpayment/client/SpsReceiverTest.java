@@ -142,7 +142,6 @@ public class SpsReceiverTest {
 
         // then
         assertThat(xml).isNotNull();
-        System.out.println(xml);
         assertThat(xml).contains("TEST_ID2");
         assertThat(xml).contains("NG");
         assertThat(xml).contains("res_err_msg");

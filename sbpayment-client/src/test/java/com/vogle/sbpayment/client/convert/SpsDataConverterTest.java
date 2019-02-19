@@ -34,13 +34,12 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class SpsDataConverterTest {
 
+    private static final String ORIGIN = "Allan Im";
+    private static final String ENCODED = "QWxsYW4gSW0=";
+    private static final String ENCRYPTED = "P8Rw2Jh3J6A=";
     private final Charset charsetName = Charset.forName("Shift_JIS");
     private final String desKey = "abcdefghyjklmn1234567890";
     private final String desInitKey = "12345678";
-
-    private final static String ORIGIN = "Allan Im";
-    private final static String ENCODED = "QWxsYW4gSW0=";
-    private final static String ENCRYPTED = "P8Rw2Jh3J6A=";
 
     @Test
     public void encode() {
@@ -96,7 +95,7 @@ public class SpsDataConverterTest {
     }
 
     @Test
-    public void encryptAndDecrypt() {
+    public void encrypt() {
         SampleObject source = new SampleObject(ORIGIN, ORIGIN, ORIGIN);
         source.setSubBasic64(ORIGIN);
         source.setSubCipherString(ORIGIN);
@@ -104,7 +103,6 @@ public class SpsDataConverterTest {
         // encrypt
         SpsDataConverter.encrypt(desKey, desInitKey, charsetName, source);
 
-        assertThat(source).isNotNull();
         assertThat(source.getBasic64()).isNotNull();
         assertThat(source.getCipherString()).isNotNull();
         assertThat(source.getBasic64()).isEqualTo(ORIGIN);
@@ -116,11 +114,17 @@ public class SpsDataConverterTest {
         assertThat(source.getSubCipherString()).isEqualTo(ENCRYPTED);
         assertThat(source.getItems().get(0).getCipherName()).isEqualTo(ENCRYPTED);
         assertThat(source.getItem().getCipherName()).isEqualTo(ENCRYPTED);
+    }
+
+    @Test
+    public void decrypt() {
+        SampleObject source = new SampleObject(ORIGIN, ORIGIN, ORIGIN);
+        source.setSubBasic64(ORIGIN);
+        source.setSubCipherString(ORIGIN);
 
         // decrypt
         SpsDataConverter.decrypt(desKey, desInitKey, charsetName, source);
 
-        assertThat(source).isNotNull();
         assertThat(source.getBasic64()).isNotNull();
         assertThat(source.getCipherString()).isNotNull();
         assertThat(source.getBasic64()).isEqualTo(ORIGIN);
@@ -217,6 +221,7 @@ public class SpsDataConverterTest {
         private Item item;
 
         SampleObject() {
+            super();
         }
 
         SampleObject(String basic64, String subCipherString, String itemName) {
@@ -278,5 +283,6 @@ public class SpsDataConverterTest {
         private String cipher;
 
         private String encryptedFlg;
+
     }
 }
