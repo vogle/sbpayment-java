@@ -122,6 +122,8 @@ public class SpsDataConverterTest {
         source.setSubBasic64(ORIGIN);
         source.setSubCipherString(ORIGIN);
 
+        // encrypt
+        SpsDataConverter.encrypt(desKey, desInitKey, charsetName, source);
         // decrypt
         SpsDataConverter.decrypt(desKey, desInitKey, charsetName, source);
 
