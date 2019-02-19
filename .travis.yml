@@ -36,7 +36,6 @@ jobs:
     script:
     - "./gradlew build"
     after_success:
-      - cp config/vogle-checkstyle.xml checkstyle.xml; cp config/vogle-ruleset-6.7.x.xml ruleset.xml
       - "./gradlew allTestReport jacocoCoverageReport"
       - "./gradlew uploadJacocoToCoveralls -x jacocoCoverageReport"
       - "./gradlew uploadJacocoToCodacy -x jacocoCoverageReport"
