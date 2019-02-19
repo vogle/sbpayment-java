@@ -7,9 +7,7 @@ checks:
   file-lines:
     enabled: false # handled by PMD
   method-complexity:
-    enabled: true
-    config:
-      threshold: 7
+    enabled: false # handled by PMD
   method-count:
     enabled: false # Handled by PMD
   method-lines:
@@ -19,17 +17,25 @@ checks:
   return-statements:
     enabled: false # Handled by PMD
   similar-code:
-    enabled: true
+    enabled: false # Handled by PMD
   identical-code:
     enabled: true
 plugins:
   checkstyle:
     enabled: true
     config:
-      file: config/vogle-checkstyle.xml
+      file: "config/vogle-checkstyle.xml"
   pmd:
     enabled: true
     config:
-      file: config/vogle-ruleset-6.7.x.xml
+      file: "config/vogle-ruleset-6.7.x.xml"
   sonar-java:
     enabled: true
+    config:
+      sonar.java.source: 8
+exclude_patterns:
+  - "**/dist/"
+  - "**/build/"
+  - "**/test/"
+  - "**/integTest/"
+  - "**/*.md"
