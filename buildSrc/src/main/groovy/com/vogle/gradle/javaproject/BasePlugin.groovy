@@ -75,9 +75,8 @@ class BasePlugin implements Plugin<Project> {
             project.logger.quiet "${logLine}"
         }
 
-        // Apply base, project-report and contacts
+        // Apply base
         project.plugins.apply(org.gradle.api.plugins.BasePlugin)
-        project.plugins.apply(ProjectReportsPlugin)
 
         // Apply IDEA
         project.plugins.apply(IdeaPlugin)
