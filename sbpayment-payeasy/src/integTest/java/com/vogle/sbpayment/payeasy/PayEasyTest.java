@@ -16,6 +16,7 @@
 
 package com.vogle.sbpayment.payeasy;
 
+import com.vogle.sbpayment.client.InvalidAccessException;
 import com.vogle.sbpayment.client.Sbpayment;
 import com.vogle.sbpayment.client.SpsMapper;
 import com.vogle.sbpayment.client.SpsResult;
@@ -55,6 +56,7 @@ public class PayEasyTest {
     private String serviceId;
 
     private PayEasyPayment payment;
+    private PayEasyPayment paymentWithLink;
     private SpsMapper mapper;
 
     public PayEasyTest() {
@@ -76,6 +78,11 @@ public class PayEasyTest {
         onlineType.setBillInfoKana("カブシキガイシャ");
         onlineType.setBillLimitDay(BILL_LIMIT_DAY);
         payment = PayEasyPayment.newInstance(sbpayment, onlineType);
+
+        LinkType linkType = new LinkType();
+        linkType.setPayCsv("9999");
+        linkType.setBillLimitDay(BILL_LIMIT_DAY);
+        paymentWithLink = PayEasyPayment.newInstance(sbpayment, linkType);
     }
 
     @Test
@@ -102,6 +109,32 @@ public class PayEasyTest {
                 .isEqualTo(RequestHelper.dateOnly(res.getDate(), BILL_LIMIT_DAY));
         assertThat(res.getPayEasyInfo().getSkno()).isNotEmpty();
         assertThat(res.getPayEasyInfo().getCustNumber()).isNotEmpty();
+    }
+
+    @Test
+    public void paymentWithLinkType() {
+
+        // when
+        PaymentInfo paymentInfo = getDefaultPaymentInfo();
+        PayEasy payEasy = getPayEasy();
+        SpsResult<PayEasyPaymentResponse> payment = this.paymentWithLink.payment(paymentInfo, payEasy);
+
+        // then
+        assertThat(payment).isNotNull();
+        assertThat(payment.getStatus()).isEqualTo(200);
+        assertThat(payment.getHeaders()).isNotNull();
+        assertThat(payment.getBody()).isNotNull();
+//        assertThat(payment.getBody().isSuccess()).isTrue();
+//        assertThat(payment.getBody().getSpsTransactionId()).isNotEmpty();
+//
+//        PayEasyPaymentResponse res = payment.getBody();
+//        assertThat(res.getTrackingId()).isNotBlank();
+//        assertThat(res.getPayEasyInfo()).isNotNull();
+//        assertThat(res.getPayEasyInfo().getInvoiceNo()).isNotEmpty();
+//        assertThat(res.getPayEasyInfo().getBillDate())
+//                .isEqualTo(RequestHelper.dateOnly(res.getDate(), BILL_LIMIT_DAY));
+//        assertThat(res.getPayEasyInfo().getSkno()).isNotEmpty();
+//        assertThat(res.getPayEasyInfo().getCustNumber()).isNotEmpty();
     }
 
     @Test
@@ -146,6 +179,28 @@ public class PayEasyTest {
 
     }
 
+    @Test(expected = InvalidAccessException.class)
+    public void convertDepositReceivedWithWrongId() throws Exception {
+        // given test data
+        PayEasyDepositReceived temp = new PayEasyDepositReceived();
+        temp.setId("NT01-00103-701");
+        temp.setMerchantId(merchantId);
+        temp.setServiceId(serviceId);
+        temp.setSpsTransactionId("x");
+        temp.setTrackingId("123");
+        temp.setRecDatetime("20191010");
+
+        temp.setRequestDate("20191010101010");
+        temp.setSpsHashcode(SpsDataConverter.makeSpsHashCode(temp, mapper.getHashKey(), mapper.getCharset()));
+
+        // given xml
+        String xml = mapper.objectToXml(temp);
+
+        // when
+        payment.receiveDeposit(xml);
+
+    }
+
     @Test
     public void successDepositResponse() {
         String response = payment.successDeposit();
@@ -176,8 +231,8 @@ public class PayEasyTest {
         temp.setServiceId(serviceId);
         temp.setSpsTransactionId("xxxxxxxxxxxxxxxxxxxxx");
         temp.setTrackingId("1234567890");
-        temp.setRecDatetime("20171010");
-        temp.setRequestDate("20171010101010");
+        temp.setRecDatetime("20181010");
+        temp.setRequestDate("20181010101010");
 
         temp.setSpsHashcode(SpsDataConverter.makeSpsHashCode(temp, mapper.getHashKey(), mapper.getCharset()));
 
@@ -188,17 +243,39 @@ public class PayEasyTest {
 
         assertThat(request.getId()).isEqualTo(temp.getId());
         assertThat(request.getMerchantId()).isEqualTo(temp.getMerchantId());
-        assertThat(request.getServiceId()).isEqualTo(temp.getServiceId());
         assertThat(request.getSpsTransactionId()).isEqualTo(temp.getSpsTransactionId());
+        assertThat(request.getServiceId()).isEqualTo(temp.getServiceId());
         assertThat(request.getTrackingId()).isEqualTo(temp.getTrackingId());
         assertThat(request.getRecDatetime()).isEqualTo(temp.getRecDatetime());
         assertThat(request.getRequestDate()).isEqualTo(temp.getRequestDate());
 
     }
 
+    @Test(expected = InvalidAccessException.class)
+    public void convertExpiredReceivedWithWrongId() throws Exception {
+        // test data
+        PayEasyExpiredCancelReceived temp = new PayEasyExpiredCancelReceived();
+        temp.setId("NT01-00104-701");
+        temp.setMerchantId(merchantId);
+        temp.setServiceId(serviceId);
+        temp.setSpsTransactionId("xxxxxxxxxxxxxxxxxxxxx");
+        temp.setTrackingId("1234");
+        temp.setRecDatetime("20191110");
+        temp.setRequestDate("20191010101011");
+
+        temp.setSpsHashcode(SpsDataConverter.makeSpsHashCode(temp, mapper.getHashKey(), mapper.getCharset()));
+
+        // request data
+        String xml = mapper.objectToXml(temp);
+
+        // when
+        payment.receiveExpiredCancel(xml);
+
+    }
+
 
     @Test
-    public void successExpiredResponse() throws Exception {
+    public void successExpiredResponse() {
         String response = payment.successExpiredCancel();
         assertThat(response).isNotEmpty()
                 .contains("<?xml version=\"1.0\" encoding=\"" + mapper.getCharset() + "\"?>")
@@ -207,7 +284,7 @@ public class PayEasyTest {
     }
 
     @Test
-    public void failExpiredResponse() throws Exception {
+    public void failExpiredResponse() {
         String errMsg = "エラー発生";
         String response = payment.failExpiredCancel(errMsg);
         assertThat(response).isNotEmpty()

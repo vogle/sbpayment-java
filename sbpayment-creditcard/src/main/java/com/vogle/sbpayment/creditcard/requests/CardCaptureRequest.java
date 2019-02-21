@@ -23,6 +23,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import lombok.Data;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
@@ -65,6 +66,7 @@ public class CardCaptureRequest implements SpsRequest<DefaultResponse> {
     @JacksonXmlProperty(localName = "processing_datetime")
     private String processingDatetime;
 
+    @Valid
     @JacksonXmlProperty(localName = "pay_option_manage")
     private CardCaptureOptions payOptions;
 
@@ -76,7 +78,6 @@ public class CardCaptureRequest implements SpsRequest<DefaultResponse> {
     @JacksonXmlProperty(localName = "limit_second")
     private Integer limitSecond;
 
-    @NotEmpty
     @Size(max = 40)
     @JacksonXmlProperty(localName = "sps_hashcode")
     private String spsHashcode;

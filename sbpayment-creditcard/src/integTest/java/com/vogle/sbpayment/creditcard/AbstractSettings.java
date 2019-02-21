@@ -16,7 +16,6 @@
 
 package com.vogle.sbpayment.creditcard;
 
-import com.vogle.sbpayment.client.DefaultSbpayment;
 import com.vogle.sbpayment.client.Sbpayment;
 
 import java.io.File;

@@ -44,6 +44,12 @@ import com.vogle.sbpayment.creditcard.responses.LegacyCardInfoUpdateResponse;
  **/
 public interface CreditCardPayment {
 
+    /**
+     * Gets default credit-card payment service
+     *
+     * @param sbpayment      The {@link Sbpayment}
+     * @param enableFeatures Will be able to enable some features by {@link CardPayFeature}
+     */
     static CreditCardPayment newInstance(Sbpayment sbpayment, CardPayFeature... enableFeatures) {
         return new DefaultCreditCardPayment(sbpayment, enableFeatures);
     }

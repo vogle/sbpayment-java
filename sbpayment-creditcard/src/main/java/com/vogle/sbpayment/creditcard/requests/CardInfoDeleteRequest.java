@@ -67,7 +67,6 @@ public class CardInfoDeleteRequest implements SpsRequest<CardInfoDeleteResponse>
     @JacksonXmlProperty(localName = "limit_second")
     private Integer limitSecond;
 
-    @NotEmpty
     @Size(max = 40)
     @JacksonXmlProperty(localName = "sps_hashcode")
     private String spsHashcode;
