@@ -30,6 +30,7 @@ import lombok.Data;
 
 import java.util.List;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
@@ -117,17 +118,20 @@ public class LegacyCardAuthorizeRequest implements SpsRequest<CardAuthorizeRespo
     @JacksonXmlProperty(localName = "sps_cust_info_return_flg")
     private String spsCustInfoReturnFlg;
 
+    @Valid
     @MultiByteString
     @JacksonXmlElementWrapper(localName = "dtls")
     @JacksonXmlProperty(localName = "dtl")
     private List<PayDetail> payDetails;
 
+    @Valid
     @NotNull
     @CipherString
     @MultiByteString
     @JacksonXmlProperty(localName = "pay_method_info")
     private LegacyCardAuthorizeMethod payMethod;
 
+    @Valid
     @NotNull
     @JacksonXmlProperty(localName = "pay_option_manage")
     private LegacyCardAuthorizeOptions payOptions;
@@ -144,7 +148,6 @@ public class LegacyCardAuthorizeRequest implements SpsRequest<CardAuthorizeRespo
     @JacksonXmlProperty(localName = "limit_second")
     private Integer limitSecond;
 
-    @NotEmpty
     @Size(max = 40)
     @JacksonXmlProperty(localName = "sps_hashcode")
     private String spsHashcode;

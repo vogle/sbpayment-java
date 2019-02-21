@@ -73,8 +73,8 @@ import java.util.List;
  *
  * @author Allan Im
  */
-public class DefaultCreditCardPayment implements CreditCardPayment {
 
+public class DefaultCreditCardPayment implements CreditCardPayment {
     private final SpsClient client;
     private final String returnCustomerInfo;
     private final String returnCardBrand;

@@ -25,6 +25,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import lombok.Data;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -64,12 +65,14 @@ public class LegacyCardInfoUpdateRequest implements SpsRequest<LegacyCardInfoUpd
     @JacksonXmlProperty(localName = "sps_cust_info_return_flg")
     private String spsCustInfoReturnFlg;
 
+    @Valid
     @NotNull
     @CipherString
     @MultiByteString
     @JacksonXmlProperty(localName = "pay_method_info")
     private LegacyCardInfoMethod payMethod;
 
+    @Valid
     @JacksonXmlProperty(localName = "pay_option_manage")
     private LegacyCardInfoOptions payOptions;
 
@@ -85,7 +88,6 @@ public class LegacyCardInfoUpdateRequest implements SpsRequest<LegacyCardInfoUpd
     @JacksonXmlProperty(localName = "limit_second")
     private Integer limitSecond;
 
-    @NotEmpty
     @Size(max = 40)
     @JacksonXmlProperty(localName = "sps_hashcode")
     private String spsHashcode;

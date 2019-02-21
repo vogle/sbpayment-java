@@ -43,6 +43,9 @@ public class SpsSecurity {
     private static final char SPACE = ' ';
     private static final String ALGORITHM = "DESede/CBC/NoPadding";
 
+    private SpsSecurity() {
+    }
+
     /**
      * Encrypt the source.
      *
@@ -93,7 +96,7 @@ public class SpsSecurity {
 
         try {
             // アルゴリズム：3DES-CBC（Padding なし）
-            Cipher cipher = Cipher.getInstance("DESede/CBC/NoPadding");
+            Cipher cipher = Cipher.getInstance(ALGORITHM);
             cipher.init(Cipher.DECRYPT_MODE, toSecretKey(desKey), toAlgorithmParameterSpec(initKey));
 
             // BASE64 デコーダ

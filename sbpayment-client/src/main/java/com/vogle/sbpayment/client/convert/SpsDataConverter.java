@@ -50,6 +50,9 @@ public class SpsDataConverter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SpsDataConverter.class);
 
+    private SpsDataConverter() {
+    }
+
     /**
      * If the filed has {@link MultiByteString}, It is doing Base64Encoding<br/>
      * フィールドへ{@link MultiByteString}が付いている場合、Base64Encodingする。
@@ -113,6 +116,10 @@ public class SpsDataConverter {
         }
     }
 
+    private static String encodeToString(Charset charsetName, String value) {
+        return Base64.getEncoder().encodeToString(value.getBytes(charsetName));
+    }
+
     /**
      * Encrypt the source
      *
@@ -155,10 +162,6 @@ public class SpsDataConverter {
                 }
             }
         }
-    }
-
-    private static String encodeToString(Charset charsetName, String value) {
-        return Base64.getEncoder().encodeToString(value.getBytes(charsetName));
     }
 
     /**

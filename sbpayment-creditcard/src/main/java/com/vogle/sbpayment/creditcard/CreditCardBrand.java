@@ -23,7 +23,12 @@ package com.vogle.sbpayment.creditcard;
  **/
 public enum CreditCardBrand {
 
-    JCB("J"), VISA("V"), MASTER("M"), AMEX("A"), DINERS("D"), OTHER("X");
+    JCB("J"),
+    VISA("V"),
+    MASTER("M"),
+    AMEX("A"),
+    DINERS("D"),
+    OTHER("X");
 
     private String spsCardbrandCode;
 

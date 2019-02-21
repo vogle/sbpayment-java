@@ -30,11 +30,9 @@ import javax.validation.constraints.Pattern;
 @Data
 public class CardAuthorizeOptions {
 
-    @NotEmpty
     @JacksonXmlProperty(localName = "token")
     private String token;
 
-    @NotEmpty
     @JacksonXmlProperty(localName = "token_key")
     private String tokenKey;
 

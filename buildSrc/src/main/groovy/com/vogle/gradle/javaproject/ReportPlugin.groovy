@@ -2,6 +2,7 @@ package com.vogle.gradle.javaproject
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.plugins.ProjectReportsPlugin
 import org.gradle.api.tasks.testing.Test
 import org.gradle.api.tasks.testing.TestReport
 import org.gradle.testing.jacoco.plugins.JacocoPlugin
@@ -22,6 +23,14 @@ class ReportPlugin implements Plugin<Project> {
     @Override
     void apply(Project project) {
 
+        // add project report
+        project.plugins.apply(ProjectReportsPlugin)
+        if (project.rootProject == project) {
+            project.htmlDependencyReport {
+                projects = project.allprojects
+            }
+        }
+
         // add generating test report task
         addAllTestRootReportTask(project)
 
@@ -35,9 +44,6 @@ class ReportPlugin implements Plugin<Project> {
      */
     def applyJacoco = { Project project ->
         project.plugins.apply(JacocoPlugin)
-        project.jacoco {
-            toolVersion = '0.8.+'
-        }
         if (project.hasProperty('jacocoTestReport')) {
             project.jacocoTestReport {
                 reports {

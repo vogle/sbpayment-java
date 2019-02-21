@@ -30,6 +30,9 @@ import java.util.List;
  **/
 public class RequestHelper {
 
+    private RequestHelper() {
+    }
+
     /**
      * convert Item to Pay detail
      *

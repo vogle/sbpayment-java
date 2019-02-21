@@ -105,6 +105,7 @@ public class DefaultSpsClient implements SpsClient {
     @Override
     public <T extends SpsResponse> SpsResult<T> execute(SpsRequest<T> request) {
         Asserts.notNull(request, "The request");
+        ValidationHelper.beanValidate(request);
 
         Charset charset = mapper.getCharset();
         try {

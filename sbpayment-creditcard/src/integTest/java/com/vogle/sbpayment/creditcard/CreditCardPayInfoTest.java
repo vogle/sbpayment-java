@@ -53,7 +53,7 @@ public class CreditCardPayInfoTest extends AbstractSettings {
     }
 
     @Test
-    public void payLumpSumAndNumberLower4() throws Exception {
+    public void payLumpSumAndNumberLower4() {
         PaymentInfo paymentInfo = getDefaultPaymentInfo();
         ByCreditCard creditCard = getDefaultPayCreditCard().build();
 
@@ -61,7 +61,6 @@ public class CreditCardPayInfoTest extends AbstractSettings {
         SpsResult<CardTranLookupResponse> lookup = testPay(paymentInfo, creditCard, CardInfoResponseType.LOWER4);
 
         PayMethodInfoDetail detail = lookup.getBody().getPayMethodInfo().getPayMethodInfoDetail();
-        assertThat(detail).isNotNull();
         assertThat(detail.getCcNumber()).isNotEmpty();
         assertThat(detail.getCcNumber().startsWith("****")).isTrue();
         assertThat(detail.getCcNumber().endsWith("3312")).isTrue();
@@ -83,8 +82,6 @@ public class CreditCardPayInfoTest extends AbstractSettings {
         SpsResult<CardTranLookupResponse> lookup = testPay(paymentInfo, creditCard, CardInfoResponseType.ALL_MASK);
 
         PayMethodInfoDetail detail = lookup.getBody().getPayMethodInfo().getPayMethodInfoDetail();
-        assertThat(detail).isNotNull();
-        assertThat(detail.getCcNumber()).isNotEmpty();
         assertThat(detail.getCcNumber().startsWith("****")).isTrue();
         assertThat(detail.getCcNumber().endsWith("****")).isTrue();
         assertThat(detail.getCcExpiration()).isEqualTo("202412");
@@ -105,8 +102,6 @@ public class CreditCardPayInfoTest extends AbstractSettings {
         SpsResult<CardTranLookupResponse> lookup = testPay(paymentInfo, creditCard, CardInfoResponseType.ALL_MASK);
 
         PayMethodInfoDetail detail = lookup.getBody().getPayMethodInfo().getPayMethodInfoDetail();
-        assertThat(detail).isNotNull();
-        assertThat(detail.getCcNumber()).isNotEmpty();
         assertThat(detail.getCcNumber().startsWith("****")).isTrue();
         assertThat(detail.getCcNumber().endsWith("****")).isTrue();
         assertThat(detail.getCcExpiration()).isEqualTo("202412");
@@ -127,8 +122,6 @@ public class CreditCardPayInfoTest extends AbstractSettings {
         SpsResult<CardTranLookupResponse> lookup = testPay(paymentInfo, creditCard, CardInfoResponseType.ALL_MASK);
 
         PayMethodInfoDetail detail = lookup.getBody().getPayMethodInfo().getPayMethodInfoDetail();
-        assertThat(detail).isNotNull();
-        assertThat(detail.getCcNumber()).isNotEmpty();
         assertThat(detail.getCcNumber().startsWith("****")).isTrue();
         assertThat(detail.getCcNumber().endsWith("****")).isTrue();
         assertThat(detail.getCcExpiration()).isEqualTo("202412");

@@ -14,30 +14,23 @@
  * limitations under the License.
  */
 
-package com.vogle.sbpayment.payeasy.responses;
+package com.vogle.sbpayment.creditcard.params;
 
-import java.util.HashMap;
-import java.util.Map;
+import org.junit.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * PayEasy features lists
+ * Tests for {@link CardInfoResponseType}
  *
  * @author Allan Im
- **/
-class FeatureHelper {
+ */
+public class CardInfoResponseTypeTest {
 
-    private static Map<String, String> descMap = new HashMap<>();
-
-    private FeatureHelper() {
-    }
-
-    static {
-        descMap.put("ST01-00101-703", "PayEasy Payment");
-        descMap.put("NT01-00103-703", "PayEasy Deposit Notice");
-        descMap.put("NT01-00104-703", "PayEasy Expired Notice");
-    }
-
-    static String getDescription(String id) {
-        return descMap.get(id);
+    @Test
+    public void code() {
+        assertThat(CardInfoResponseType.NONE.code()).endsWith("0");
+        assertThat(CardInfoResponseType.ALL_MASK.code()).endsWith("1");
+        assertThat(CardInfoResponseType.LOWER4.code()).endsWith("2");
     }
 }
