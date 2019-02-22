@@ -74,7 +74,7 @@ configure(javaprojects) {
         config = rootProject.resources.text.fromFile('config/vogle-checkstyle.xml')
     }
     pmd {
-        toolVersion = '6.11'
+        toolVersion = '6.11.0'
         ruleSetConfig = rootProject.resources.text.fromFile('config/vogle-ruleset-6.11.x.xml')
     }
 
