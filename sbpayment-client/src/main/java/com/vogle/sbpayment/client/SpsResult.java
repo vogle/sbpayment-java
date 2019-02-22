@@ -70,8 +70,8 @@ public class SpsResult<T extends SpsResponse> {
      * Create a new {@code HttpEntity} with the given body and headers.
      *
      * @param status  the entity status
-     * @param body    the entity body
      * @param headers the entity headers
+     * @param body    the entity body
      */
     public SpsResult(int status, Map<String, String> headers, T body) {
         this.status = status;

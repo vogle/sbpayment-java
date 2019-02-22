@@ -17,14 +17,14 @@ checks:
   return-statements:
     enabled: false # Handled by PMD
   similar-code:
-    enabled: false # Handled by PMD
+    enabled: false
   identical-code:
-    enabled: true
+    enabled: false
 plugins:
   checkstyle:
     enabled: true
-#    config:
-#      file: 'config/vogle-checkstyle.xml'
+    config:
+      file: 'config/vogle-checkstyle.xml'
   pmd:
     enabled: true
     config:
@@ -34,6 +34,7 @@ plugins:
     config:
       sonar.java.source: 8
 exclude_patterns:
+  - 'config/'
   - '**/dist/'
   - '**/build/'
   - '**/test/'
