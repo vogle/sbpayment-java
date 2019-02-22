@@ -17,11 +17,9 @@ checks:
   return-statements:
     enabled: false # Handled by PMD
   similar-code:
-    enabled: false # Handled by PMD
+    enabled: true
   identical-code:
     enabled: true
-    config:
-      threshold: 30
 plugins:
   checkstyle:
     enabled: true
