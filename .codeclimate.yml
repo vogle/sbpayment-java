@@ -20,11 +20,13 @@ checks:
     enabled: false # Handled by PMD
   identical-code:
     enabled: true
+    config:
+      threshold: 30
 plugins:
   checkstyle:
     enabled: true
-#    config:
-#      file: 'config/vogle-checkstyle.xml'
+    config:
+      file: 'config/vogle-checkstyle.xml'
   pmd:
     enabled: true
     config:
@@ -34,6 +36,7 @@ plugins:
     config:
       sonar.java.source: 8
 exclude_patterns:
+  - 'config/'
   - '**/dist/'
   - '**/build/'
   - '**/test/'
