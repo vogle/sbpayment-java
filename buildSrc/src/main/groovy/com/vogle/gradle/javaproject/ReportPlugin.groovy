@@ -87,7 +87,9 @@ class ReportPlugin implements Plugin<Project> {
                 executionData project.fileTree(project.rootDir.absolutePath).include("**/build/jacoco/*.exec")
 
                 project.subprojects.each {
-                    sourceSets it.sourceSets.main
+                    if (it.tasks.withType(JacocoReport)) {
+                        sourceSets it.sourceSets.main
+                    }
                 }
 
                 reports {
