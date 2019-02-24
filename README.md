@@ -1,8 +1,8 @@
 # <img src="https://service.biztex.co.jp/wp-content/uploads/2018/08/SB-PaymentService_logo-3-1024x129.png" height="50">&nbsp;<sub>for <img src="https://simpleicons.org/icons/java.svg" height="40"/>JAVA</sub>
 
+[![Japanese](https://img.shields.io/badge/ReadMe-%E6%97%A5%E6%9C%AC%E8%AA%9E-yellow.svg)](README_JA.md)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.vogle.sbpayment/sbpayment-client/badge.svg?service=github)](https://search.maven.org/search?q=g:com.vogle.sbpayment)
 [![Javadocs](http://javadoc.io/badge/com.vogle.sbpayment/sbpayment-client.svg)](http://javadoc.io/doc/com.vogle.sbpayment/sbpayment-client)
-[![Nexus Staging](https://img.shields.io/nexus/s/https/oss.sonatype.org/com.vogle.sbpayment/sbpayment-client.svg?style=flat)](https://oss.sonatype.org/#nexus-search;quick~com.vogle.sbpayment)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0)
 [![Join the chat at https://gitter.im/vogle/sbpayment](https://badges.gitter.im/vogle/sbpayment.svg)](https://gitter.im/vogle/sbpayment)
 
@@ -13,6 +13,7 @@
 [![CodeFactor](https://www.codefactor.io/repository/github/vogle/sbpayment-java/badge)](https://www.codefactor.io/repository/github/vogle/sbpayment-java)
 [![Maintainability](https://api.codeclimate.com/v1/badges/c27bba1102704c1853dc/maintainability)](https://codeclimate.com/github/vogle/sbpayment-java/maintainability)
 [![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=com.vogle.sbpayment%3Asbpayment-java&metric=sqale_index)](https://sonarcloud.io/dashboard?id=com.vogle.sbpayment%3Asbpayment-java)
+
 
 
 Sbpayment for JAVA makes it easy to use the API type of [SB-Payment Service](https://www.sbpayment.jp/) using JAVA.
@@ -35,6 +36,8 @@ dependencies {
     implementation 'com.vogle.sbpayment:sbpayment-creditcard:1.+'
     // payeasy
     implementation 'com.vogle.sbpayment:sbpayment-payeasy:1.+'
+    // if you use spring boot
+    implementation 'com.vogle.sbpayment:sbpayment-spring-boot-starter:1.+'
 }
 ```
 
@@ -53,8 +56,23 @@ dependencies {
     <artifactId>sbpayment-payeasy</artifactId>
     <version>1.0.0</version>
   </dependency>
+  <!--if you use spring boot-->
+    <dependency>
+      <groupId>com.vogle.sbpayment</groupId>
+      <artifactId>sbpayment-spring-boot-starter</artifactId>
+      <version>1.0.0</version>
+    </dependency>
 </dependencies>
 ```
+
+#### Modules
+| Module | Maven Central | JavaDoc |
+| ------------- | ------------- | ------------- |
+| Client | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.vogle.sbpayment/sbpayment-client/badge.svg?service=github)](https://maven-badges.herokuapp.com/maven-central/com.vogle.sbpayment/sbpayment-client) | [![Javadocs](http://javadoc.io/badge/com.vogle.sbpayment/sbpayment-client.svg)](http://javadoc.io/doc/com.vogle.sbpayment/sbpayment-client) |
+| Credit Card | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.vogle.sbpayment/sbpayment-creditcard/badge.svg?service=github)](https://maven-badges.herokuapp.com/maven-central/com.vogle.sbpayment/sbpayment-creditcard) | [![Javadocs](http://javadoc.io/badge/com.vogle.sbpayment/sbpayment-creditcard.svg)](http://javadoc.io/doc/com.vogle.sbpayment/sbpayment-creditcard) |
+| Pay-Easy | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.vogle.sbpayment/sbpayment-payeasy/badge.svg?service=github)](https://maven-badges.herokuapp.com/maven-central/com.vogle.sbpayment/sbpayment-payeasy) | [![Javadocs](http://javadoc.io/badge/com.vogle.sbpayment/sbpayment-payeasy.svg)](http://javadoc.io/doc/com.vogle.sbpayment/sbpayment-payeasy) |
+| Spring Boot Starter | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.vogle.sbpayment/sbpayment-spring-boot-starter/badge.svg?service=github)](https://maven-badges.herokuapp.com/maven-central/com.vogle.sbpayment/sbpayment-spring-boot-starter) | [![Javadocs](http://javadoc.io/badge/com.vogle.sbpayment/sbpayment-spring-boot-starter.svg)](http://javadoc.io/doc/com.vogle.sbpayment/sbpayment-spring-boot-starter) |
+
 
 ## Building from Source
 Execute `./gradlew build -x integTest` in the root directory.

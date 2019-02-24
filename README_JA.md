@@ -1,8 +1,8 @@
 # <img src="https://service.biztex.co.jp/wp-content/uploads/2018/08/SB-PaymentService_logo-3-1024x129.png" height="50">&nbsp;<sub>for <img src="https://simpleicons.org/icons/java.svg" height="40"/>JAVA</sub>
 
+[![English](https://img.shields.io/badge/ReadMe-English-yellow.svg)](README.md)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.vogle.sbpayment/sbpayment-client/badge.svg?service=github)](https://search.maven.org/search?q=g:com.vogle.sbpayment)
 [![Javadocs](http://javadoc.io/badge/com.vogle.sbpayment/sbpayment-client.svg)](http://javadoc.io/doc/com.vogle.sbpayment/sbpayment-client)
-[![Nexus Staging](https://img.shields.io/nexus/s/https/oss.sonatype.org/com.vogle.sbpayment/sbpayment-client.svg?style=flat)](https://oss.sonatype.org/#nexus-search;quick~com.vogle.sbpayment)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0)
 [![Join the chat at https://gitter.im/vogle/sbpayment](https://badges.gitter.im/vogle/sbpayment.svg)](https://gitter.im/vogle/sbpayment)
 
@@ -35,6 +35,8 @@ dependencies {
     implementation 'com.vogle.sbpayment:sbpayment-creditcard:1.+'
     // payeasy
     implementation 'com.vogle.sbpayment:sbpayment-payeasy:1.+'
+    // if you use spring boot
+    implementation 'com.vogle.sbpayment:sbpayment-spring-boot-starter:1.+'
 }
 ```
 
@@ -53,8 +55,23 @@ dependencies {
     <artifactId>sbpayment-payeasy</artifactId>
     <version>1.0.0</version>
   </dependency>
+  <!--if you use spring boot-->
+    <dependency>
+      <groupId>com.vogle.sbpayment</groupId>
+      <artifactId>sbpayment-spring-boot-starter</artifactId>
+      <version>1.0.0</version>
+    </dependency>
 </dependencies>
 ```
+
+#### モージュル
+| Module | Maven Central | JavaDoc |
+| ------------- | ------------- | ------------- |
+| Client | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.vogle.sbpayment/sbpayment-client/badge.svg?service=github)](https://maven-badges.herokuapp.com/maven-central/com.vogle.sbpayment/sbpayment-client) | [![Javadocs](http://javadoc.io/badge/com.vogle.sbpayment/sbpayment-client.svg)](http://javadoc.io/doc/com.vogle.sbpayment/sbpayment-client) |
+| Credit Card | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.vogle.sbpayment/sbpayment-creditcard/badge.svg?service=github)](https://maven-badges.herokuapp.com/maven-central/com.vogle.sbpayment/sbpayment-creditcard) | [![Javadocs](http://javadoc.io/badge/com.vogle.sbpayment/sbpayment-creditcard.svg)](http://javadoc.io/doc/com.vogle.sbpayment/sbpayment-creditcard) |
+| Pay-Easy | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.vogle.sbpayment/sbpayment-payeasy/badge.svg?service=github)](https://maven-badges.herokuapp.com/maven-central/com.vogle.sbpayment/sbpayment-payeasy) | [![Javadocs](http://javadoc.io/badge/com.vogle.sbpayment/sbpayment-payeasy.svg)](http://javadoc.io/doc/com.vogle.sbpayment/sbpayment-payeasy) |
+| Spring Boot Starter | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.vogle.sbpayment/sbpayment-spring-boot-starter/badge.svg?service=github)](https://maven-badges.herokuapp.com/maven-central/com.vogle.sbpayment/sbpayment-spring-boot-starter) | [![Javadocs](http://javadoc.io/badge/com.vogle.sbpayment/sbpayment-spring-boot-starter.svg)](http://javadoc.io/doc/com.vogle.sbpayment/sbpayment-spring-boot-starter) |
+
 
 ## プロジェクトソースからのビルド
 ルートディレクトリで `./gradlew build -x integTest`を実行してください。
