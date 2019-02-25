@@ -30,6 +30,19 @@ class CoverallsPlugin implements Plugin<ProjectInternal> {
             // create coveralls project extension
             project.extensions.create('coveralls', CoverallsPluginExtension)
 
+            // find coverage report and setup
+            String xmlDest = project.coveralls.jacocoReportPath
+            Set<JacocoReport> reports = project.tasks.withType(JacocoReport).findAll {
+                String path = it.reports.xml.destination
+                path.contains(xmlDest)
+            }
+            if (reports.isEmpty()) {
+                project.tasks.withType(JacocoReport).all { JacocoReport task ->
+                    project.coveralls.jacocoReportPath = task.reports.xml.destination
+                    project.coveralls.sourceDirs = task.getAllSourceDirs().flatten()
+                }
+            }
+
             // register coveralls task
             Task task = project.task('uploadJacocoToCoveralls', type: CoverallsTask)
 

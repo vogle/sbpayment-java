@@ -1,6 +1,7 @@
 package com.vogle.gradle
 
 import org.gradle.api.Action
+import org.gradle.api.GradleException
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
@@ -54,30 +55,44 @@ class CodacyPlugin implements Plugin<ProjectInternal> {
     def addTask = { Project project ->
         project.plugins.withType(JacocoPlugin) {
 
-            String token = project.findProperty(CODACY_PROJECT_TOKEN)
-            project.tasks.create('uploadJacocoToCodacy', JavaExec) {
-                group = 'reporting'
-                description = 'Upload Jacoco coverage to Codacy.'
+            // make arguments
+            List<String> args = new ArrayList<>()
+            args.add("report")
+            args.add("-l")
+            args.add("Java")
 
-                classpath = project.configurations.getByName(CODACY_CONFIGURATION_NAME)
-                dependsOn project.tasks.withType(JacocoReport).collect()
-
-                main = 'com.codacy.CodacyCoverageReporter'
-
-                if (token) {
-                    args = [
-                            "report",
-                            "-l", "Java",
-                            "-r", project.codacy.jacocoReportPath,
-                            "-t", token
-                    ]
-                } else {
-                    args = [
-                            "report",
-                            "-l", "Java",
-                            "-r", project.codacy.jacocoReportPath
-                    ]
+            // find coverage report and setup
+            String xmlDest = project.codacy.jacocoReportPath
+            if (!xmlDest) {
+                project.tasks.withType(JacocoReport).all { report ->
+                    xmlDest = report.reports.xml.destination
                 }
+            }
+            if (xmlDest) {
+                args.add("-r")
+                args.add(xmlDest)
+            } else {
+                throw new GradleException(
+                        "You have to JacocoReport, Either apply the Jacoco plugin or set up a report file")
+            }
+
+            // find token and set up
+            String token = project.findProperty(CODACY_PROJECT_TOKEN)
+            if (token) {
+                args.add("-t")
+                args.add(token)
+            }
+
+            // create task
+            project.tasks.create('uploadJacocoToCodacy', JavaExec) {
+                it.group = 'reporting'
+                it.description = 'Upload Jacoco coverage to Codacy.'
+
+                it.classpath = project.configurations.getByName(CODACY_CONFIGURATION_NAME)
+                it.dependsOn project.tasks.withType(JacocoReport).collect()
+
+                it.main = 'com.codacy.CodacyCoverageReporter'
+                it.args(args)
             }
         }
     }

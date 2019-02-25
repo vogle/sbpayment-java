@@ -36,10 +36,10 @@ jobs:
     script:
     - "./gradlew build"
     after_success:
-      - "./gradlew allTestReport jacocoCoverageReport"
-      - "./gradlew uploadJacocoToCoveralls -x jacocoCoverageReport"
-      - "./gradlew uploadJacocoToCodacy -x jacocoCoverageReport"
-      - "./gradlew sonarqube -x jacocoTestReport"
+      - ./gradlew allTestReport jacocoCoverageReport
+      - ./gradlew uploadJacocoToCoveralls -x jacocoCoverageReport
+      - ./gradlew uploadJacocoToCodacy -x jacocoCoverageReport
+      - git fetch --unshallow; ./gradlew sonarqube -x jacocoTestReport
       - chmod +x ./.codeclimate.sh; ./.codeclimate.sh
       - bash <(curl -s https://codecov.io/bash)
     if: NOT type IN (pull_request) AND branch = master
