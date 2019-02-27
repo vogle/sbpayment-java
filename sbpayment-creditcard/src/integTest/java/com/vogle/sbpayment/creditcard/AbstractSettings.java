@@ -40,6 +40,7 @@ abstract class AbstractSettings {
             p.load(new FileInputStream(System.getProperty("user.dir") + File.separator
                     + "../config/it1.properties"));
         } catch (IOException ignored) {
+            // ignored
         }
 
         sbpayment = Sbpayment.newInstance(p);

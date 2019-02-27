@@ -72,6 +72,7 @@ public class SbpaymentTest {
             properties.load(Thread.currentThread().getContextClassLoader()
                     .getResourceAsStream("test.properties"));
         } catch (IOException ignored) {
+            // ignored
         }
 
         // when

@@ -57,6 +57,7 @@ public class DefaultSbpayment implements Sbpayment {
         try {
             properties.load(inputStream);
         } catch (IOException ignored) {
+            // ignored
         }
         this.config = SpsConfig.from(properties);
     }

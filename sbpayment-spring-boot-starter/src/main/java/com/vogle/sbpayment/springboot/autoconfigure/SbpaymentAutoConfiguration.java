@@ -16,13 +16,11 @@
 
 package com.vogle.sbpayment.springboot.autoconfigure;
 
-import com.vogle.sbpayment.client.DefaultSbpayment;
 import com.vogle.sbpayment.client.Sbpayment;
 import com.vogle.sbpayment.client.SpsClient;
 import com.vogle.sbpayment.client.SpsConfig;
 import com.vogle.sbpayment.creditcard.CardPayFeature;
 import com.vogle.sbpayment.creditcard.CreditCardPayment;
-import com.vogle.sbpayment.creditcard.DefaultCreditCardPayment;
 import com.vogle.sbpayment.payeasy.LinkType;
 import com.vogle.sbpayment.payeasy.OnlineType;
 import com.vogle.sbpayment.payeasy.PayEasyPayment;
@@ -37,7 +35,6 @@ import org.springframework.context.annotation.Configuration;
 
 import java.nio.charset.Charset;
 import java.util.HashSet;
-import java.util.Properties;
 import java.util.Set;
 import java.util.TimeZone;
 
@@ -91,7 +88,7 @@ public class SbpaymentAutoConfiguration {
     @ConditionalOnMissingBean
     @ConditionalOnClass(CreditCardPayment.class)
     @ConditionalOnBean(Sbpayment.class)
-    @ConditionalOnProperty(prefix = "sbpayment.creditcard", name = "disabled", havingValue = "false",
+    @ConditionalOnProperty(prefix = "sbpayment.creditcard", name = "enabled", havingValue = "true",
             matchIfMissing = true)
     public CreditCardPayment creditCardPayment(SbpaymentProperties properties, Sbpayment sbpayment) {
         CreditCard creditCard = properties.getCreditcard();
@@ -119,7 +116,7 @@ public class SbpaymentAutoConfiguration {
     @ConditionalOnMissingBean
     @ConditionalOnClass(PayEasyPayment.class)
     @ConditionalOnBean(Sbpayment.class)
-    @ConditionalOnProperty(prefix = "sbpayment.payeasy", name = "disabled", havingValue = "false",
+    @ConditionalOnProperty(prefix = "sbpayment.payeasy", name = "enabled", havingValue = "true",
             matchIfMissing = true)
     public PayEasyPayment payEasyPayment(SbpaymentProperties properties, Sbpayment sbpayment) {
         PayEasy payEasy = properties.getPayeasy();

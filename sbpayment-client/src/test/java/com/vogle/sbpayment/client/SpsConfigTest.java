@@ -41,6 +41,7 @@ public class SpsConfigTest {
             properties.load(Thread.currentThread().getContextClassLoader()
                     .getResourceAsStream("config_test.properties"));
         } catch (IOException ignored) {
+            // ignored
         }
 
         // when

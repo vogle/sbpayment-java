@@ -65,6 +65,7 @@ public class PayEasyTest {
             p.load(new FileInputStream(System.getProperty("user.dir") + File.separator
                     + "../config/it2.properties"));
         } catch (IOException ignored) {
+            // ignored
         }
 
         merchantId = (String) p.get("sbpayment.merchantId");

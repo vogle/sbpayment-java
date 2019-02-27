@@ -138,6 +138,7 @@ public class SpsConfig {
                         Method method = SpsConfigBuilder.class.getMethod(key, String.class);
                         method.invoke(builder, (String) value);
                     } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException ignored) {
+                        // ignored
                     }
                 }
             }

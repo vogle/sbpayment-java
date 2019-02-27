@@ -230,6 +230,7 @@ public class SpsDataConverter {
                     setValueTo(source, field, enabled ? "1" : "0");
                 }
             } catch (NoSuchFieldException ignored) {
+                // ignored
             }
 
         }
