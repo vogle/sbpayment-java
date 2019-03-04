@@ -1,7 +1,7 @@
 plugins {
     id 'com.diffplug.gradle.spotless' version '3.17.0' apply false
-    id 'com.gradle.build-scan' version '2.1'
-    id "org.sonarqube" version '2.7'
+    id 'com.gradle.build-scan' version '2.2.1'
+    id 'org.sonarqube' version '2.7'
     id 'nebula.release' version '9.2.0'
 }
 
@@ -12,6 +12,20 @@ ext {
 
     javaprojects = subprojects.findAll { new File(it.projectDir, 'src/main/java').directory }
     publishedprojects = javaprojects.findAll { !it.name.contains('sample') }
+}
+
+buildScan {
+    termsOfServiceUrl = 'https://gradle.com/terms-of-service'
+    termsOfServiceAgree = 'yes'
+
+    if (System.getenv('CI')) {
+        tag 'CI'
+        link "CI build", System.getenv("BUILD_URL")
+    } else {
+        tag 'Local'
+    }
+
+    tag System.getProperty('os.name')
 }
 
 // Configuration to apply to all the projects
