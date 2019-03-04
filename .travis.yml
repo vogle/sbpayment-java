@@ -34,7 +34,7 @@ jobs:
         token:
           secure: "$SONAR_TOKEN"
     script:
-    - "./gradlew build"
+    - "./gradlew build --scan"
     after_success:
       - ./gradlew allTestReport jacocoCoverageReport
       - ./gradlew uploadJacocoToCoveralls -x jacocoCoverageReport
