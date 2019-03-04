@@ -5,6 +5,7 @@
 [![Javadocs](http://javadoc.io/badge/com.vogle.sbpayment/sbpayment-client.svg)](http://javadoc.io/doc/com.vogle.sbpayment/sbpayment-client)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0)
 [![Join the chat at https://gitter.im/vogle/sbpayment](https://badges.gitter.im/vogle/sbpayment.svg)](https://gitter.im/vogle/sbpayment)
+[![Gradle Scan](https://img.shields.io/badge/Gradle-Scan-blue.svg)](https://vogle.page.link/scan)
 
 [![Build Status](https://travis-ci.org/vogle/sbpayment-java.svg?branch=master)](https://travis-ci.org/vogle/sbpayment-java)
 [![Coveralls](https://img.shields.io/coveralls/github/vogle/sbpayment-java.svg)](https://coveralls.io/github/vogle/sbpayment-java?branch=master)
