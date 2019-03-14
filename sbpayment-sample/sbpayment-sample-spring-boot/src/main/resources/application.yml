@@ -1,0 +1,6 @@
+spring:
+  devtools:
+    restart:
+      exclude: public/**
+  thymeleaf:
+    cache: false
