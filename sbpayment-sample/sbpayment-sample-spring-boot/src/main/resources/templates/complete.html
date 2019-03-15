@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Sbpayment Spring-Boot Sample</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" th:href="@{css/style.css}">
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+            crossorigin="anonymous"></script>
+
+</head>
+
+<body>
+<div class="container-fluid">
+    <div class="header m-3">
+        <h1><img src="https://gravatar.com/userimage/110059180/7c4c2d37772675fc66900248f5da5500.png?size=50"
+                 class="mr-3" alt=""/>sbpayment-sample-spring-boot</h1>
+    </div>
+
+    <div class="card">
+        <div class="card-header" th:text="${title}">
+            Featured
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">Headers</h5>
+            <div class="card-text mb-3">
+                <table class="table table-sm">
+                    <thead>
+                    <tr>
+                        <th scope="col">Item</th>
+                        <th scope="col">Value</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="header : ${headers}">
+                        <td th:text="${header.key}">key</td>
+                        <td th:text="${header.value}">value</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <h5 class="card-title">Body</h5>
+            <div class="card-text mb-3">
+                <table class="table table-sm">
+                    <thead>
+                    <tr>
+                        <th scope="col">Item</th>
+                        <th scope="col">Value</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="body : ${bodyMap}" th:if="${body.key ne 'payMethodInfo'}">
+                        <td th:text="${body.key}">key</td>
+                        <td th:text="${body.value}">value</td>
+                    </tr>
+                    <tr th:each="pay : ${bodyMap.get('payMethodInfo')}">
+                        <td th:text="${pay.key}">key</td>
+                        <td th:text="${pay.value}">value</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <a href="#" class="btn btn-primary">Go somewhere</a>
+        </div>
+    </div>
+</div>
+
+</body>
+
+</html>

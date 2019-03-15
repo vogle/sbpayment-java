@@ -144,6 +144,12 @@ public class SbpaymentProperties {
         private boolean enabled = true;
 
         /**
+         * Token JS URL. <br/>
+         * TokenサビースのJSのURL
+         */
+        private String tokenUrl;
+
+        /**
          * 顧客コードを送るとき、SBPS 顧客情報を返却する
          */
         private boolean customerInfoReturn;

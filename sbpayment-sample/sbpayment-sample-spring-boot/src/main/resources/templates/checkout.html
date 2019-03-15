@@ -1,130 +1,185 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
-    <title>Bootstrap Checkout Sample</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"
-            type="text/javascript"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+    <title>Sbpayment Spring-Boot Sample</title>
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" th:href="@{css/style.css}">
 
-    <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css'>
-    <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap-theme.min.css'>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+            crossorigin="anonymous"></script>
 
-    <link rel="stylesheet" href="css/style.css">
+    <script th:if="${hasCreditCard}" type="text/javascript" th:src="${spsTokenUrl}"></script>
+    <script th:if="${hasCreditCard}" type="text/javascript">
+        function token() {
+            var merchantId = String($("body").data("merchant-id"));
+            var serviceId= String($("body").data("service-id"));
+            var ccNumber= String($("#cc-number").val());
+            var ccExpiration= String($("#cc-expiration").val());
+            var securityCode= String($("#cc-cvv").val());
 
+            com_sbps_system.generateToken({
+                merchantId: merchantId,
+                serviceId: serviceId,
+                ccNumber: ccNumber,
+                ccExpiration: ccExpiration,
+                securityCode: securityCode
+            }, self.afterGenerateToken);
+        }
+
+        var afterGenerateToken = function (response) {
+            console.log(response);
+            if (response.result === "OK") {
+                $("#token").val(response.tokenResponse.token);
+                $("#tokenKey").val(response.tokenResponse.tokenKey);
+                $("#payNewCard").submit();
+            } else {
+                alert('Fail');
+            }
+        }
+    </script>
 
 </head>
 
-<body>
-
+<body th:data-merchant-id="${merchantId}" th:data-service-id="${serviceId}">
 <div class="container-fluid">
-    <div class="page-header">
-        <h1>Checkout</h1>
+    <div class="header m-3">
+        <h1><img src="https://gravatar.com/userimage/110059180/7c4c2d37772675fc66900248f5da5500.png?size=50"
+                 class="mr-3" alt=""/>sbpayment-sample-spring-boot</h1>
     </div>
-    <div class="row">
-        <div class="col-xs-12">
-            <h3>I'll pay with&hellip;</h3>
-            <div class="list-group">
-                <!-- my card -->
-                <div class="list-group-item">
-                    <div class="list-group-item-heading">
-                        <div class="row radio">
-                            <div class="col-xs-3">
-                                <label>
-                                    <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2"
-                                           checked>
-                                    My Visa Card
-                                </label>
-                            </div>
-                            <div class="col-xs-9">
-                                <div class="row">
-                                    <div class="col-xs-4">
-                                        <dl class="dl-small">
-                                            <dt>Credit Card Number</dt>
-                                            <dd>**********1111</dd>
-                                        </dl>
-                                    </div>
-                                    <div class="col-xs-2">
-                                        <dl class="dl-small">
-                                            <dt>Expiration</dt>
-                                            <dd>07/2016</dd>
-                                        </dl>
-                                    </div>
-                                    <div class="col-xs-6">
-                                        <dl class="dl-small">
-                                            <dt>Billing Address</dt>
-                                            <dd>1509 Latona St, Philadelphia, PA 19146</dd>
-                                        </dl>
-                                    </div>
-                                </div>
-                                <button class="btn btn-sm">Edit</button>
-                                <button class="btn btn-sm btn-link">Delete this card</button>
-                            </div>
+
+    <div class="accordion" id="paymentList">
+        <!-- saved card -->
+        <div th:if="${hasSavedCard}" class="card">
+            <div class="card-header" id="myCard">
+                <h2 class="mb-0">
+                    <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseMyCard"
+                            aria-expanded="true" aria-controls="collapseMyCard">
+                        My Credit Card
+                    </button>
+                </h2>
+            </div>
+
+            <div id="collapseMyCard" class="collapse show" aria-labelledby="myCard" data-parent="#paymentList">
+                <div class="card-body media">
+                    <img src="http://www.sbpayment.jp/images/specification/index_creditcard.png"
+                         height="85" alt="" class="mr-3"/>
+
+                    <div class="media-body">
+                        <div class="mb-3">
+                            SBペイメントへ保存されているカード番号や有効期限などを利用して、商品等の代金支払いを行うことができます。
                         </div>
+
+                        <dl class="mt-3">
+                            <dt>Credit Card Number</dt>
+                            <dd>**********1111</dd>
+                            <dt>Expiration</dt>
+                            <dd>07/2016</dd>
+                        </dl>
+
+                        <button type="button" class="btn btn-primary btn-sm btn-block">Checkout by my credit card
+                        </button>
                     </div>
                 </div>
+            </div>
+        </div>
 
-                <!-- card -->
-                <div class="list-group-item">
-                    <div class="list-group-item-heading">
-                        <div class="row radio">
-                            <div class="col-xs-3">
-                                <label data-toggl-e="collapse" data-target="#newcard">
-                                    <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
-                                    A New Credit Card
-                                </label>
+        <!-- credit card -->
+        <div th:if="${hasCreditCard}" class="card">
+            <div class="card-header" id="newCard">
+                <h2 class="mb-0">
+                    <button class="btn btn-link collapsed" type="button" data-toggle="collapse"
+                            data-target="#collapseNewCard" aria-expanded="false" aria-controls="collapseNewCard">
+                        New Credit Card
+                    </button>
+                </h2>
+            </div>
+            <div id="collapseNewCard" class="collapse" aria-labelledby="newCard" data-parent="#paymentList">
+                <div class="card-body">
+                    <div class="media">
+                        <img src="http://www.sbpayment.jp/images/specification/index_creditcard.png"
+                             height="85" alt="" class="mr-3"/>
+                        <div class="media-body">
+                            <div class="mb-3">
+                                クレジットカード決済とは、クレジットカード会社が提供する決済手段です。カード番号や有効期限などを利用して、商品等
+                                の代金支払いを行うことができます。
                             </div>
-                            <div class="col-xs-9">
-                                <div class="media">
-                                    <a class="media-left" href="#">
-                                        <img src="https://lovewithfood.com/assets/credit_cards/cards-b3a7c7b8345355bf110ebedfd6401312.png"
-                                             height="25" alt=""/>
-                                    </a>
-                                    <div class="media-body" id="newcard">
-                                        We accept these credit cards.
-                                    </div>
+                            <div class="form-group">
+                                <label for="cc-number">Credit card number</label>
+                                <input type="text" class="form-control" id="cc-number" placeholder="" required
+                                       value="4111111111111111">
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="cc-expiration">Expiration</label>
+                                    <input type="text" class="form-control" id="cc-expiration" placeholder="" required
+                                           value="202212">
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="cc-expiration">CVV</label>
+                                    <input type="text" class="form-control" id="cc-cvv" placeholder="" required
+                                           value="1234">
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
 
-                <!-- pay-easy -->
-                <div class="list-group-item">
-                    <div class="list-group-item-heading">
-                        <div class="row radio">
-                            <div class="col-xs-3">
-                                <label>
-                                    <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
-                                    Pay-Easy
-                                </label>
-                            </div>
-                            <div class="col-xs-9">
-                                <div class="media">
-                                    <a class="media-left" href="#">
-                                        <img src="https://www.paypalobjects.com/webstatic/mktg/logo-center/PP_Acceptance_Marks_for_LogoCenter_76x48.png"
-                                             height="25" alt=""/>
-                                    </a>
-                                    <div class="media-body">
-                                        When you click "Place Order", you will be taken to the PayPal website.
-                                    </div>
-                                </div>
-                            </div>
+                            <button type="button" class="btn btn-primary btn-sm btn-block" onclick="token()">Checkout by new credit card
+                            </button>
+                            <form id="payNewCard" method="post" action="/payment">
+                                <input type="hidden" name="type" value="newCard">
+                                <input type="hidden" name="saveCard" value="false">
+                                <input type="hidden" id="token" name="token" value="">
+                                <input type="hidden" id="tokenKey" name="tokenKey" value="">
+                            </form>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="well">
-                <button type="button" class="btn btn-primary btn-lg btn-block">Place Order</button>
+        </div>
+
+        <!-- pay easy -->
+        <div th:if="${hasPayEasy}" class="card">
+            <div class="card-header" id="payeasy">
+                <h2 class="mb-0">
+                    <button class="btn btn-link collapsed" type="button" data-toggle="collapse"
+                            data-target="#collapsePayEasy" aria-expanded="false" aria-controls="collapsePayEasy">
+                        Pay-Easy
+                    </button>
+                </h2>
+            </div>
+            <div id="collapsePayEasy" class="collapse" aria-labelledby="payeasy" data-parent="#paymentList">
+                <div class="card-body media">
+                    <img src="http://www.sbpayment.jp/images/specification/index_pay-easy.png"
+                         height="85" alt="" class="mr-3"/>
+                    <div class="media-body">
+                        <div class="mb-3">
+                            Pay-easy決済とは、購入時に払い出される情報を利用して、ATMやインターネットバンキングで商品等の代金を支払うこ
+                            とができる決済サービスです。
+                        </div>
+
+                        <button type="button" class="btn btn-primary btn-sm btn-block">Checkout by Pay-Easy</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+
 </div>
-<script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
-<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js'></script>
+
+<script type="text/javascript">
+    $('.collapse:first').addClass('show');
+</script>
 
 
 </body>

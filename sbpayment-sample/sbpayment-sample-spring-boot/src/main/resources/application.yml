@@ -1,6 +1,10 @@
 spring:
   devtools:
     restart:
-      exclude: public/**
+      exclude: static/**
   thymeleaf:
     cache: false
+
+logging:
+  level:
+    com.vogle: info

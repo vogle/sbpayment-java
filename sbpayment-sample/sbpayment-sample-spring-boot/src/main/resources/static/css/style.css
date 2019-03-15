@@ -1,21 +1,5 @@
-.dl-small {
-  margin-bottom: 4px;
-}
-
 body {
   margin: 0 auto;
   padding: 1em;
   max-width: 800px;
-}
-
-.form-control {
-  width: auto;
-}
-
-.form-control-small {
-  width: 100px;
-}
-
-.form-control-large {
-  width: 310px;
 }
