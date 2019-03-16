@@ -38,42 +38,28 @@
             <h5 class="card-title">Headers</h5>
             <div class="card-text mb-3">
                 <table class="table table-sm">
-                    <thead>
-                    <tr>
-                        <th scope="col">Item</th>
-                        <th scope="col">Value</th>
-                    </tr>
-                    </thead>
-                    <tbody>
                     <tr th:each="header : ${headers}">
                         <td th:text="${header.key}">key</td>
                         <td th:text="${header.value}">value</td>
                     </tr>
-                    </tbody>
                 </table>
             </div>
             <h5 class="card-title">Body</h5>
             <div class="card-text mb-3">
                 <table class="table table-sm">
-                    <thead>
-                    <tr>
-                        <th scope="col">Item</th>
-                        <th scope="col">Value</th>
-                    </tr>
-                    </thead>
-                    <tbody>
                     <tr th:each="body : ${bodyMap}" th:if="${body.key ne 'payMethodInfo'}">
                         <td th:text="${body.key}">key</td>
                         <td th:text="${body.value}">value</td>
                     </tr>
                     <tr th:each="pay : ${bodyMap.get('payMethodInfo')}">
-                        <td th:text="${pay.key}">key</td>
+                        <td th:text="'method.'+${pay.key}">key</td>
                         <td th:text="${pay.value}">value</td>
                     </tr>
-                    </tbody>
                 </table>
             </div>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
+            <a href="/" class="btn btn-primary">Go to checkout</a>
+            <a th:if="${trackingId}" href="/capture" class="btn btn-primary">Capture</a>
+            <a th:if="${trackingId}" href="/cancel" class="btn btn-primary">Cancel or Refund</a>
         </div>
     </div>
 </div>

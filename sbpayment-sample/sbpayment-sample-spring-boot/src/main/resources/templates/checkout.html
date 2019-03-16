@@ -23,12 +23,12 @@
 
     <script th:if="${hasCreditCard}" type="text/javascript" th:src="${spsTokenUrl}"></script>
     <script th:if="${hasCreditCard}" type="text/javascript">
-        function token() {
+        function newCard() {
             var merchantId = String($("body").data("merchant-id"));
-            var serviceId= String($("body").data("service-id"));
-            var ccNumber= String($("#cc-number").val());
-            var ccExpiration= String($("#cc-expiration").val());
-            var securityCode= String($("#cc-cvv").val());
+            var serviceId = String($("body").data("service-id"));
+            var ccNumber = String($("#cc-number").val());
+            var ccExpiration = String($("#cc-expiration").val());
+            var securityCode = String($("#cc-cvv").val());
 
             com_sbps_system.generateToken({
                 merchantId: merchantId,
@@ -39,11 +39,17 @@
             }, self.afterGenerateToken);
         }
 
+        function myCard() {
+            $("#payMyCard").submit();
+        }
+
         var afterGenerateToken = function (response) {
             console.log(response);
+            var isSave = String($("#cc-save").val());
             if (response.result === "OK") {
                 $("#token").val(response.tokenResponse.token);
                 $("#tokenKey").val(response.tokenResponse.tokenKey);
+                $("#isSaveCard").val(isSave);
                 $("#payNewCard").submit();
             } else {
                 alert('Fail');
@@ -83,14 +89,20 @@
                         </div>
 
                         <dl class="mt-3">
+                            <dt>Brand</dt>
+                            <dd th:text="${savedCard.creditCardBrand}">Brand</dd>
                             <dt>Credit Card Number</dt>
-                            <dd>**********1111</dd>
+                            <dd th:text="${savedCard.ccNumber}">**********1111</dd>
                             <dt>Expiration</dt>
-                            <dd>07/2016</dd>
+                            <dd th:text="${savedCard.ccExpiration}">07/2016</dd>
                         </dl>
 
-                        <button type="button" class="btn btn-primary btn-sm btn-block">Checkout by my credit card
+                        <button type="button" class="btn btn-primary btn-sm btn-block" onclick="myCard()">
+                            Checkout by my credit card
                         </button>
+                        <form id="payMyCard" method="post" action="/payment">
+                            <input type="hidden" name="type" value="myCard">
+                        </form>
                     </div>
                 </div>
             </div>
@@ -133,14 +145,22 @@
                                            value="1234">
                                 </div>
                             </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="true" id="cc-save">
+                                <label class="form-check-label" for="cc-save">
+                                    Save Credit Card
+                                </label>
+                            </div>
 
-                            <button type="button" class="btn btn-primary btn-sm btn-block" onclick="token()">Checkout by new credit card
+                            <button type="button" class="btn btn-primary btn-sm btn-block" onclick="newCard()">
+                                Checkout by new credit card
                             </button>
                             <form id="payNewCard" method="post" action="/payment">
                                 <input type="hidden" name="type" value="newCard">
                                 <input type="hidden" name="saveCard" value="false">
                                 <input type="hidden" id="token" name="token" value="">
                                 <input type="hidden" id="tokenKey" name="tokenKey" value="">
+                                <input type="hidden" id="isSaveCard" name="isSaveCard" value="">
                             </form>
                         </div>
                     </div>

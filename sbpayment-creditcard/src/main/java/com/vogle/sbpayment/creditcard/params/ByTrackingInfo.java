@@ -31,7 +31,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 /**
- * If pay for tracking id, need this information
+ * If pay by tracking id, need this information
  *
  * @author Allan Im
  **/

@@ -28,7 +28,7 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
 /**
- * If pay for saved card, need this information
+ * If pay by saved card, need this information
  *
  * @author Allan Im
  **/
