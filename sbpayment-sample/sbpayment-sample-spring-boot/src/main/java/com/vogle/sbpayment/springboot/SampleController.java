@@ -7,6 +7,7 @@ import com.vogle.sbpayment.creditcard.params.BySavedCard;
 import com.vogle.sbpayment.creditcard.params.ByToken;
 import com.vogle.sbpayment.creditcard.params.CardInfoResponseType;
 import com.vogle.sbpayment.creditcard.responses.CardAuthorizeResponse;
+import com.vogle.sbpayment.creditcard.responses.CardInfoDeleteResponse;
 import com.vogle.sbpayment.creditcard.responses.CardInfoLookupMethodInfo;
 import com.vogle.sbpayment.creditcard.responses.CardInfoLookupResponse;
 import com.vogle.sbpayment.creditcard.responses.DefaultResponse;
@@ -59,7 +60,9 @@ public class SampleController {
     }
 
     @GetMapping("/")
-    public String checkout(ModelMap modelMap, HttpServletRequest request) {
+    public String checkout(ModelMap modelMap, HttpSession session) {
+        session.removeAttribute(SESSION_PAYMENT_TYPE);
+
         if (creditCardPayment != null) {
             modelMap.addAttribute("hasCreditCard", true);
             modelMap.addAttribute("spsTokenUrl", sbpaymentProperties.getCreditcard().getTokenUrl());
@@ -125,6 +128,11 @@ public class SampleController {
             modelMap.addAttribute("headers", result.getHeaders());
             modelMap.addAttribute("bodyMap", mapper.convertValue(result.getBody(), Map.class));
             modelMap.addAttribute("result", result);
+        } else if ("DELETE_CARD".equals(paymentType)) {
+            SpsResult result = (SpsResult) session.getAttribute(SESSION_RESULT);
+            modelMap.addAttribute("title", "Credit Card: " + result.getBody().getDescription());
+            modelMap.addAttribute("headers", result.getHeaders());
+            modelMap.addAttribute("bodyMap", mapper.convertValue(result.getBody(), Map.class));
         } else {
             throw new IllegalStateException("Don't have payment type");
         }
@@ -158,6 +166,14 @@ public class SampleController {
     public String capture(HttpSession session) {
         String trackingId = (String) session.getAttribute(SESSION_TRACKING_ID);
         SpsResult<DefaultResponse> result = creditCardPayment.capture(trackingId);
+        return saveResult(session, result);
+    }
+
+    @GetMapping("/delete")
+    public String delete(HttpSession session) {
+        SpsResult<CardInfoDeleteResponse> result = creditCardPayment.deleteCard(
+            SAMPLE_CUSTOMER_CODE);
+        session.setAttribute(SESSION_PAYMENT_TYPE, "DELETE_CARD");
         return saveResult(session, result);
     }
 }
