@@ -43,6 +43,10 @@
             $("#payMyCard").submit();
         }
 
+        function payeasy() {
+            $("#payPayEasy").submit();
+        }
+
         var afterGenerateToken = function (response) {
             console.log(response);
             var isSave = String($("#cc-save").val());
@@ -189,7 +193,12 @@
                             とができる決済サービスです。
                         </div>
 
-                        <button type="button" class="btn btn-primary btn-sm btn-block">Checkout by Pay-Easy</button>
+                        <button type="button" class="btn btn-primary btn-sm btn-block" onclick="payeasy()">
+                            Checkout by Pay-Easy
+                        </button>
+                        <form id="payPayEasy" method="post" action="/payment">
+                            <input type="hidden" name="type" value="payeasy">
+                        </form>
                     </div>
                 </div>
             </div>

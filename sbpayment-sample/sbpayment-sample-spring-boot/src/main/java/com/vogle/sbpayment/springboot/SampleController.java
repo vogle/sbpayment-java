@@ -12,6 +12,7 @@ import com.vogle.sbpayment.creditcard.responses.CardInfoLookupMethodInfo;
 import com.vogle.sbpayment.creditcard.responses.CardInfoLookupResponse;
 import com.vogle.sbpayment.creditcard.responses.DefaultResponse;
 import com.vogle.sbpayment.payeasy.PayEasyPayment;
+import com.vogle.sbpayment.payeasy.params.PayEasy;
 import com.vogle.sbpayment.springboot.autoconfigure.SbpaymentProperties;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -108,6 +109,17 @@ public class SampleController {
         } else if ("myCard".equals(request.getParameter("type"))) {
             BySavedCard savedCard = BySavedCard.builder().build();
             saveCreditCardInfo(session, creditCardPayment.authorize(paymentInfo, savedCard));
+        } else if ("payeasy".equals(request.getParameter("type"))) {
+            BySavedCard savedCard = BySavedCard.builder().build();
+            PayEasy payEasy = PayEasy.builder()
+                .firstName("太郎").lastName("名前")
+                .firstNameKana("タロウ").lastNameKana("ナマエ")
+                .tel("08011112222")
+                .mail("mail@sample.sample")
+                .build();
+
+            session.setAttribute(SESSION_PAYMENT_TYPE, "PAYEASY");
+            saveResult(session, payEasyPayment.payment(paymentInfo, payEasy));
         } else {
             throw new IllegalArgumentException("Don't have payment type");
         }
@@ -129,6 +141,11 @@ public class SampleController {
             modelMap.addAttribute("bodyMap", mapper.convertValue(result.getBody(), Map.class));
             modelMap.addAttribute("result", result);
         } else if ("DELETE_CARD".equals(paymentType)) {
+            SpsResult result = (SpsResult) session.getAttribute(SESSION_RESULT);
+            modelMap.addAttribute("title", "Credit Card: " + result.getBody().getDescription());
+            modelMap.addAttribute("headers", result.getHeaders());
+            modelMap.addAttribute("bodyMap", mapper.convertValue(result.getBody(), Map.class));
+        } else if ("PAYEASY".equals(paymentType)) {
             SpsResult result = (SpsResult) session.getAttribute(SESSION_RESULT);
             modelMap.addAttribute("title", "Credit Card: " + result.getBody().getDescription());
             modelMap.addAttribute("headers", result.getHeaders());
