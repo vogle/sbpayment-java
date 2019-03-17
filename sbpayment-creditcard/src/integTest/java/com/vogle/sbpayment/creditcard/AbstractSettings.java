@@ -38,7 +38,7 @@ abstract class AbstractSettings {
         Properties p = new Properties();
         try {
             p.load(new FileInputStream(System.getProperty("user.dir") + File.separator
-                    + "../config/it1.properties"));
+                + "../config/it1.properties"));
         } catch (IOException ignored) {
             // ignored
         }

@@ -28,9 +28,6 @@ class FeatureHelper {
 
     private static Map<String, String> descMap = new HashMap<>();
 
-    private FeatureHelper() {
-    }
-
     static {
 
         // Card payment features
@@ -51,6 +48,9 @@ class FeatureHelper {
         descMap.put("MG02-00132-101", "StoredCard Update");
         descMap.put("MG02-00103-101", "StoredCard Delete");
         descMap.put("MG02-00104-101", "StoredCard Lookup");
+    }
+
+    private FeatureHelper() {
     }
 
     static String getDescription(String id) {

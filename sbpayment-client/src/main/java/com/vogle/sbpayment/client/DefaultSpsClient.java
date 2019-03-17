@@ -131,7 +131,7 @@ public class DefaultSpsClient implements SpsClient {
             if (statusCode == 200) {
                 // response header
                 Map<String, String> headerMap = Arrays.stream(response.getAllHeaders())
-                        .collect(Collectors.toMap(NameValuePair::getName, NameValuePair::getValue));
+                    .collect(Collectors.toMap(NameValuePair::getName, NameValuePair::getValue));
 
                 // response body
                 String body = EntityUtils.toString(response.getEntity(), mapper.getCharset());
@@ -157,7 +157,7 @@ public class DefaultSpsClient implements SpsClient {
         } catch (IOException ex) {
             if (LOGGER.isErrorEnabled()) {
                 LOGGER.error("SPS Client Internal Error : {}({})",
-                        ex.getClass().getSimpleName(), ex.getMessage());
+                    ex.getClass().getSimpleName(), ex.getMessage());
             }
             throw new IllegalStateException(ex.getMessage(), ex);
         }
@@ -166,12 +166,12 @@ public class DefaultSpsClient implements SpsClient {
     private <T extends SpsResponse> void printInfoLog(T bodyObject) {
         if (LOGGER.isInfoEnabled()) {
             LOGGER.info("SPS Client ({}) response : result = {}{}{}",
-                    bodyObject.getId() == null ? "FAIL" : bodyObject.getDescription(),
-                    bodyObject.getResult(),
-                    "OK".equalsIgnoreCase(bodyObject.getResult()) ? "" : ", errCode = "
-                            + bodyObject.getErrCode(),
-                    bodyObject.getSpsTransactionId() == null ? "" : ", sps-transaction-id = "
-                            + bodyObject.getSpsTransactionId());
+                bodyObject.getId() == null ? "FAIL" : bodyObject.getDescription(),
+                bodyObject.getResult(),
+                "OK".equalsIgnoreCase(bodyObject.getResult()) ? "" : ", errCode = "
+                    + bodyObject.getErrCode(),
+                bodyObject.getSpsTransactionId() == null ? "" : ", sps-transaction-id = "
+                    + bodyObject.getSpsTransactionId());
         }
     }
 
@@ -183,24 +183,24 @@ public class DefaultSpsClient implements SpsClient {
             switch (statusCode) {
                 case 401:
                     LOGGER.error("SPS Client connect fail : Either you supplied the wrong credentials,"
-                                    + " authId : {}, authPw : {} ",
-                            config.getBasicAuthId(), config.getBasicAuthPassword());
+                            + " authId : {}, authPw : {} ",
+                        config.getBasicAuthId(), config.getBasicAuthPassword());
                     break;
                 case 403:
                     LOGGER.error("SPS Client connect fail : You don't have permission to access {} on this server",
-                            config.getApiUrl());
+                        config.getApiUrl());
                     break;
                 case 404:
                     LOGGER.error("SPS Client connect fail : The requested URL {} was not found on this server",
-                            config.getApiUrl());
+                        config.getApiUrl());
                     break;
                 case 500:
                     LOGGER.error("SPS Client connect fail : Internal server error from {}",
-                            config.getApiUrl());
+                        config.getApiUrl());
                     break;
                 case 503:
                     LOGGER.error("SPS Client connect fail : The server is temporarily unable to service your request"
-                            + " due to maintenance downtime");
+                        + " due to maintenance downtime");
                     break;
                 default:
                     LOGGER.error("SPS Client connect fail : HTTP Status {}", statusCode);
@@ -221,7 +221,7 @@ public class DefaultSpsClient implements SpsClient {
         if (isNotEmpty(config.getBasicAuthId()) && isNotEmpty(config.getBasicAuthPassword())) {
             CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
             credentialsProvider.setCredentials(AuthScope.ANY,
-                    new UsernamePasswordCredentials(config.getBasicAuthId(), config.getBasicAuthPassword()));
+                new UsernamePasswordCredentials(config.getBasicAuthId(), config.getBasicAuthPassword()));
             httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
         }
 

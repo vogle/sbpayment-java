@@ -28,13 +28,13 @@ class FeatureHelper {
 
     private static Map<String, String> descMap = new HashMap<>();
 
-    private FeatureHelper() {
-    }
-
     static {
         descMap.put("ST01-00101-703", "PayEasy Payment");
         descMap.put("NT01-00103-703", "PayEasy Deposit Notice");
         descMap.put("NT01-00104-703", "PayEasy Expired Notice");
+    }
+
+    private FeatureHelper() {
     }
 
     static String getDescription(String id) {

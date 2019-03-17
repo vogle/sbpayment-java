@@ -40,11 +40,9 @@ import static org.assertj.core.api.Assertions.assertThat;
  **/
 public class SbpaymentAutoConfigurationTest {
 
-    private Set<String> required = new HashSet<>();
-
     @Rule
     public ExpectedException thrown = ExpectedException.none();
-
+    private Set<String> required = new HashSet<>();
     private AnnotationConfigApplicationContext context;
 
     @Before

@@ -19,7 +19,6 @@ package com.vogle.sbpayment.creditcard.params;
 import com.vogle.sbpayment.creditcard.DealingsType;
 
 import lombok.Builder;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;

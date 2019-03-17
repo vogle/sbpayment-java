@@ -44,14 +44,14 @@ public class SpsReceiverTest {
 
         // when
         TestReceive receive = receiver.receive("<sps-api-request id=\"NT01-00103-703\">\n"
-                + "<merchant_id>" + merchant + "</merchant_id>\n"
-                + "<service_id>" + service + "</service_id>\n"
-                + "<sps_transaction_id>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</sps_transaction_id>\n"
-                + "<tracking_id>12345678901234</tracking_id>\n"
-                + "<rec_datetime>20091010</rec_datetime>\n"
-                + "<request_date>20091010125959</request_date>\n"
-                + "<sps_hashcode>" + hashCode + "</sps_hashcode>\n"
-                + "</sps-api-request>", TestReceive.class);
+            + "<merchant_id>" + merchant + "</merchant_id>\n"
+            + "<service_id>" + service + "</service_id>\n"
+            + "<sps_transaction_id>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</sps_transaction_id>\n"
+            + "<tracking_id>12345678901234</tracking_id>\n"
+            + "<rec_datetime>20091010</rec_datetime>\n"
+            + "<request_date>20091010125959</request_date>\n"
+            + "<sps_hashcode>" + hashCode + "</sps_hashcode>\n"
+            + "</sps-api-request>", TestReceive.class);
 
         // then
         assertThat(receive).isNotNull();
@@ -71,8 +71,8 @@ public class SpsReceiverTest {
 
         // when
         receiver.receive("<sps-api-request id=\"NT01-00103-703\">\n"
-                + "<merchant_id>wrong</merchant_id>\n"
-                + "</sps-api-request>", TestReceive.class);
+            + "<merchant_id>wrong</merchant_id>\n"
+            + "</sps-api-request>", TestReceive.class);
     }
 
     @Test(expected = InvalidAccessException.class)
@@ -87,9 +87,9 @@ public class SpsReceiverTest {
 
         // when
         receiver.receive("<sps-api-request id=\"NT01-00103-703\">\n"
-                + "<merchant_id>" + merchant + "</merchant_id>\n"
-                + "<service_id>wrong</service_id>\n"
-                + "</sps-api-request>", TestReceive.class);
+            + "<merchant_id>" + merchant + "</merchant_id>\n"
+            + "<service_id>wrong</service_id>\n"
+            + "</sps-api-request>", TestReceive.class);
     }
 
     @Test(expected = InvalidAccessException.class)
@@ -104,10 +104,10 @@ public class SpsReceiverTest {
 
         // when
         receiver.receive("<sps-api-request id=\"NT01-00103-703\">\n"
-                + "<merchant_id>" + merchant + "</merchant_id>\n"
-                + "<service_id>" + service + "</service_id>\n"
-                + "<sps_hashcode>wrong</sps_hashcode>\n"
-                + "</sps-api-request>", TestReceive.class);
+            + "<merchant_id>" + merchant + "</merchant_id>\n"
+            + "<service_id>" + service + "</service_id>\n"
+            + "<sps_hashcode>wrong</sps_hashcode>\n"
+            + "</sps-api-request>", TestReceive.class);
     }
 
     @Test
@@ -149,14 +149,14 @@ public class SpsReceiverTest {
 
     private SpsConfig config(String merchant, String service, String hashKey) {
         return SpsConfig.builder()
-                .apiUrl("http://vogle.com")
-                .merchantId(merchant)
-                .serviceId(service)
-                .hashKey(hashKey)
-                .cipherEnabled(true)
-                .desKey("DES_KEY")
-                .desInitKey("INIT_KEY")
-                .build();
+            .apiUrl("http://vogle.com")
+            .merchantId(merchant)
+            .serviceId(service)
+            .hashKey(hashKey)
+            .cipherEnabled(true)
+            .desKey("DES_KEY")
+            .desInitKey("INIT_KEY")
+            .build();
     }
 
     private SpsMapper mapper(SpsConfig.CipherInfo cipherInfo) {

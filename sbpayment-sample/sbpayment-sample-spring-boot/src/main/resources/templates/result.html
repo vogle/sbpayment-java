@@ -3,31 +3,31 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
 
     <title>Sbpayment Spring-Boot Sample</title>
 
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" rel="stylesheet">
     <link rel="stylesheet" th:href="@{css/style.css}">
 
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    <script crossorigin="anonymous"
             integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-            crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+            src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script crossorigin="anonymous"
             integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-            crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+            src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script crossorigin="anonymous"
             integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-            crossorigin="anonymous"></script>
+            src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
 </head>
 
 <body>
 <div class="container-fluid">
     <div class="header m-3">
-        <h1><img src="https://gravatar.com/userimage/110059180/7c4c2d37772675fc66900248f5da5500.png?size=50"
-                 class="mr-3" alt=""/>sbpayment-sample-spring-boot</h1>
+        <h1><img alt=""
+                 class="mr-3" src="https://gravatar.com/userimage/110059180/7c4c2d37772675fc66900248f5da5500.png?size=50"/>sbpayment-sample-spring-boot</h1>
     </div>
 
     <div class="card">
@@ -57,9 +57,9 @@
                     </tr>
                 </table>
             </div>
-            <a href="/" class="btn btn-primary">Go to checkout</a>
-            <a th:if="${trackingId}" href="/capture" class="btn btn-primary">Capture</a>
-            <a th:if="${trackingId}" href="/cancel" class="btn btn-primary">Cancel or Refund</a>
+            <a class="btn btn-primary" href="/">Go to checkout</a>
+            <a class="btn btn-primary" href="/capture" th:if="${trackingId}">Capture</a>
+            <a class="btn btn-primary" href="/cancel" th:if="${trackingId}">Cancel or Refund</a>
         </div>
     </div>
 </div>

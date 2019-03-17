@@ -58,7 +58,7 @@ public class DefaultSpsReceiver implements SpsReceiver {
      */
     @Override
     public <T extends SpsReceivedData> T receive(String xml, Class<T> receivedDataClass)
-            throws InvalidAccessException {
+        throws InvalidAccessException {
 
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("SPS Receiver data : {}", xml);

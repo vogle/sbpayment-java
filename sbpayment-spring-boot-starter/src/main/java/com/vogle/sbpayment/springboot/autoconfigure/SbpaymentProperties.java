@@ -34,23 +34,23 @@ public class SbpaymentProperties {
     /**
      * Softbank payment system information
      */
-    private final Client client = new Client();
+    private final ClientProperties client = new ClientProperties();
 
     /**
      * Credit Card options
      */
-    private final CreditCard creditcard = new CreditCard();
+    private final CreditCardProperties creditcard = new CreditCardProperties();
 
     /**
      * Pay-Easy Options
      */
-    private final PayEasy payeasy = new PayEasy();
+    private final PayEasyProperties payeasy = new PayEasyProperties();
 
     /**
      * Softbank getClient configuration
      */
     @Data
-    public static class Client {
+    public static class ClientProperties {
         /**
          * Cipher settings
          */
@@ -139,37 +139,32 @@ public class SbpaymentProperties {
      * CreditCard configuration
      */
     @Data
-    public static class CreditCard {
-
-        private boolean enabled = true;
-
-        /**
-         * Token JS URL. <br/>
-         * TokenサビースのJSのURL
-         */
-        private String tokenUrl;
-
-        /**
-         * 顧客コードを送るとき、SBPS 顧客情報を返却する
-         */
-        private boolean customerInfoReturn;
-
-        /**
-         * カード情報を送るとき、カードブランド情報を返却する。
-         */
-        private boolean cardbrandReturn;
-
-        /**
-         * Alternate getClient enabled<br/>
-         * Trueにしたら、本alternateClientの情報を利用する。
-         */
-        private boolean alternateClientEnabled;
+    public static class CreditCardProperties {
 
         /**
          * Alternate getClient properties
          */
         @NestedConfigurationProperty
-        private final Client alternateClient = new Client();
+        private final ClientProperties alternateClient = new ClientProperties();
+        private boolean enabled = true;
+        /**
+         * Token JS URL. <br/>
+         * TokenサビースのJSのURL
+         */
+        private String tokenUrl;
+        /**
+         * 顧客コードを送るとき、SBPS 顧客情報を返却する
+         */
+        private boolean customerInfoReturn;
+        /**
+         * カード情報を送るとき、カードブランド情報を返却する。
+         */
+        private boolean cardbrandReturn;
+        /**
+         * Alternate getClient enabled<br/>
+         * Trueにしたら、本alternateClientの情報を利用する。
+         */
+        private boolean alternateClientEnabled;
 
     }
 
@@ -177,45 +172,38 @@ public class SbpaymentProperties {
      * PayEasy configuration
      */
     @Data
-    public static class PayEasy {
+    public static class PayEasyProperties {
 
+        /**
+         * Alternate getClient properties
+         */
+        @NestedConfigurationProperty
+        private final ClientProperties alternateClient = new ClientProperties();
         private boolean enabled = true;
-
         private Type type = Type.ONLINE;
-
         /**
          * 金融機関コード、情報リンク方式の場合のみ必須です。ただし、電算システムを利用の場合は不要です。
          */
         private String payCsv;
-
         /**
          * 請求内容カナ、ATM 等に表示されます。（全角英数カナ）
          */
         private String billInfoKana;
-
         /**
          * 請求内容漢字、ATM 等に表示されます。（全角）
          */
         private String billInfo;
-
         /**
          * 支払期限、受注日時からデフォルトの支払期限の設定値内での指定が可能です。
          * ウェルネットを利用されている加盟店の場合、支払期限は当日指定が可能です。
          * 本日は「0」に基準として、日数を加算。
          */
         private int billLimitDay = 3;
-
         /**
          * Alternate getClient enabled<br/>
          * Trueにしたら、本alternateClientの情報を利用する。
          */
         private boolean alternateClientEnabled;
-
-        /**
-         * Alternate getClient properties
-         */
-        @NestedConfigurationProperty
-        private final Client alternateClient = new Client();
 
         /**
          * PayEasy Type

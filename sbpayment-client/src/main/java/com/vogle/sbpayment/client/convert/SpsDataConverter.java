@@ -314,7 +314,7 @@ public class SpsDataConverter {
         try {
             Iterable iterable = (Iterable) source.getClass().getMethod(getterName(field.getName())).invoke(source);
             return (iterable == null) ? Collections.emptyIterator()
-                    : (Iterator) field.getType().getMethod(ITERATOR).invoke(iterable);
+                : (Iterator) field.getType().getMethod(ITERATOR).invoke(iterable);
         } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException ex) {
             LOGGER.error("Is not iterator field: '{}'", field.getName());
             throw new InvalidRequestException(ex);
@@ -326,7 +326,7 @@ public class SpsDataConverter {
             return (String) source.getClass().getMethod(getterName(field.getName())).invoke(source);
         } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException ex) {
             LOGGER.error("Must check a getter for field: '{}', And it have to return that is the String type.",
-                    field.getName());
+                field.getName());
             throw new InvalidRequestException(ex);
         }
     }
@@ -334,10 +334,10 @@ public class SpsDataConverter {
     private static void setValueTo(Object source, Field field, String value) {
         try {
             source.getClass().getMethod(setterName(field.getName()), String.class)
-                    .invoke(source, value);
+                .invoke(source, value);
         } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException ex) {
             LOGGER.error("Must check a setter for field: '{}', And it have to parameter that is the String type. ",
-                    field.getName());
+                field.getName());
             throw new InvalidRequestException(ex);
         }
     }

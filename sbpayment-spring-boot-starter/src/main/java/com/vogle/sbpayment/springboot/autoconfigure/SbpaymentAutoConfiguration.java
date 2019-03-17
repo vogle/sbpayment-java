@@ -38,9 +38,9 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.TimeZone;
 
-import static com.vogle.sbpayment.springboot.autoconfigure.SbpaymentProperties.Client;
-import static com.vogle.sbpayment.springboot.autoconfigure.SbpaymentProperties.CreditCard;
-import static com.vogle.sbpayment.springboot.autoconfigure.SbpaymentProperties.PayEasy;
+import static com.vogle.sbpayment.springboot.autoconfigure.SbpaymentProperties.ClientProperties;
+import static com.vogle.sbpayment.springboot.autoconfigure.SbpaymentProperties.CreditCardProperties;
+import static com.vogle.sbpayment.springboot.autoconfigure.SbpaymentProperties.PayEasyProperties;
 
 /**
  * Softbank payment service auto configuration
@@ -60,25 +60,25 @@ public class SbpaymentAutoConfiguration {
     @ConditionalOnMissingBean
     @ConditionalOnProperty(prefix = "sbpayment.client", name = {"merchant-id", "service-id", "hash-key"})
     public Sbpayment sbpayment(SbpaymentProperties properties) {
-        Client client = properties.getClient();
+        ClientProperties client = properties.getClient();
         return createSbpayment(client);
     }
 
-    private Sbpayment createSbpayment(Client client) {
+    private Sbpayment createSbpayment(ClientProperties client) {
         return Sbpayment.newInstance(SpsConfig.builder()
-                .charset(Charset.forName(client.getCharset()))
-                .timeZone(TimeZone.getTimeZone(client.getTimeZone()))
-                .apiUrl(client.getApiUrl())
-                .merchantId(client.getMerchantId())
-                .serviceId(client.getServiceId())
-                .basicAuthId(client.getBasicAuthId())
-                .basicAuthPassword(client.getBasicAuthPassword())
-                .hashKey(client.getHashKey())
-                .cipherEnabled(client.getCipherSets().isEnabled())
-                .desKey(client.getCipherSets().getDesKey())
-                .desInitKey(client.getCipherSets().getDesInitKey())
-                .allowableSecondOnRequest(client.getAllowableSecondOnRequest())
-                .build());
+            .charset(Charset.forName(client.getCharset()))
+            .timeZone(TimeZone.getTimeZone(client.getTimeZone()))
+            .apiUrl(client.getApiUrl())
+            .merchantId(client.getMerchantId())
+            .serviceId(client.getServiceId())
+            .basicAuthId(client.getBasicAuthId())
+            .basicAuthPassword(client.getBasicAuthPassword())
+            .hashKey(client.getHashKey())
+            .cipherEnabled(client.getCipherSets().isEnabled())
+            .desKey(client.getCipherSets().getDesKey())
+            .desInitKey(client.getCipherSets().getDesInitKey())
+            .allowableSecondOnRequest(client.getAllowableSecondOnRequest())
+            .build());
     }
 
     /**
@@ -89,9 +89,9 @@ public class SbpaymentAutoConfiguration {
     @ConditionalOnClass(CreditCardPayment.class)
     @ConditionalOnBean(Sbpayment.class)
     @ConditionalOnProperty(prefix = "sbpayment.creditcard", name = "enabled", havingValue = "true",
-            matchIfMissing = true)
+        matchIfMissing = true)
     public CreditCardPayment creditCardPayment(SbpaymentProperties properties, Sbpayment sbpayment) {
-        CreditCard creditCard = properties.getCreditcard();
+        CreditCardProperties creditCard = properties.getCreditcard();
 
         Set<CardPayFeature> enableFeatures = new HashSet<>();
         if (creditCard.isCustomerInfoReturn()) {
@@ -117,9 +117,9 @@ public class SbpaymentAutoConfiguration {
     @ConditionalOnClass(PayEasyPayment.class)
     @ConditionalOnBean(Sbpayment.class)
     @ConditionalOnProperty(prefix = "sbpayment.payeasy", name = "enabled", havingValue = "true",
-            matchIfMissing = true)
+        matchIfMissing = true)
     public PayEasyPayment payEasyPayment(SbpaymentProperties properties, Sbpayment sbpayment) {
-        PayEasy payEasy = properties.getPayeasy();
+        PayEasyProperties payEasy = properties.getPayeasy();
 
         if (payEasy.isAlternateClientEnabled()) {
             Sbpayment privatePayment = createSbpayment(payEasy.getAlternateClient());
@@ -129,8 +129,8 @@ public class SbpaymentAutoConfiguration {
         }
     }
 
-    private PayEasyPayment createPayEasyService(Sbpayment sbpayment, PayEasy payEasy) {
-        if (PayEasy.Type.ONLINE.equals(payEasy.getType())) {
+    private PayEasyPayment createPayEasyService(Sbpayment sbpayment, PayEasyProperties payEasy) {
+        if (PayEasyProperties.Type.ONLINE.equals(payEasy.getType())) {
             OnlineType onlineType = new OnlineType();
             onlineType.setBillInfo(payEasy.getBillInfo());
             onlineType.setBillInfoKana(payEasy.getBillInfoKana());

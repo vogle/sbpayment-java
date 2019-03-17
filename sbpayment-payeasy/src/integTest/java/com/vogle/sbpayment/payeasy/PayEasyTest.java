@@ -63,7 +63,7 @@ public class PayEasyTest {
         Properties p = new Properties();
         try {
             p.load(new FileInputStream(System.getProperty("user.dir") + File.separator
-                    + "../config/it2.properties"));
+                + "../config/it2.properties"));
         } catch (IOException ignored) {
             // ignored
         }
@@ -107,7 +107,7 @@ public class PayEasyTest {
         assertThat(res.getPayEasyInfo()).isNotNull();
         assertThat(res.getPayEasyInfo().getInvoiceNo()).isNotEmpty();
         assertThat(res.getPayEasyInfo().getBillDate())
-                .isEqualTo(RequestHelper.dateOnly(res.getDate(), BILL_LIMIT_DAY));
+            .isEqualTo(RequestHelper.dateOnly(res.getDate(), BILL_LIMIT_DAY));
         assertThat(res.getPayEasyInfo().getSkno()).isNotEmpty();
         assertThat(res.getPayEasyInfo().getCustNumber()).isNotEmpty();
     }
@@ -125,17 +125,17 @@ public class PayEasyTest {
         assertThat(payment.getStatus()).isEqualTo(200);
         assertThat(payment.getHeaders()).isNotNull();
         assertThat(payment.getBody()).isNotNull();
-//        assertThat(payment.getBody().isSuccess()).isTrue();
-//        assertThat(payment.getBody().getSpsTransactionId()).isNotEmpty();
-//
-//        PayEasyPaymentResponse res = payment.getBody();
-//        assertThat(res.getTrackingId()).isNotBlank();
-//        assertThat(res.getPayEasyInfo()).isNotNull();
-//        assertThat(res.getPayEasyInfo().getInvoiceNo()).isNotEmpty();
-//        assertThat(res.getPayEasyInfo().getBillDate())
-//                .isEqualTo(RequestHelper.dateOnly(res.getDate(), BILL_LIMIT_DAY));
-//        assertThat(res.getPayEasyInfo().getSkno()).isNotEmpty();
-//        assertThat(res.getPayEasyInfo().getCustNumber()).isNotEmpty();
+        //        assertThat(payment.getBody().isSuccess()).isTrue();
+        //        assertThat(payment.getBody().getSpsTransactionId()).isNotEmpty();
+        //
+        //        PayEasyPaymentResponse res = payment.getBody();
+        //        assertThat(res.getTrackingId()).isNotBlank();
+        //        assertThat(res.getPayEasyInfo()).isNotNull();
+        //        assertThat(res.getPayEasyInfo().getInvoiceNo()).isNotEmpty();
+        //        assertThat(res.getPayEasyInfo().getBillDate())
+        //                .isEqualTo(RequestHelper.dateOnly(res.getDate(), BILL_LIMIT_DAY));
+        //        assertThat(res.getPayEasyInfo().getSkno()).isNotEmpty();
+        //        assertThat(res.getPayEasyInfo().getCustNumber()).isNotEmpty();
     }
 
     @Test
@@ -206,9 +206,9 @@ public class PayEasyTest {
     public void successDepositResponse() {
         String response = payment.successDeposit();
         assertThat(response).isNotEmpty()
-                .contains("<?xml version=\"1.0\" encoding=\"" + mapper.getCharset() + "\"?>")
-                .contains("<sps-api-response id=\"NT01-00103-703\">")
-                .contains("<res_result>OK</res_result>");
+            .contains("<?xml version=\"1.0\" encoding=\"" + mapper.getCharset() + "\"?>")
+            .contains("<sps-api-response id=\"NT01-00103-703\">")
+            .contains("<res_result>OK</res_result>");
     }
 
     @Test
@@ -216,11 +216,11 @@ public class PayEasyTest {
         String errMsg = "ERROR Message";
         String response = payment.failDeposit(errMsg);
         assertThat(response).isNotEmpty()
-                .contains("<?xml version=\"1.0\" encoding=\"" + mapper.getCharset() + "\"?>")
-                .contains("<sps-api-response id=\"NT01-00103-703\">")
-                .contains("<res_result>NG</res_result>")
-                .contains("<res_err_msg>" + Base64.getEncoder().encodeToString(errMsg.getBytes(mapper.getCharset()))
-                        + "</res_err_msg>");
+            .contains("<?xml version=\"1.0\" encoding=\"" + mapper.getCharset() + "\"?>")
+            .contains("<sps-api-response id=\"NT01-00103-703\">")
+            .contains("<res_result>NG</res_result>")
+            .contains("<res_err_msg>" + Base64.getEncoder().encodeToString(errMsg.getBytes(mapper.getCharset()))
+                + "</res_err_msg>");
     }
 
     @Test
@@ -279,9 +279,9 @@ public class PayEasyTest {
     public void successExpiredResponse() {
         String response = payment.successExpiredCancel();
         assertThat(response).isNotEmpty()
-                .contains("<?xml version=\"1.0\" encoding=\"" + mapper.getCharset() + "\"?>")
-                .contains("<sps-api-response id=\"NT01-00104-703\">")
-                .contains("<res_result>OK</res_result>");
+            .contains("<?xml version=\"1.0\" encoding=\"" + mapper.getCharset() + "\"?>")
+            .contains("<sps-api-response id=\"NT01-00104-703\">")
+            .contains("<res_result>OK</res_result>");
     }
 
     @Test
@@ -289,32 +289,32 @@ public class PayEasyTest {
         String errMsg = "エラー発生";
         String response = payment.failExpiredCancel(errMsg);
         assertThat(response).isNotEmpty()
-                .contains("<?xml version=\"1.0\" encoding=\"" + mapper.getCharset() + "\"?>")
-                .contains("<sps-api-response id=\"NT01-00104-703\">")
-                .contains("<res_result>NG</res_result>")
-                .contains("<res_err_msg>" + Base64.getEncoder().encodeToString(errMsg.getBytes(mapper.getCharset()))
-                        + "</res_err_msg>");
+            .contains("<?xml version=\"1.0\" encoding=\"" + mapper.getCharset() + "\"?>")
+            .contains("<sps-api-response id=\"NT01-00104-703\">")
+            .contains("<res_result>NG</res_result>")
+            .contains("<res_err_msg>" + Base64.getEncoder().encodeToString(errMsg.getBytes(mapper.getCharset()))
+                + "</res_err_msg>");
     }
 
     private PaymentInfo getDefaultPaymentInfo() {
         return PaymentInfo.builder()
-                .customerCode("TEST_CUSTOMER")
-                .orderId(orderNo())
-                .itemId("ORDERITEMID")
-                .itemName("日本語")
-                .amount(1080)
-                .tax(80)
-                .build();
+            .customerCode("TEST_CUSTOMER")
+            .orderId(orderNo())
+            .itemId("ORDERITEMID")
+            .itemName("日本語")
+            .amount(1080)
+            .tax(80)
+            .build();
     }
 
     private PayEasy getPayEasy() {
         return PayEasy.builder()
-                .lastName("株式").firstName("会社")
-                .lastNameKana("カブシキ").firstNameKana("カイシャ")
-                .tel("08011112222")
-                .mail("email@vogle.com")
-                .terminalValue(TerminalValue.PC)
-                .build();
+            .lastName("株式").firstName("会社")
+            .lastNameKana("カブシキ").firstNameKana("カイシャ")
+            .tel("08011112222")
+            .mail("email@vogle.com")
+            .terminalValue(TerminalValue.PC)
+            .build();
     }
 
     private String orderNo() {

@@ -75,7 +75,7 @@ public class SpsSecurity {
             return Base64.getEncoder().encodeToString(encryptedByte);
 
         } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException
-                | InvalidAlgorithmParameterException | BadPaddingException | IllegalBlockSizeException ex) {
+            | InvalidAlgorithmParameterException | BadPaddingException | IllegalBlockSizeException ex) {
             throw new SecurityException("3DES-CBC encrypt fail", ex);
         }
     }
@@ -108,7 +108,7 @@ public class SpsSecurity {
             return new String(decryptedByte, charsetName).trim();
 
         } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException
-                | InvalidAlgorithmParameterException | BadPaddingException | IllegalBlockSizeException ex) {
+            | InvalidAlgorithmParameterException | BadPaddingException | IllegalBlockSizeException ex) {
             throw new SecurityException("3DES-CBC decrypt fail", ex);
         }
     }

@@ -38,11 +38,11 @@ public class RequestHelperTest {
         // given
         List<Item> items = new ArrayList<>();
         items.add(Item.builder()
-                .itemId("ID1").itemName("NAME1").itemAmount(100).itemTax(8).itemCount(2)
-                .build());
+            .itemId("ID1").itemName("NAME1").itemAmount(100).itemTax(8).itemCount(2)
+            .build());
         items.add(Item.builder()
-                .itemId("ID2").itemName("NAME2").itemAmount(1000).itemTax(80).itemCount(4)
-                .build());
+            .itemId("ID2").itemName("NAME2").itemAmount(1000).itemTax(80).itemCount(4)
+            .build());
 
         // when
         List<PayDetail> payDetails = RequestHelper.mapItem(items);
@@ -51,7 +51,7 @@ public class RequestHelperTest {
         assertThat(payDetails).isNotNull();
         assertThat(payDetails.size()).isEqualTo(2);
         assertThat(payDetails.stream().filter(payDetail -> payDetail.getDtlItemId().equals("ID1"))
-                .collect(Collectors.toList()).size()).isEqualTo(1);
+            .collect(Collectors.toList()).size()).isEqualTo(1);
     }
 
     @Test

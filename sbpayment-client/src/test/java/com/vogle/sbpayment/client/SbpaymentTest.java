@@ -70,7 +70,7 @@ public class SbpaymentTest {
         Properties properties = new Properties();
         try {
             properties.load(Thread.currentThread().getContextClassLoader()
-                    .getResourceAsStream("test.properties"));
+                .getResourceAsStream("test.properties"));
         } catch (IOException ignored) {
             // ignored
         }
@@ -91,13 +91,13 @@ public class SbpaymentTest {
 
         // Given
         SpsConfig config = SpsConfig.builder()
-                .apiUrl("http://vogle.com")
-                .merchantId("XX002").serviceId("BBB")
-                .basicAuthId("BASIC").basicAuthPassword("PASSWORD")
-                .hashKey("HASH_KEY")
-                .cipherEnabled(true)
-                .desKey("DES_KEY").desInitKey("DES_INIT_KEY")
-                .build();
+            .apiUrl("http://vogle.com")
+            .merchantId("XX002").serviceId("BBB")
+            .basicAuthId("BASIC").basicAuthPassword("PASSWORD")
+            .hashKey("HASH_KEY")
+            .cipherEnabled(true)
+            .desKey("DES_KEY").desInitKey("DES_INIT_KEY")
+            .build();
 
         // when
         Sbpayment sbpayment = Sbpayment.newInstance(config);

@@ -115,7 +115,7 @@ public class DefaultCreditCardPayment implements CreditCardPayment {
         ValidationHelper.beanValidate(paymentInfo, token);
 
         CardAuthorizeRequest request = newCardAuthorizeRequest(paymentInfo, token.getDealingsType(),
-                token.getDivideTimes());
+            token.getDivideTimes());
 
         // options
         CardAuthorizeOptions options = new CardAuthorizeOptions();
@@ -133,7 +133,7 @@ public class DefaultCreditCardPayment implements CreditCardPayment {
         ValidationHelper.beanValidate(paymentInfo, savedCard);
 
         CardAuthorizeRequest request = newCardAuthorizeRequest(paymentInfo, savedCard.getDealingsType(),
-                savedCard.getDivideTimes());
+            savedCard.getDivideTimes());
 
         // options
         CardAuthorizeOptions options = new CardAuthorizeOptions();
@@ -183,7 +183,7 @@ public class DefaultCreditCardPayment implements CreditCardPayment {
         if (trackingInfo.hasOptions()) {
             CardAuthorizeMethod method = new CardAuthorizeMethod();
             method.setDealingsType(trackingInfo.getDealingsType() == null ? null
-                    : trackingInfo.getDealingsType().code());
+                : trackingInfo.getDealingsType().code());
             method.setDivideTimes(trackingInfo.getDivideTimes());
 
             if (trackingInfo.isSavingCreditCard()) {

@@ -98,12 +98,12 @@ public class SpsClientTest {
         when(mockResponse.getStatusLine()).thenReturn(getStatusLine(200));
         when(mockResponse.getAllHeaders()).thenReturn(new Header[0]);
         when(mockResponse.getEntity()).thenReturn(
-                new StringEntity("<sps-api-response id=\"ST02-00101-101\">\n"
-                        + "<res_result>OK</res_result>\n"
-                        + "<res_sps_transaction_id>X1234567890123456789012345678901</res_sps_transaction_id>\n"
-                        + "<res_process_date>20120620144317</res_process_date>\n"
-                        + "<res_date>20120620144318</res_date>\n"
-                        + "</sps-api-response>"));
+            new StringEntity("<sps-api-response id=\"ST02-00101-101\">\n"
+                + "<res_result>OK</res_result>\n"
+                + "<res_sps_transaction_id>X1234567890123456789012345678901</res_sps_transaction_id>\n"
+                + "<res_process_date>20120620144317</res_process_date>\n"
+                + "<res_date>20120620144318</res_date>\n"
+                + "</sps-api-response>"));
         HttpClient mockClient = mock(HttpClient.class);
         when(mockClient.execute(Mockito.any())).thenReturn(mockResponse);
 
@@ -224,13 +224,13 @@ public class SpsClientTest {
 
     private Sbpayment settings(String merchantId, String serviceId) {
         return Sbpayment.newInstance(SpsConfig.builder()
-                .apiUrl("http://vogle.com")
-                .merchantId(merchantId)
-                .serviceId(serviceId)
-                .basicAuthId("BASIC_ID")
-                .basicAuthPassword("BASIC_PASS")
-                .hashKey("HASH_KEY")
-                .build());
+            .apiUrl("http://vogle.com")
+            .merchantId(merchantId)
+            .serviceId(serviceId)
+            .basicAuthId("BASIC_ID")
+            .basicAuthPassword("BASIC_PASS")
+            .hashKey("HASH_KEY")
+            .build());
     }
 
     private SpsClient createClient(String merchantId, String serviceId) {
