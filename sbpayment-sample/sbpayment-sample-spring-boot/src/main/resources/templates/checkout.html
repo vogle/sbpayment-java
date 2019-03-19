@@ -39,14 +39,6 @@
             }, self.afterGenerateToken);
         }
 
-        function myCard() {
-            $("#payMyCard").submit();
-        }
-
-        function payeasy() {
-            $("#payPayEasy").submit();
-        }
-
         var afterGenerateToken = function (response) {
             console.log(response);
             var isSave = String($("#cc-save").val());
@@ -58,6 +50,14 @@
             } else {
                 alert('Fail');
             }
+        }
+
+        function myCard() {
+            $("#payMyCard").submit();
+        }
+
+        function payeasy() {
+            $("#payPayEasy").submit();
         }
     </script>
 

@@ -1,7 +1,9 @@
 package com.vogle.sbpayment.springboot;
 
+import com.vogle.sbpayment.client.InvalidAccessException;
 import com.vogle.sbpayment.client.SpsResult;
 import com.vogle.sbpayment.client.params.PaymentInfo;
+import com.vogle.sbpayment.client.responses.SpsResponse;
 import com.vogle.sbpayment.creditcard.CreditCardPayment;
 import com.vogle.sbpayment.creditcard.params.BySavedCard;
 import com.vogle.sbpayment.creditcard.params.ByToken;
@@ -13,14 +15,21 @@ import com.vogle.sbpayment.creditcard.responses.CardInfoLookupResponse;
 import com.vogle.sbpayment.creditcard.responses.DefaultResponse;
 import com.vogle.sbpayment.payeasy.PayEasyPayment;
 import com.vogle.sbpayment.payeasy.params.PayEasy;
+import com.vogle.sbpayment.payeasy.receivers.PayEasyDepositReceived;
+import com.vogle.sbpayment.payeasy.receivers.PayEasyExpiredCancelReceived;
+import com.vogle.sbpayment.payeasy.responses.PayEasyPaymentResponse;
 import com.vogle.sbpayment.springboot.autoconfigure.SbpaymentProperties;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.servlet.view.UrlBasedViewResolver;
 
 import java.util.Map;
@@ -38,13 +47,14 @@ import javax.servlet.http.HttpSession;
 public class SampleController {
 
     private static final String SAMPLE_CUSTOMER_CODE = "SAMPLE_01";
-    private static final String SESSION_PAYMENT_TYPE = "PAYMENT-TYPE";
     private static final String SESSION_TRACKING_ID = "TRACKING-ID";
     private static final String SESSION_RESULT = "RESULT";
 
     private final SbpaymentProperties sbpaymentProperties;
     private CreditCardPayment creditCardPayment;
     private PayEasyPayment payEasyPayment;
+
+    private ObjectMapper mapper = new ObjectMapper();
 
     public SampleController(SbpaymentProperties sbpaymentProperties) {
         this.sbpaymentProperties = sbpaymentProperties;
@@ -61,19 +71,17 @@ public class SampleController {
     }
 
     @GetMapping("/")
-    public String checkout(ModelMap modelMap, HttpSession session) {
-        session.removeAttribute(SESSION_PAYMENT_TYPE);
-
+    public String checkout(ModelMap modelMap) {
         if (creditCardPayment != null) {
             modelMap.addAttribute("hasCreditCard", true);
             modelMap.addAttribute("spsTokenUrl", sbpaymentProperties.getCreditcard().getTokenUrl());
             modelMap.addAttribute("merchantId", sbpaymentProperties.getClient().getMerchantId());
             modelMap.addAttribute("serviceId", sbpaymentProperties.getClient().getServiceId());
 
+            // saved card information
             SpsResult<CardInfoLookupResponse> cardInfo = creditCardPayment.lookupCard(
                 SAMPLE_CUSTOMER_CODE, CardInfoResponseType.LOWER4);
             CardInfoLookupMethodInfo methodInfo = cardInfo.getBody().getPayMethodInfo();
-
             modelMap.addAttribute("hasSavedCard", methodInfo != null);
             modelMap.addAttribute("savedCard", methodInfo);
         }
@@ -84,6 +92,52 @@ public class SampleController {
         return "checkout";
     }
 
+    @GetMapping("/result")
+    public String result(ModelMap modelMap, HttpSession session) {
+        SpsResult result = (SpsResult) session.getAttribute(SESSION_RESULT);
+        Assert.notNull(result, "Don't have result information");
+
+        if (result.isSuccessfulConnection()) {
+            modelMap.addAttribute("title", result.getBody().getDescription());
+        } else {
+            modelMap.addAttribute("title", "Fail: " + result.getStatus());
+        }
+
+        // check tracking ID
+        String trackingId = (String) session.getAttribute(SESSION_TRACKING_ID);
+        if (!StringUtils.isEmpty(trackingId)) {
+            modelMap.addAttribute("hasTrackingId", true);
+        }
+
+        SpsResponse response = result.getBody();
+        if (response instanceof PayEasyPaymentResponse) {
+            String custNumber = ((PayEasyPaymentResponse) response).getPayEasyInfo().getCustNumber();
+            modelMap.addAttribute("custNumberUrl", custNumber);
+        }
+
+        modelMap.addAttribute("headers", result.getHeaders());
+        modelMap.addAttribute("bodyMap", mapper.convertValue(result.getBody(), Map.class));
+
+        return "result";
+    }
+
+    private String saveCreditCardResult(HttpSession session, SpsResult result) {
+        if (result.isSuccess()) {
+            String trackingId = ((CardAuthorizeResponse) result.getBody()).getTrackingId();
+            session.setAttribute(SESSION_TRACKING_ID, trackingId);
+        }
+
+        return saveResult(session, result);
+    }
+
+    private String saveResult(HttpSession session, SpsResult result) {
+        session.setAttribute(SESSION_RESULT, result);
+        return UrlBasedViewResolver.REDIRECT_URL_PREFIX.concat("/result");
+    }
+
+    /**
+     * Payment Sample
+     */
     @PostMapping("/payment")
     public String payment(HttpServletRequest request, HttpSession session) {
 
@@ -104,13 +158,13 @@ public class SampleController {
                 .tokenKey(paramTokenKey)
                 .savingCreditCard(doSave)
                 .build();
+            return saveCreditCardResult(session, creditCardPayment.authorize(paymentInfo, token));
 
-            saveCreditCardInfo(session, creditCardPayment.authorize(paymentInfo, token));
         } else if ("myCard".equals(request.getParameter("type"))) {
             BySavedCard savedCard = BySavedCard.builder().build();
-            saveCreditCardInfo(session, creditCardPayment.authorize(paymentInfo, savedCard));
+            return saveCreditCardResult(session, creditCardPayment.authorize(paymentInfo, savedCard));
+
         } else if ("payeasy".equals(request.getParameter("type"))) {
-            BySavedCard savedCard = BySavedCard.builder().build();
             PayEasy payEasy = PayEasy.builder()
                 .firstName("太郎").lastName("名前")
                 .firstNameKana("タロウ").lastNameKana("ナマエ")
@@ -118,79 +172,94 @@ public class SampleController {
                 .mail("mail@sample.sample")
                 .build();
 
-            session.setAttribute(SESSION_PAYMENT_TYPE, "PAYEASY");
-            saveResult(session, payEasyPayment.payment(paymentInfo, payEasy));
+            return saveResult(session, payEasyPayment.payment(paymentInfo, payEasy));
+
         } else {
-            throw new IllegalArgumentException("Don't have payment type");
-        }
-
-        return UrlBasedViewResolver.REDIRECT_URL_PREFIX.concat("/result");
-    }
-
-    @GetMapping("/result")
-    public String result(ModelMap modelMap, HttpSession session) {
-        String paymentType = (String) session.getAttribute(SESSION_PAYMENT_TYPE);
-        ObjectMapper mapper = new ObjectMapper();
-        if ("CARD".equals(paymentType)) {
-            String trackingId = (String) session.getAttribute(SESSION_TRACKING_ID);
-            SpsResult result = (SpsResult) session.getAttribute(SESSION_RESULT);
-            modelMap.addAttribute("title", "Credit Card: " + result.getBody().getDescription());
-            modelMap.addAttribute("trackingId", trackingId);
-            modelMap.addAttribute("status", result.getStatus());
-            modelMap.addAttribute("headers", result.getHeaders());
-            modelMap.addAttribute("bodyMap", mapper.convertValue(result.getBody(), Map.class));
-            modelMap.addAttribute("result", result);
-        } else if ("DELETE_CARD".equals(paymentType)) {
-            SpsResult result = (SpsResult) session.getAttribute(SESSION_RESULT);
-            modelMap.addAttribute("title", "Credit Card: " + result.getBody().getDescription());
-            modelMap.addAttribute("headers", result.getHeaders());
-            modelMap.addAttribute("bodyMap", mapper.convertValue(result.getBody(), Map.class));
-        } else if ("PAYEASY".equals(paymentType)) {
-            SpsResult result = (SpsResult) session.getAttribute(SESSION_RESULT);
-            modelMap.addAttribute("title", "Credit Card: " + result.getBody().getDescription());
-            modelMap.addAttribute("headers", result.getHeaders());
-            modelMap.addAttribute("bodyMap", mapper.convertValue(result.getBody(), Map.class));
-        } else {
-            throw new IllegalStateException("Don't have payment type");
-        }
-        return "result";
-    }
-
-    private void saveCreditCardInfo(HttpSession session, SpsResult result) {
-        session.setAttribute(SESSION_PAYMENT_TYPE, "CARD");
-        session.setAttribute(SESSION_RESULT, result);
-
-        if (result.isSuccess()) {
-            String trackingId = ((CardAuthorizeResponse) result.getBody()).getTrackingId();
-            session.setAttribute(SESSION_TRACKING_ID, trackingId);
+            throw new IllegalStateException("Don't have the payment type");
         }
     }
 
-    private String saveResult(HttpSession session, SpsResult result) {
-        session.setAttribute(SESSION_RESULT, result);
-        return UrlBasedViewResolver.REDIRECT_URL_PREFIX.concat("/result");
-    }
-
+    /**
+     * Cancel Credit-card
+     */
     @GetMapping("/cancel")
     public String cancel(HttpSession session) {
         String trackingId = (String) session.getAttribute(SESSION_TRACKING_ID);
+        Assert.hasText(trackingId, "Don't have the trackingId");
+
         SpsResult<DefaultResponse> result = creditCardPayment.cancel(trackingId);
         session.removeAttribute(SESSION_TRACKING_ID);
         return saveResult(session, result);
     }
 
+    /**
+     * Capture Credit-card
+     */
     @GetMapping("/capture")
     public String capture(HttpSession session) {
         String trackingId = (String) session.getAttribute(SESSION_TRACKING_ID);
+        Assert.hasText(trackingId, "Don't have the trackingId");
+
         SpsResult<DefaultResponse> result = creditCardPayment.capture(trackingId);
         return saveResult(session, result);
     }
 
+    /**
+     * Delete saved-credit-card
+     */
     @GetMapping("/delete")
     public String delete(HttpSession session) {
-        SpsResult<CardInfoDeleteResponse> result = creditCardPayment.deleteCard(
-            SAMPLE_CUSTOMER_CODE);
-        session.setAttribute(SESSION_PAYMENT_TYPE, "DELETE_CARD");
+        SpsResult<CardInfoDeleteResponse> result = creditCardPayment.deleteCard(SAMPLE_CUSTOMER_CODE);
         return saveResult(session, result);
+    }
+
+    /**
+     * Receive the deposit for pay-easy
+     */
+    @GetMapping("/deposit")
+    public ResponseEntity receiveDeposit(@RequestBody String body) {
+        try {
+            PayEasyDepositReceived depositReceived = payEasyPayment.receiveDeposit(body);
+            // some check data
+            String trackingId = depositReceived.getTrackingId();
+            String errorMsg = "";
+            if (trackingId == null) {
+                errorMsg = "Don't have order";
+            }
+
+            if (StringUtils.isEmpty(errorMsg)) {
+                // some success process
+                return ResponseEntity.ok(payEasyPayment.successDeposit());
+            } else {
+                return ResponseEntity.ok(payEasyPayment.failDeposit(errorMsg));
+            }
+        } catch (InvalidAccessException e) {
+            return ResponseEntity.ok(payEasyPayment.failDeposit(e.getMessage()));
+        }
+    }
+
+    /**
+     * Receive the expired cancel for pay-easy
+     */
+    @GetMapping("/expired-cancel")
+    public ResponseEntity receiveExpiredCancel(@RequestBody String body) {
+        try {
+            PayEasyExpiredCancelReceived cancelReceived = payEasyPayment.receiveExpiredCancel(body);
+            // some check data
+            String trackingId = cancelReceived.getTrackingId();
+            String errorMsg = "";
+            if (trackingId == null) {
+                errorMsg = "Don't have order";
+            }
+
+            if (StringUtils.isEmpty(errorMsg)) {
+                // some cancel process
+                return ResponseEntity.ok(payEasyPayment.successExpiredCancel());
+            } else {
+                return ResponseEntity.ok(payEasyPayment.failExpiredCancel(errorMsg));
+            }
+        } catch (InvalidAccessException e) {
+            return ResponseEntity.ok(payEasyPayment.failExpiredCancel(e.getMessage()));
+        }
     }
 }

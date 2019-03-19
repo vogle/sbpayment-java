@@ -27,7 +27,9 @@
 <div class="container-fluid">
     <div class="header m-3">
         <h1><img alt=""
-                 class="mr-3" src="https://gravatar.com/userimage/110059180/7c4c2d37772675fc66900248f5da5500.png?size=50"/>sbpayment-sample-spring-boot</h1>
+                 class="mr-3"
+                 src="https://gravatar.com/userimage/110059180/7c4c2d37772675fc66900248f5da5500.png?size=50"/>sbpayment-sample-spring-boot
+        </h1>
     </div>
 
     <div class="card">
@@ -58,8 +60,10 @@
                 </table>
             </div>
             <a class="btn btn-primary" href="/">Go to checkout</a>
-            <a class="btn btn-primary" href="/capture" th:if="${trackingId}">Capture</a>
-            <a class="btn btn-primary" href="/cancel" th:if="${trackingId}">Cancel or Refund</a>
+            <a class="btn btn-primary" href="/capture" th:if="${hasTrackingId}">Capture</a>
+            <a class="btn btn-primary" href="/cancel" th:if="${hasTrackingId}">Cancel or Refund</a>
+            <a class="btn btn-primary" target="_blank" th:href="${custNumberUrl}" th:if="${custNumberUrl}">
+                PAY-EASY URL</a>
         </div>
     </div>
 </div>
