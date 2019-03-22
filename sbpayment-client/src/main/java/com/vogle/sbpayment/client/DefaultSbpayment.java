@@ -72,6 +72,14 @@ public class DefaultSbpayment implements Sbpayment {
     }
 
     /**
+     * SPS Information
+     */
+    @Override
+    public SpsConfig.SpsInfo getSpsInfo() {
+        return config.getSpsInfo();
+    }
+
+    /**
      * Gets made getMapper
      *
      * @return SpsMapper

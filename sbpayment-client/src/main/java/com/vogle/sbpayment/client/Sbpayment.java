@@ -61,6 +61,12 @@ public interface Sbpayment {
     }
 
     /**
+     * SPS Information
+     */
+    SpsConfig.SpsInfo getSpsInfo();
+
+
+    /**
      * Gets made getMapper
      *
      * @return SpsMapper
