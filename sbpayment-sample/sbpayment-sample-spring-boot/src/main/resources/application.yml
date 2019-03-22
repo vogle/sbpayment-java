@@ -8,3 +8,6 @@ spring:
 logging:
   level:
     com.vogle: info
+
+server:
+  port: 8000

@@ -146,20 +146,25 @@ public class SbpaymentProperties {
          */
         @NestedConfigurationProperty
         private final ClientProperties alternateClient = new ClientProperties();
+
         private boolean enabled = true;
+
         /**
          * Token JS URL. <br/>
          * TokenサビースのJSのURL
          */
         private String tokenUrl;
+
         /**
          * 顧客コードを送るとき、SBPS 顧客情報を返却する
          */
         private boolean customerInfoReturn;
+
         /**
          * カード情報を送るとき、カードブランド情報を返却する。
          */
         private boolean cardbrandReturn;
+
         /**
          * Alternate getClient enabled<br/>
          * Trueにしたら、本alternateClientの情報を利用する。
@@ -179,26 +184,33 @@ public class SbpaymentProperties {
          */
         @NestedConfigurationProperty
         private final ClientProperties alternateClient = new ClientProperties();
+
         private boolean enabled = true;
+
         private Type type = Type.ONLINE;
+
         /**
          * 金融機関コード、情報リンク方式の場合のみ必須です。ただし、電算システムを利用の場合は不要です。
          */
         private String payCsv;
+
         /**
          * 請求内容カナ、ATM 等に表示されます。（全角英数カナ）
          */
         private String billInfoKana;
+
         /**
          * 請求内容漢字、ATM 等に表示されます。（全角）
          */
         private String billInfo;
+
         /**
          * 支払期限、受注日時からデフォルトの支払期限の設定値内での指定が可能です。
          * ウェルネットを利用されている加盟店の場合、支払期限は当日指定が可能です。
          * 本日は「0」に基準として、日数を加算。
          */
         private int billLimitDay = 3;
+
         /**
          * Alternate getClient enabled<br/>
          * Trueにしたら、本alternateClientの情報を利用する。
