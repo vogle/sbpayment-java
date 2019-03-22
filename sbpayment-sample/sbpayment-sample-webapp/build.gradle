@@ -1,0 +1,24 @@
+plugins {
+    id 'war'
+    id 'org.gretty' version '2.3.1'
+}
+
+description = 'SBPayment Sample - Web Application'
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    implementation project(':sbpayment-creditcard')
+    implementation project(':sbpayment-payeasy')
+
+    providedCompile 'javax.servlet:javax.servlet-api'
+
+    implementation 'ch.qos.logback:logback-classic'
+}
+
+gretty {
+    httpPort = 8010
+    contextPath = '/'
+}
