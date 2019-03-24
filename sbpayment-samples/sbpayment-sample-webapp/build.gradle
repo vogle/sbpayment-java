@@ -19,6 +19,6 @@ dependencies {
 }
 
 gretty {
-    httpPort = 8010
+    httpPort = 8020
     contextPath = '/'
 }
