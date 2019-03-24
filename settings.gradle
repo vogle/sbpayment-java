@@ -6,7 +6,5 @@ include "sbpayment-payeasy"
 
 include "sbpayment-spring-boot-starter"
 
-include "document"
-
-include "sbpayment-sample:sbpayment-sample-spring-boot"
-include "sbpayment-sample:sbpayment-sample-webapp"
+include "sbpayment-samples:sbpayment-sample-spring-boot"
+include "sbpayment-samples:sbpayment-sample-webapp"
