@@ -106,8 +106,8 @@ If you want to integTest, You have to setup Sbpayment information
 
 ## Development Sample
 
-- **Use Spring-Boot:** See [sbpayment-sample-spring-boot](sbpayment-sample/sbpayment-sample-spring-boot)
-- **General Web Application:** See [sbpayment-sample-webapp](sbpayment-sample/sbpayment-sample-webapp)
+- **Use Spring-Boot:** See [sbpayment-sample-spring-boot](sbpayment-samples/sbpayment-sample-spring-boot)
+- **General Web Application:** See [sbpayment-sample-webapp](sbpayment-samples/sbpayment-sample-webapp)
 
 
 ## API

@@ -104,8 +104,8 @@ dependencies {
 
 ## 開発サンプル
 
-- **Spring-Bootの利用:** [sbpayment-sample-spring-boot](sbpayment-sample/sbpayment-sample-spring-boot)
-- **一般ウェブアプリケーション:** [sbpayment-sample-webapp](sbpayment-sample/sbpayment-sample-webapp)
+- **Spring-Bootの利用:** [sbpayment-sample-spring-boot](sbpayment-samples/sbpayment-sample-spring-boot)
+- **一般ウェブアプリケーション:** [sbpayment-sample-webapp](sbpayment-samples/sbpayment-sample-webapp)
 
 
 ## API

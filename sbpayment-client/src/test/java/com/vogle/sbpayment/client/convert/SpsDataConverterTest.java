@@ -280,11 +280,11 @@ public class SpsDataConverterTest {
 
     private class NoGetterObject {
         @MultiByteString
-        String some;
+        private String some;
 
         @CipherString
-        String cipher;
+        private String cipher;
 
-        String encryptedFlg;
+        private String encryptedFlg;
     }
 }
