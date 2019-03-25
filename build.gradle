@@ -20,11 +20,13 @@ buildScan {
 
     if (System.getenv('CI')) {
         tag 'CI'
-        link "CI build", System.getenv("BUILD_URL")
+        
+        if (System.getenv('TRAVIS')) {
+            link "TRAVIS BUILD", System.getenv("TRAVIS_BUILD_WEB_URL")
+        }
     } else {
         tag 'Local'
     }
-
     tag System.getProperty('os.name')
 }
 
