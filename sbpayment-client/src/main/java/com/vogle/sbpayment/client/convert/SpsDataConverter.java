@@ -46,12 +46,12 @@ public class SpsDataConverter {
     private static final String PREFIX_SET = "set";
     private static final String ITERATOR = "iterator";
 
+    private static final String CHARSET_NAME = "charsetName";
+    private static final String SOURCE = "source";
+
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SpsDataConverter.class);
-
-    private SpsDataConverter() {
-    }
 
     /**
      * If the filed has {@link MultiByteString}, It is doing Base64Encoding<br/>
@@ -78,8 +78,8 @@ public class SpsDataConverter {
     }
 
     private static <T> void base64Encode(Charset charsetName, boolean enableCipher, T source) {
-        ValidationHelper.assertsNotNull("charsetName", charsetName);
-        ValidationHelper.assertsNotNull("source", source);
+        ValidationHelper.assertsNotNull(CHARSET_NAME, charsetName);
+        ValidationHelper.assertsNotNull(SOURCE, source);
 
         // for supper class
         for (Class<?> currentClass : getClassTree(source.getClass())) {
@@ -130,8 +130,8 @@ public class SpsDataConverter {
      * @param <T>         String or Iterable object
      */
     public static <T> void encrypt(String desKey, String initKey, Charset charsetName, T source) {
-        ValidationHelper.assertsNotNull("charsetName", charsetName);
-        ValidationHelper.assertsNotNull("source", source);
+        ValidationHelper.assertsNotNull(CHARSET_NAME, charsetName);
+        ValidationHelper.assertsNotNull(SOURCE, source);
 
         // for supper class
         for (Class<?> currentClass : getClassTree(source.getClass())) {
@@ -174,8 +174,8 @@ public class SpsDataConverter {
      * @param <T>         String or Iterable object
      */
     public static <T> void decrypt(String desKey, String initKey, Charset charsetName, T source) {
-        ValidationHelper.assertsNotNull("charsetName", charsetName);
-        ValidationHelper.assertsNotNull("source", source);
+        ValidationHelper.assertsNotNull(CHARSET_NAME, charsetName);
+        ValidationHelper.assertsNotNull(SOURCE, source);
 
         // for supper class
         for (Class<?> currentClass : getClassTree(source.getClass())) {
@@ -217,7 +217,7 @@ public class SpsDataConverter {
      * @param enabled set "1" if true
      */
     public static <T> void setEncryptedFlg(T source, boolean enabled) {
-        ValidationHelper.assertsNotNull("source", source);
+        ValidationHelper.assertsNotNull(SOURCE, source);
 
         // for supper class
         for (Class<?> currentClass : getClassTree(source.getClass())) {
@@ -247,7 +247,7 @@ public class SpsDataConverter {
     public static String makeSpsHashCode(Object value, String hashKey, Charset charsetName) {
         ValidationHelper.assertsNotNull("value", value);
         ValidationHelper.assertsNotEmpty("hashKey", hashKey);
-        ValidationHelper.assertsNotNull("charsetName", charsetName);
+        ValidationHelper.assertsNotNull(CHARSET_NAME, charsetName);
 
         try {
             byte[] json = MAPPER.writeValueAsBytes(value);

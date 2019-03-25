@@ -30,16 +30,18 @@ import com.vogle.sbpayment.payeasy.receivers.PayEasyDepositReceived;
 import com.vogle.sbpayment.payeasy.receivers.PayEasyExpiredCancelReceived;
 import com.vogle.sbpayment.payeasy.responses.PayEasyPaymentResponse;
 
-import org.junit.Test;
-
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Base64;
 import java.util.Date;
 import java.util.Properties;
 import java.util.Random;
+
+import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -50,7 +52,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  **/
 public class PayEasyTest {
 
-    private static int BILL_LIMIT_DAY = 5;
+    private static final int BILL_LIMIT_DAY = 5;
 
     private String merchantId;
     private String serviceId;
@@ -61,9 +63,9 @@ public class PayEasyTest {
 
     public PayEasyTest() {
         Properties p = new Properties();
-        try {
-            p.load(new FileInputStream(System.getProperty("user.dir") + File.separator
-                + "../config/it2.properties"));
+        String path = System.getProperty("user.dir") + File.separator + "../config/it2.properties";
+        try (InputStream inputStream = Files.newInputStream(Paths.get(path))) {
+            p.load(inputStream);
         } catch (IOException ignored) {
             // ignored
         }

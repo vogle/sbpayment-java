@@ -43,9 +43,6 @@ public class SpsSecurity {
     private static final char SPACE = ' ';
     private static final String ALGORITHM = "DESede/CBC/NoPadding";
 
-    private SpsSecurity() {
-    }
-
     /**
      * Encrypt the source.
      *

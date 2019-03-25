@@ -38,9 +38,6 @@ public class ValidationHelper {
 
     private static final ValidatorFactory FACTORY = Validation.buildDefaultValidatorFactory();
 
-    private ValidationHelper() {
-    }
-
     private static Validator getValidator() {
         return FACTORY.getValidator();
     }

@@ -17,6 +17,7 @@
 package com.vogle.sbpayment.payeasy.params;
 
 import lombok.Builder;
+import lombok.Builder.Default;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -39,7 +40,7 @@ public class PayEasy {
     /**
      * 請求書発行区分
      */
-    @lombok.Builder.Default
+    @Default
     private IssueType issueType = IssueType.ISSUED;
 
     /**
@@ -117,6 +118,6 @@ public class PayEasy {
     /**
      * 端末種別
      */
-    @lombok.Builder.Default
+    @Default
     private TerminalValue terminalValue = TerminalValue.PC;
 }

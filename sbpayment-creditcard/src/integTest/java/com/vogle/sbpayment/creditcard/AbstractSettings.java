@@ -19,8 +19,10 @@ package com.vogle.sbpayment.creditcard;
 import com.vogle.sbpayment.client.Sbpayment;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Properties;
@@ -31,14 +33,14 @@ import java.util.Random;
  *
  * @author Allan Im
  **/
-abstract class AbstractSettings {
+class AbstractSettings {
     Sbpayment sbpayment;
 
     AbstractSettings() {
         Properties p = new Properties();
-        try {
-            p.load(new FileInputStream(System.getProperty("user.dir") + File.separator
-                + "../config/it1.properties"));
+        String path = System.getProperty("user.dir") + File.separator + "../config/it1.properties";
+        try (InputStream inputStream = Files.newInputStream(Paths.get(path))) {
+            p.load(inputStream);
         } catch (IOException ignored) {
             // ignored
         }

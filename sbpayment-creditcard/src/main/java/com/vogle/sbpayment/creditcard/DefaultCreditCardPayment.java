@@ -75,6 +75,10 @@ import java.util.List;
  */
 
 public class DefaultCreditCardPayment implements CreditCardPayment {
+    private static final String TRACKING_ID = "trackingId";
+    private static final String CUSTOMER_CODE = "customerCode";
+    private static final String TYPE = "type";
+
     private final SpsClient client;
     private final String returnCustomerInfo;
     private final String returnCardBrand;
@@ -219,7 +223,7 @@ public class DefaultCreditCardPayment implements CreditCardPayment {
 
     @Override
     public SpsResult<DefaultResponse> commit(String trackingId) {
-        ValidationHelper.assertsNotEmpty("trackingId", trackingId);
+        ValidationHelper.assertsNotEmpty(TRACKING_ID, trackingId);
         CardCommitRequest request = client.newRequest(CardCommitRequest.class);
 
         // set transaction information
@@ -231,7 +235,7 @@ public class DefaultCreditCardPayment implements CreditCardPayment {
 
     @Override
     public SpsResult<DefaultResponse> capture(String trackingId) {
-        ValidationHelper.assertsNotEmpty("trackingId", trackingId);
+        ValidationHelper.assertsNotEmpty(TRACKING_ID, trackingId);
         CardCaptureRequest request = client.newRequest(CardCaptureRequest.class);
 
         // set transaction information
@@ -243,7 +247,7 @@ public class DefaultCreditCardPayment implements CreditCardPayment {
 
     @Override
     public SpsResult<DefaultResponse> capture(String trackingId, Integer amount) {
-        ValidationHelper.assertsNotEmpty("trackingId", trackingId);
+        ValidationHelper.assertsNotEmpty(TRACKING_ID, trackingId);
         ValidationHelper.assertsAmount(amount);
         CardCaptureRequest request = client.newRequest(CardCaptureRequest.class);
 
@@ -261,7 +265,7 @@ public class DefaultCreditCardPayment implements CreditCardPayment {
 
     @Override
     public SpsResult<DefaultResponse> cancel(String trackingId) {
-        ValidationHelper.assertsNotEmpty("trackingId", trackingId);
+        ValidationHelper.assertsNotEmpty(TRACKING_ID, trackingId);
         CardCancelRequest request = client.newRequest(CardCancelRequest.class);
 
         // set transaction information
@@ -278,7 +282,7 @@ public class DefaultCreditCardPayment implements CreditCardPayment {
 
     @Override
     public SpsResult<DefaultResponse> refund(String trackingId, Integer amount) {
-        ValidationHelper.assertsNotEmpty("trackingId", trackingId);
+        ValidationHelper.assertsNotEmpty(TRACKING_ID, trackingId);
         ValidationHelper.assertsAmount(amount);
         CardPartialRefundRequest request = client.newRequest(CardPartialRefundRequest.class);
 
@@ -301,8 +305,8 @@ public class DefaultCreditCardPayment implements CreditCardPayment {
 
     @Override
     public SpsResult<CardTranLookupResponse> lookup(String trackingId, CardInfoResponseType type) {
-        ValidationHelper.assertsNotEmpty("trackingId", trackingId);
-        ValidationHelper.assertsNotNull("type", type);
+        ValidationHelper.assertsNotEmpty(TRACKING_ID, trackingId);
+        ValidationHelper.assertsNotNull(TYPE, type);
 
         CardTranLookupRequest request = client.newRequest(CardTranLookupRequest.class);
 
@@ -322,7 +326,7 @@ public class DefaultCreditCardPayment implements CreditCardPayment {
 
     @Override
     public SpsResult<CardInfoSaveResponse> saveCard(String customerCode, SaveCardByToken token) {
-        ValidationHelper.assertsNotEmpty("customerCode", customerCode);
+        ValidationHelper.assertsNotEmpty(CUSTOMER_CODE, customerCode);
         ValidationHelper.beanValidate(token);
 
         CardInfoSaveRequest request = client.newRequest(CardInfoSaveRequest.class);
@@ -342,7 +346,7 @@ public class DefaultCreditCardPayment implements CreditCardPayment {
 
     @Override
     public SpsResult<LegacyCardInfoSaveResponse> saveCard(String customerCode, SaveCreditCard creditCard) {
-        ValidationHelper.assertsNotEmpty("customerCode", customerCode);
+        ValidationHelper.assertsNotEmpty(CUSTOMER_CODE, customerCode);
         ValidationHelper.beanValidate(creditCard);
 
         LegacyCardInfoSaveRequest request = client.newRequest(LegacyCardInfoSaveRequest.class);
@@ -366,7 +370,7 @@ public class DefaultCreditCardPayment implements CreditCardPayment {
 
     @Override
     public SpsResult<CardInfoUpdateResponse> updateCard(String customerCode, SaveCardByToken token) {
-        ValidationHelper.assertsNotEmpty("customerCode", customerCode);
+        ValidationHelper.assertsNotEmpty(CUSTOMER_CODE, customerCode);
         ValidationHelper.beanValidate(token);
 
         CardInfoUpdateRequest request = client.newRequest(CardInfoUpdateRequest.class);
@@ -386,7 +390,7 @@ public class DefaultCreditCardPayment implements CreditCardPayment {
 
     @Override
     public SpsResult<LegacyCardInfoUpdateResponse> updateCard(String customerCode, SaveCreditCard creditCard) {
-        ValidationHelper.assertsNotEmpty("customerCode", customerCode);
+        ValidationHelper.assertsNotEmpty(CUSTOMER_CODE, customerCode);
         ValidationHelper.beanValidate(creditCard);
 
         LegacyCardInfoUpdateRequest request = client.newRequest(LegacyCardInfoUpdateRequest.class);
@@ -410,7 +414,7 @@ public class DefaultCreditCardPayment implements CreditCardPayment {
 
     @Override
     public SpsResult<CardInfoDeleteResponse> deleteCard(String customerCode) {
-        ValidationHelper.assertsNotEmpty("customerCode", customerCode);
+        ValidationHelper.assertsNotEmpty(CUSTOMER_CODE, customerCode);
 
         CardInfoDeleteRequest request = client.newRequest(CardInfoDeleteRequest.class);
 
@@ -428,8 +432,8 @@ public class DefaultCreditCardPayment implements CreditCardPayment {
 
     @Override
     public SpsResult<CardInfoLookupResponse> lookupCard(String customerCode, CardInfoResponseType type) {
-        ValidationHelper.assertsNotEmpty("customerCode", customerCode);
-        ValidationHelper.assertsNotNull("type", type);
+        ValidationHelper.assertsNotEmpty(CUSTOMER_CODE, customerCode);
+        ValidationHelper.assertsNotNull(TYPE, type);
 
         CardInfoLookupRequest request = client.newRequest(CardInfoLookupRequest.class);
 

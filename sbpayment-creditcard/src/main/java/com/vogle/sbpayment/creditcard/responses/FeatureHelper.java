@@ -50,9 +50,6 @@ class FeatureHelper {
         descMap.put("MG02-00104-101", "StoredCard Lookup");
     }
 
-    private FeatureHelper() {
-    }
-
     static String getDescription(String id) {
         return descMap.get(id);
     }

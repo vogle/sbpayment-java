@@ -34,9 +34,6 @@ class FeatureHelper {
         descMap.put("NT01-00104-703", "PayEasy Expired Notice");
     }
 
-    private FeatureHelper() {
-    }
-
     static String getDescription(String id) {
         return descMap.get(id);
     }
