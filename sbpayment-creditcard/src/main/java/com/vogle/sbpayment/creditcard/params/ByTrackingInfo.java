@@ -19,7 +19,6 @@ package com.vogle.sbpayment.creditcard.params;
 import com.vogle.sbpayment.creditcard.DealingsType;
 
 import lombok.Builder;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -31,7 +30,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 /**
- * If pay for tracking id, need this information
+ * If pay by tracking id, need this information
  *
  * @author Allan Im
  **/

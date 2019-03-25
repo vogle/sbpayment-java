@@ -57,6 +57,7 @@ public class DefaultSbpayment implements Sbpayment {
         try {
             properties.load(inputStream);
         } catch (IOException ignored) {
+            // ignored
         }
         this.config = SpsConfig.from(properties);
     }
@@ -68,6 +69,14 @@ public class DefaultSbpayment implements Sbpayment {
      */
     protected DefaultSbpayment(SpsConfig config) {
         this.config = config;
+    }
+
+    /**
+     * SPS Information
+     */
+    @Override
+    public SpsConfig.SpsInfo getSpsInfo() {
+        return config.getSpsInfo();
     }
 
     /**

@@ -28,9 +28,6 @@ class FeatureHelper {
 
     private static Map<String, String> descMap = new HashMap<>();
 
-    private FeatureHelper() {
-    }
-
     static {
 
         // Card payment features

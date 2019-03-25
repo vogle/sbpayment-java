@@ -55,12 +55,12 @@ public class CreditCardStorageTest extends AbstractSettings {
         // given
         String customerCode = customerCode();
         SaveCreditCard.Builder creditCard = SaveCreditCard.builder()
-                .number("4123450131003312")
-                .expiration("202412")
-                .securityCode("123")
-                .resrv1("テスト１")
-                .resrv2("テスト２")
-                .resrv3("テスト３");
+            .number("4123450131003312")
+            .expiration("202412")
+            .securityCode("123")
+            .resrv1("テスト１")
+            .resrv2("テスト２")
+            .resrv3("テスト３");
 
         // when save
         SpsResult<LegacyCardInfoSaveResponse> save = payment.saveCard(customerCode, creditCard.build());
@@ -116,7 +116,8 @@ public class CreditCardStorageTest extends AbstractSettings {
         assertThat(cardInfoLower4.getResrv3()).isEqualTo("更新３");
 
         // lookup ALL_MASK
-        SpsResult<CardInfoLookupResponse> lookupAllMask = payment.lookupCard(customerCode, CardInfoResponseType.ALL_MASK);
+        SpsResult<CardInfoLookupResponse> lookupAllMask = payment.lookupCard(customerCode,
+            CardInfoResponseType.ALL_MASK);
         assertCommon(lookupAllMask);
         assertThat(lookupAllMask.getBody().getSpsTransactionId()).isNotBlank();
         assertThat(lookupAllMask.getBody().isSuccess()).isTrue();
@@ -147,20 +148,20 @@ public class CreditCardStorageTest extends AbstractSettings {
         String customerCode = customerCode();
 
         PaymentInfo paymentInfo = PaymentInfo.builder()
-                .customerCode(customerCode)
-                .orderId(orderNo())
-                .itemId("ORDERITEMID")
-                .itemName("日本語")
-                .amount(1080)
-                .tax(80)
-                .build();
+            .customerCode(customerCode)
+            .orderId(orderNo())
+            .itemId("ORDERITEMID")
+            .itemName("日本語")
+            .amount(1080)
+            .tax(80)
+            .build();
 
         ByCreditCard creditCard = ByCreditCard.builder()
-                .number("4123450131003312")
-                .expiration("202412")
-                .securityCode("123")
-                .savingCreditCard(true)
-                .build();
+            .number("4123450131003312")
+            .expiration("202412")
+            .securityCode("123")
+            .savingCreditCard(true)
+            .build();
 
         // authorize
         SpsResult<CardAuthorizeResponse> authorize = payment.authorize(paymentInfo, creditCard);
@@ -190,13 +191,13 @@ public class CreditCardStorageTest extends AbstractSettings {
     public void saveThenAuth() {
         String customerCode = customerCode();
         SaveCreditCard creditCard = SaveCreditCard.builder()
-                .number("4123450131003312")
-                .expiration("202412")
-                .securityCode("123")
-                .resrv1("テスト１0")
-                .resrv2("テスト２0")
-                .resrv3("テスト３0")
-                .build();
+            .number("4123450131003312")
+            .expiration("202412")
+            .securityCode("123")
+            .resrv1("テスト１0")
+            .resrv2("テスト２0")
+            .resrv3("テスト３0")
+            .build();
 
         // save
         SpsResult<LegacyCardInfoSaveResponse> save = payment.saveCard(customerCode, creditCard);
@@ -208,17 +209,17 @@ public class CreditCardStorageTest extends AbstractSettings {
         assertThat(save.getBody().getSpsInfo()).isNotNull();
 
         PaymentInfo paymentInfo = PaymentInfo.builder()
-                .customerCode(customerCode)
-                .orderId(orderNo())
-                .itemId("ORDERITEMID")
-                .itemName("日本語")
-                .amount(1080)
-                .tax(80)
-                .build();
+            .customerCode(customerCode)
+            .orderId(orderNo())
+            .itemId("ORDERITEMID")
+            .itemName("日本語")
+            .amount(1080)
+            .tax(80)
+            .build();
 
         BySavedCard savedCard = BySavedCard.builder()
-                .dealingsType(DealingsType.LUMP_SUM)
-                .build();
+            .dealingsType(DealingsType.LUMP_SUM)
+            .build();
 
         // authorize
         SpsResult<CardAuthorizeResponse> authorize = payment.authorize(paymentInfo, savedCard);

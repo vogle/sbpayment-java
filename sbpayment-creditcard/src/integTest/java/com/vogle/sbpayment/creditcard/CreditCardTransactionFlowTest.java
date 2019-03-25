@@ -172,8 +172,8 @@ public class CreditCardTransactionFlowTest extends AbstractSettings {
         // reauthorize
         PaymentInfo newPaymentInfo = getDefaultPaymentInfo();
         ByTrackingInfo existingCard = ByTrackingInfo.builder()
-                .trackingId(orgTransactionId)
-                .build();
+            .trackingId(orgTransactionId)
+            .build();
 
         SpsResult<CardAuthorizeResponse> reauthorize = payment.reauthorize(newPaymentInfo, existingCard);
         String transactionId = reauthorize.getBody().getTrackingId();
@@ -196,10 +196,10 @@ public class CreditCardTransactionFlowTest extends AbstractSettings {
         // reauthorize
         PaymentInfo newPaymentInfo = getDefaultPaymentInfo();
         ByTrackingInfo existingCard = ByTrackingInfo.builder()
-                .trackingId(orgTransactionId)
-                .dealingsType(DealingsType.INSTALLMENT)
-                .divideTimes(5)
-                .build();
+            .trackingId(orgTransactionId)
+            .dealingsType(DealingsType.INSTALLMENT)
+            .divideTimes(5)
+            .build();
 
         SpsResult<CardAuthorizeResponse> reauthorize = payment.reauthorize(newPaymentInfo, existingCard);
         assertAuthorize(reauthorize);
@@ -218,21 +218,21 @@ public class CreditCardTransactionFlowTest extends AbstractSettings {
 
     private PaymentInfo getDefaultPaymentInfo() {
         return PaymentInfo.builder()
-                .customerCode("TEST_CUSTOMER")
-                .orderId(orderNo())
-                .itemId("ORDERITEMID")
-                .itemName("日本語カタカナ")
-                .amount(1080)
-                .tax(80)
-                .build();
+            .customerCode("TEST_CUSTOMER")
+            .orderId(orderNo())
+            .itemId("ORDERITEMID")
+            .itemName("日本語カタカナ")
+            .amount(1080)
+            .tax(80)
+            .build();
     }
 
     private ByCreditCard getDefaultPayCreditCard() {
         return ByCreditCard.builder()
-                .number("4123450131003312")
-                .expiration("202412")
-                .securityCode("123")
-                .build();
+            .number("4123450131003312")
+            .expiration("202412")
+            .securityCode("123")
+            .build();
     }
 
     private void assertAuthorize(SpsResult<CardAuthorizeResponse> authorize) {
@@ -241,7 +241,7 @@ public class CreditCardTransactionFlowTest extends AbstractSettings {
         assertThat(authorize.getBody().getTrackingId()).isNotBlank();
         assertThat(authorize.getBody().getPayMethodInfo()).isNotNull();
         assertThat(authorize.getBody().getPayMethodInfo().getCreditCardBrand())
-                .isEqualTo(CreditCardBrand.VISA);
+            .isEqualTo(CreditCardBrand.VISA);
     }
 
     private void assertTransaction(SpsResult<DefaultResponse> tran) {

@@ -19,11 +19,12 @@ package com.vogle.sbpayment.client.convert;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.junit.Test;
 
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -279,12 +280,11 @@ public class SpsDataConverterTest {
 
     private class NoGetterObject {
         @MultiByteString
-        private String some;
+        String some;
 
         @CipherString
-        private String cipher;
+        String cipher;
 
-        private String encryptedFlg;
-
+        String encryptedFlg;
     }
 }

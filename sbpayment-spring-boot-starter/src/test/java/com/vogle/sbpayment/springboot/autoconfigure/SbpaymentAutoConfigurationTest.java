@@ -40,22 +40,18 @@ import static org.assertj.core.api.Assertions.assertThat;
  **/
 public class SbpaymentAutoConfigurationTest {
 
-    private static Set<String> required = new HashSet<>();
-
-    static {
-        required.add("sbpayment.client.api-url:http://test.vogle.com");
-        required.add("sbpayment.client.hash-key:HASH_KEY");
-        required.add("sbpayment.client.merchant-id:MERCHANT_ID");
-        required.add("sbpayment.client.service-id:SERVICE_ID");
-    }
-
     @Rule
     public ExpectedException thrown = ExpectedException.none();
-
+    private Set<String> required = new HashSet<>();
     private AnnotationConfigApplicationContext context;
 
     @Before
     public void init() {
+        required.add("sbpayment.client.api-url:http://test.vogle.com");
+        required.add("sbpayment.client.hash-key:HASH_KEY");
+        required.add("sbpayment.client.merchant-id:MERCHANT_ID");
+        required.add("sbpayment.client.service-id:SERVICE_ID");
+
         this.context = new AnnotationConfigApplicationContext();
     }
 
@@ -97,6 +93,10 @@ public class SbpaymentAutoConfigurationTest {
         // check bean
         assertThat(this.context.getBeanNamesForType(SbpaymentProperties.class)).hasSize(1);
         assertThat(this.context.getBeanNamesForType(Sbpayment.class)).hasSize(1);
+
+        SbpaymentProperties.ClientProperties properties = this.context
+            .getBean(SbpaymentProperties.class).getClient();
+        assertThat(properties.getMerchantId()).isNotEmpty();
     }
 
 
@@ -113,7 +113,7 @@ public class SbpaymentAutoConfigurationTest {
 
     @Test
     public void checkCreditCardDisabled() {
-        required.add("sbpayment.creditcard.disabled:true");
+        required.add("sbpayment.creditcard.enabled:false");
         TestPropertyValues.of(required).applyTo(this.context);
         this.context.register(SbpaymentAutoConfiguration.class);
         this.context.refresh();
@@ -123,14 +123,58 @@ public class SbpaymentAutoConfigurationTest {
     }
 
     @Test
+    public void checkCreditCardAddOptions() {
+        required.add("sbpayment.creditcard.token-url:http://token.vogle.com");
+        required.add("sbpayment.creditcard.customerInfoReturn:true");
+        required.add("sbpayment.creditcard.cardbrandReturn:true");
+        required.add("sbpayment.creditcard.alternateClientEnabled:true");
+        required.add("sbpayment.creditcard.alternateClient.api-url:http://test.vogle.com");
+        required.add("sbpayment.creditcard.alternateClient.hash-key:HASH_KEY");
+        required.add("sbpayment.creditcard.alternateClient.merchant-id:MERCHANT_ID");
+        required.add("sbpayment.creditcard.alternateClient.service-id:SERVICE_ID");
+        TestPropertyValues.of(required).applyTo(this.context);
+        this.context.register(SbpaymentAutoConfiguration.class);
+        this.context.refresh();
+
+        // check bean
+        assertThat(this.context.getBeanNamesForType(CreditCardPayment.class)).hasSize(1);
+
+        SbpaymentProperties.CreditCardProperties properties = this.context
+            .getBean(SbpaymentProperties.class).getCreditcard();
+        assertThat(properties.isEnabled()).isTrue();
+        assertThat(properties.getTokenUrl()).isEqualTo("http://token.vogle.com");
+    }
+
+    @Test
     public void checkPayEasyDisabled() {
-        required.add("sbpayment.payeasy.disabled:true");
+        required.add("sbpayment.payeasy.enabled:false");
         TestPropertyValues.of(required).applyTo(this.context);
         this.context.register(SbpaymentAutoConfiguration.class);
         this.context.refresh();
 
         // check bean
         assertThat(this.context.getBeanNamesForType(PayEasyPayment.class)).hasSize(0);
+    }
+
+    @Test
+    public void checkPayEasyAddOptions() {
+        required.add("sbpayment.payeasy.type:LINK");
+        required.add("sbpayment.payeasy.pay-csv:0000");
+        required.add("sbpayment.payeasy.alternateClientEnabled:true");
+        required.add("sbpayment.payeasy.alternateClient.api-url:http://test.vogle.com");
+        required.add("sbpayment.payeasy.alternateClient.hash-key:HASH_KEY");
+        required.add("sbpayment.payeasy.alternateClient.merchant-id:MERCHANT_ID");
+        required.add("sbpayment.payeasy.alternateClient.service-id:SERVICE_ID");
+        TestPropertyValues.of(required).applyTo(this.context);
+        this.context.register(SbpaymentAutoConfiguration.class);
+        this.context.refresh();
+
+        // check bean
+        assertThat(this.context.getBeanNamesForType(CreditCardPayment.class)).hasSize(1);
+
+        SbpaymentProperties.PayEasyProperties properties = this.context
+            .getBean(SbpaymentProperties.class).getPayeasy();
+        assertThat(properties.isEnabled()).isTrue();
     }
 
 }

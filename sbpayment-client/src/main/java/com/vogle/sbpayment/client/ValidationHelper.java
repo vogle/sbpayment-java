@@ -42,9 +42,6 @@ public class ValidationHelper {
         return FACTORY.getValidator();
     }
 
-    private ValidationHelper() {
-    }
-
     /**
      * Check validation with Bean Object
      *

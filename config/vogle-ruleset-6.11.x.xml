@@ -46,7 +46,7 @@
     <!--<rule ref="category/java/bestpractices.xml/JUnitAssertionsShouldIncludeMessage"/>-->
     <rule ref="category/java/bestpractices.xml/JUnitTestContainsTooManyAsserts">
         <properties>
-            <property name="maximumAsserts" value="10"/>
+            <property name="maximumAsserts" value="15"/>
         </properties>
     </rule>
     <!--<rule ref="category/java/bestpractices.xml/JUnitTestsShouldIncludeAssert"/>-->
@@ -190,7 +190,7 @@
     </rule>
     <!--<rule ref="category/java/design.xml/FinalFieldCouldBeStatic"/>-->
     <rule ref="category/java/design.xml/GodClass"/>
-    <rule ref="category/java/design.xml/ImmutableField"/>
+    <!--<rule ref="category/java/design.xml/ImmutableField"/>-->
     <!--<rule ref="category/java/design.xml/LawOfDemeter"/>-->
     <rule ref="category/java/design.xml/LogicInversion"/>
     <!--<rule ref="category/java/design.xml/LoosePackageCoupling"/>-->

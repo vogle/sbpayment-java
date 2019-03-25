@@ -33,10 +33,16 @@ import com.vogle.sbpayment.payeasy.responses.PayEasyPaymentResponse;
  **/
 public interface PayEasyPayment {
 
+    /**
+     * Make new instance for LINK-TYPE
+     */
     static PayEasyPayment newInstance(Sbpayment sbpayment, LinkType linkType) {
         return new DefaultPayEasyPayment(sbpayment, linkType);
     }
 
+    /**
+     * Make new instance for ONLINE-TYPE
+     */
     static PayEasyPayment newInstance(Sbpayment sbpayment, OnlineType onlineType) {
         return new DefaultPayEasyPayment(sbpayment, onlineType);
     }

@@ -1,0 +1,13 @@
+spring:
+  devtools:
+    restart:
+      exclude: static/**
+  thymeleaf:
+    cache: false
+
+logging:
+  level:
+    com.vogle: info
+
+server:
+  port: 8010

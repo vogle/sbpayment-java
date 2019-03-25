@@ -5,9 +5,10 @@
 [![Javadocs](http://javadoc.io/badge/com.vogle.sbpayment/sbpayment-client.svg)](http://javadoc.io/doc/com.vogle.sbpayment/sbpayment-client)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0)
 [![Join the chat at https://gitter.im/vogle/sbpayment](https://badges.gitter.im/vogle/sbpayment.svg)](https://gitter.im/vogle/sbpayment)
+[![Gradle Scan](https://img.shields.io/badge/Gradle-Scan-blue.svg)](https://vogle.page.link/scan)
 
 [![Build Status](https://travis-ci.org/vogle/sbpayment-java.svg?branch=master)](https://travis-ci.org/vogle/sbpayment-java)
-[![Coverage Status](https://coveralls.io/repos/github/vogle/sbpayment-java/badge.svg?branch=master&service=github)](https://coveralls.io/github/vogle/sbpayment-java?branch=master)
+[![Coveralls](https://img.shields.io/coveralls/github/vogle/sbpayment-java.svg)](https://coveralls.io/github/vogle/sbpayment-java?branch=master)
 [![codecov](https://codecov.io/gh/vogle/sbpayment-java/branch/master/graph/badge.svg)](https://codecov.io/gh/vogle/sbpayment-java)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/ff7cb7516ca248cfb798e6ab08faaacf)](https://www.codacy.com/app/vogle/sbpayment-java?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=vogle/sbpayment-java&amp;utm_campaign=Badge_Grade)
 [![CodeFactor](https://www.codefactor.io/repository/github/vogle/sbpayment-java/badge)](https://www.codefactor.io/repository/github/vogle/sbpayment-java)
@@ -64,21 +65,89 @@ dependencies {
 </dependencies>
 ```
 
-#### モージュル
-| Module | Maven Central | JavaDoc |
-| ------------- | ------------- | ------------- |
-| Client | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.vogle.sbpayment/sbpayment-client/badge.svg?service=github)](https://maven-badges.herokuapp.com/maven-central/com.vogle.sbpayment/sbpayment-client) | [![Javadocs](http://javadoc.io/badge/com.vogle.sbpayment/sbpayment-client.svg)](http://javadoc.io/doc/com.vogle.sbpayment/sbpayment-client) |
-| Credit Card | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.vogle.sbpayment/sbpayment-creditcard/badge.svg?service=github)](https://maven-badges.herokuapp.com/maven-central/com.vogle.sbpayment/sbpayment-creditcard) | [![Javadocs](http://javadoc.io/badge/com.vogle.sbpayment/sbpayment-creditcard.svg)](http://javadoc.io/doc/com.vogle.sbpayment/sbpayment-creditcard) |
-| Pay-Easy | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.vogle.sbpayment/sbpayment-payeasy/badge.svg?service=github)](https://maven-badges.herokuapp.com/maven-central/com.vogle.sbpayment/sbpayment-payeasy) | [![Javadocs](http://javadoc.io/badge/com.vogle.sbpayment/sbpayment-payeasy.svg)](http://javadoc.io/doc/com.vogle.sbpayment/sbpayment-payeasy) |
-| Spring Boot Starter | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.vogle.sbpayment/sbpayment-spring-boot-starter/badge.svg?service=github)](https://maven-badges.herokuapp.com/maven-central/com.vogle.sbpayment/sbpayment-spring-boot-starter) | [![Javadocs](http://javadoc.io/badge/com.vogle.sbpayment/sbpayment-spring-boot-starter.svg)](http://javadoc.io/doc/com.vogle.sbpayment/sbpayment-spring-boot-starter) |
+#### モジュール
+| Module | Maven Central | JavaDoc | @since |
+| ------------- | ------------- | ------------- | ------------- |
+| Client | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.vogle.sbpayment/sbpayment-client/badge.svg?service=github)](https://maven-badges.herokuapp.com/maven-central/com.vogle.sbpayment/sbpayment-client) | [![Javadocs](http://javadoc.io/badge/com.vogle.sbpayment/sbpayment-client.svg)](http://javadoc.io/doc/com.vogle.sbpayment/sbpayment-client) | ![@since v1.0](https://img.shields.io/badge/%40since-v1.0-blueviolet.svg) |
+| Credit Card | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.vogle.sbpayment/sbpayment-creditcard/badge.svg?service=github)](https://maven-badges.herokuapp.com/maven-central/com.vogle.sbpayment/sbpayment-creditcard) | [![Javadocs](http://javadoc.io/badge/com.vogle.sbpayment/sbpayment-creditcard.svg)](http://javadoc.io/doc/com.vogle.sbpayment/sbpayment-creditcard) | ![@since v1.0](https://img.shields.io/badge/%40since-v1.0-blueviolet.svg) |
+| Pay-Easy | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.vogle.sbpayment/sbpayment-payeasy/badge.svg?service=github)](https://maven-badges.herokuapp.com/maven-central/com.vogle.sbpayment/sbpayment-payeasy) | [![Javadocs](http://javadoc.io/badge/com.vogle.sbpayment/sbpayment-payeasy.svg)](http://javadoc.io/doc/com.vogle.sbpayment/sbpayment-payeasy) | ![@since v1.0](https://img.shields.io/badge/%40since-v1.0-blueviolet.svg) |
+| Spring Boot Starter | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.vogle.sbpayment/sbpayment-spring-boot-starter/badge.svg?service=github)](https://maven-badges.herokuapp.com/maven-central/com.vogle.sbpayment/sbpayment-spring-boot-starter) | [![Javadocs](http://javadoc.io/badge/com.vogle.sbpayment/sbpayment-spring-boot-starter.svg)](http://javadoc.io/doc/com.vogle.sbpayment/sbpayment-spring-boot-starter) | ![@since v1.0](https://img.shields.io/badge/%40since-v1.0-blueviolet.svg) |
 
 
 ## プロジェクトソースからのビルド
 ルートディレクトリで `./gradlew build -x integTest`を実行してください。
 統合テストをしたい場合は、Sbpayment情報を設定する必要があります。
 
-## ガイド
-[ドキュメント](https://vogle.com/sbpayment-java/)を読んでください。
+#### テストプロパティの作成
+- `it1.properties`と`it2.properties`を`/config`のディレクトリへ作成.
+- `it1.properties`はSBペイメント（API・自動）のアカウント情報を作成。
+- `it2.properties`はSBペイメント（API・指定）のアカウント情報を作成。
+
+※　SBペイメントのアカウント情報は自分のアカウントを利用してください。
+
+#### プロパティの情報
+
+|項目|説明|デフォルト|
+| --- | --- | --- |
+|sbpayment.charset|SBペイメントのキャリクタセット|Shift_JIS|
+|sbpayment.timeZone|SBペイメントのタイムゾーン|JST|
+|sbpayment.apiUrl|SBペイメントのAPIサビースの接続先||
+|sbpayment.merchantId|SBペイメントから取得したマーチャントID||
+|sbpayment.serviceId|SBペイメントから取得したサービスID||
+|sbpayment.basicAuthId|SBペイメントのベーシック認証ID||
+|sbpayment.basicAuthPassword|SBペイメントのベーシック認証パスワード||
+|sbpayment.allowableSecondOnRequest|リクエスト時の許容時間(秒)|600|
+|sbpayment.hashKey|ハッシュキー||
+|sbpayment.cipherEnabled|3DES 暗号化使用可否|FALSE|
+|sbpayment.desKey|3DES 暗号化キー||
+|sbpayment.desInitKey|3DES 初期化キー||
+
+## 開発サンプル
+
+- **Spring-Bootの利用:** [sbpayment-sample-spring-boot](sbpayment-sample/sbpayment-sample-spring-boot)
+- **一般ウェブアプリケーション:** [sbpayment-sample-webapp](sbpayment-sample/sbpayment-sample-webapp)
+
+
+## API
+
+#### クレジットカード
+
+インターフェース: [CreditCardPayment](sbpayment-creditcard/src/main/java/com/vogle/sbpayment/creditcard/CreditCardPayment.java)
+
+|リクエストID|メッソド|説明|
+| --- | --- | --- |
+|ST01-00131-101|authorize|決済要求（トークン、保存カード）|
+|ST01-00111-101|authorize|決済要求（クレジットカード情報）*|
+|ST01-00133-101|reauthorize|再与信要求|
+|ST02-00101-101|commit|確定要求|
+|ST02-00201-101|capture|売上確定要求|
+|ST02-00303-101|cancel|取消要求|
+|ST02-00303-101|refund|返金要求（取消要求と統合）|
+|ST02-00307-101|refund|部分返金要求|
+|MG01-00101-101|lookup|決済結果参照|
+|MG02-00131-101|saveCard|クレジットカード情報を保存（トークン）|
+|MG02-00101-101|saveCard|クレジットカード情報を保存（クレジットカード情報）*|
+|MG02-00132-101|updateCard|クレジットカード情報を更新（トークン）|
+|MG02-00102-101|updateCard|クレジットカード情報を更新（クレジットカード情報）*|
+|MG02-00103-101|deleteCard|クレジットカード情報を削除|
+|MG02-00104-101|lookupCard|クレジットカード情報を参照|
+
+- *決済要求：本サビスは本番環境では使わないでください、実際sbpaymentのAPIから削除されました。
+
+#### ペイジー
+
+See Interface: [PayEasyPayment](sbpayment-payeasy/src/main/java/com/vogle/sbpayment/payeasy/PayEasyPayment.java)
+
+|リクエストID|メッソド|説明|
+| --- | --- | --- |
+|ST01-00101-703|payment|決済要求|
+|NT01-00103-703|入金通知受信|
+| |successDeposit|入金通知の成功結果を返す|
+| |failDeposit|入金通知の失敗結果を返す|
+|NT01-00104-703|支払期限切れキャンセル通知信|
+| |successExpiredCancel|支払期限切れキャンセル通の成功結果を返す|
+| |failExpiredCancel|支払期限切れキャンセル通の失敗結果を返す|
+
 
 ## サポート
 [![GitHub issues](https://img.shields.io/github/issues/vogle/sbpayment-java.svg?color=blue&logo=github)](https://github.com/vogle/sbpayment-java/issues)
@@ -90,6 +159,8 @@ dependencies {
 このプロジェクトを手助けしたいですか？遠慮なくプルリクエストを送信してください。
 
 ## ライセンス
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0)
+
 Copyright 2019 Vogle Labs.
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this work except in

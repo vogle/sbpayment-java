@@ -138,6 +138,7 @@ public class SpsConfig {
                         Method method = SpsConfigBuilder.class.getMethod(key, String.class);
                         method.invoke(builder, (String) value);
                     } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException ignored) {
+                        // ignored
                     }
                 }
             }
@@ -151,9 +152,9 @@ public class SpsConfig {
      */
     public SpsInfo getSpsInfo() {
         SpsInfo spsInfo = SpsInfo.builder()
-                .merchantId(this.merchantId)
-                .serviceId(this.serviceId)
-                .build();
+            .merchantId(this.merchantId)
+            .serviceId(this.serviceId)
+            .build();
 
         ValidationHelper.beanValidate(spsInfo);
 
@@ -165,14 +166,14 @@ public class SpsConfig {
      */
     public ClientInfo getClientInfo() {
         ClientInfo clientInfo = ClientInfo.builder()
-                .timeZone(this.timeZone)
-                .apiUrl(this.apiUrl)
-                .merchantId(this.merchantId)
-                .serviceId(this.serviceId)
-                .basicAuthId(this.basicAuthId)
-                .basicAuthPassword(this.basicAuthPassword)
-                .allowableSecondOnRequest(this.allowableSecondOnRequest)
-                .build();
+            .timeZone(this.timeZone)
+            .apiUrl(this.apiUrl)
+            .merchantId(this.merchantId)
+            .serviceId(this.serviceId)
+            .basicAuthId(this.basicAuthId)
+            .basicAuthPassword(this.basicAuthPassword)
+            .allowableSecondOnRequest(this.allowableSecondOnRequest)
+            .build();
 
         ValidationHelper.beanValidate(clientInfo);
 
@@ -184,10 +185,10 @@ public class SpsConfig {
      */
     public CipherInfo getCipherInfo() {
         CipherInfo cipherInfo = CipherInfo.builder()
-                .charset(this.charset).hashKey(this.hashKey)
-                .desKey(this.desKey).desInitKey(this.desInitKey)
-                .cipherEnabled(this.cipherEnabled)
-                .build();
+            .charset(this.charset).hashKey(this.hashKey)
+            .desKey(this.desKey).desInitKey(this.desInitKey)
+            .cipherEnabled(this.cipherEnabled)
+            .build();
 
         ValidationHelper.beanValidate(cipherInfo);
         if (this.cipherEnabled) {

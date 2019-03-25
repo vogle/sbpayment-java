@@ -1,0 +1,16 @@
+plugins {
+    id 'org.springframework.boot' version '2.1.3.RELEASE'
+}
+
+description = 'SBPayment Sample - Spring Boot Application'
+
+dependencies {
+    implementation project(':sbpayment-creditcard')
+    implementation project(':sbpayment-payeasy')
+    implementation project(':sbpayment-spring-boot-starter')
+
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+
+    runtimeOnly 'org.springframework.boot:spring-boot-devtools'
+}

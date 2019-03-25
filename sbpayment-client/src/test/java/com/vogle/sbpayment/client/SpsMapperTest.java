@@ -131,22 +131,22 @@ public class SpsMapperTest {
 
     private SpsConfig.CipherInfo cipherEnabled() {
         return SpsConfig.builder()
-                .apiUrl("http://vogle.com")
-                .hashKey("HASH_KEY2020")
-                .cipherEnabled(true)
-                .desKey("DES_KEY")
-                .desInitKey("INIT_KEY")
-                .build().getCipherInfo();
+            .apiUrl("http://vogle.com")
+            .hashKey("HASH_KEY2020")
+            .cipherEnabled(true)
+            .desKey("DES_KEY")
+            .desInitKey("INIT_KEY")
+            .build().getCipherInfo();
     }
 
     private SpsConfig.CipherInfo cipherDeisabled() {
         return SpsConfig.builder()
-                .apiUrl("http://vogle.com")
-                .hashKey("HASH_KEY")
-                .cipherEnabled(false)
-                .desKey("DES_KEY1")
-                .desInitKey("INIT_KEY1")
-                .build().getCipherInfo();
+            .apiUrl("http://vogle.com")
+            .hashKey("HASH_KEY")
+            .cipherEnabled(false)
+            .desKey("DES_KEY1")
+            .desInitKey("INIT_KEY1")
+            .build().getCipherInfo();
     }
 
     @Data
