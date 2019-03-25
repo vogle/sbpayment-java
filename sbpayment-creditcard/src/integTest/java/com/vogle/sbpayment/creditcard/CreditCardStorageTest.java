@@ -116,7 +116,8 @@ public class CreditCardStorageTest extends AbstractSettings {
         assertThat(cardInfoLower4.getResrv3()).isEqualTo("更新３");
 
         // lookup ALL_MASK
-        SpsResult<CardInfoLookupResponse> lookupAllMask = payment.lookupCard(customerCode, CardInfoResponseType.ALL_MASK);
+        SpsResult<CardInfoLookupResponse> lookupAllMask = payment.lookupCard(customerCode,
+            CardInfoResponseType.ALL_MASK);
         assertCommon(lookupAllMask);
         assertThat(lookupAllMask.getBody().getSpsTransactionId()).isNotBlank();
         assertThat(lookupAllMask.getBody().isSuccess()).isTrue();

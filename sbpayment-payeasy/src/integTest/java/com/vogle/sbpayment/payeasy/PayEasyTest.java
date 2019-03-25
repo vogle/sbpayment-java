@@ -30,6 +30,8 @@ import com.vogle.sbpayment.payeasy.receivers.PayEasyDepositReceived;
 import com.vogle.sbpayment.payeasy.receivers.PayEasyExpiredCancelReceived;
 import com.vogle.sbpayment.payeasy.responses.PayEasyPaymentResponse;
 
+import org.junit.Test;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -40,8 +42,6 @@ import java.util.Base64;
 import java.util.Date;
 import java.util.Properties;
 import java.util.Random;
-
-import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

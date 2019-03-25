@@ -133,8 +133,6 @@ public class CreditCardPayInfoTest extends AbstractSettings {
     @Test
     public void payAddItems() throws Exception {
         PaymentInfo paymentInfo = getDefaultPaymentInfo();
-        ByCreditCard creditCard = getDefaultPayCreditCard().build();
-
         paymentInfo.setAmount(0);
         paymentInfo.setTax(0);
 
@@ -148,6 +146,7 @@ public class CreditCardPayInfoTest extends AbstractSettings {
         paymentInfo.setItems(items);
 
         // test pay
+        ByCreditCard creditCard = getDefaultPayCreditCard().build();
         SpsResult<CardTranLookupResponse> lookup = testPay(paymentInfo, creditCard, CardInfoResponseType.NONE);
 
         PayMethodInfoDetail detail = lookup.getBody().getPayMethodInfo().getPayMethodInfoDetail();
