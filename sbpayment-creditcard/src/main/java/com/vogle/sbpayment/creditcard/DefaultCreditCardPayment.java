@@ -114,15 +114,16 @@ public class DefaultCreditCardPayment implements CreditCardPayment {
     public SpsResult<CardAuthorizeResponse> authorize(PaymentInfo paymentInfo, ByToken token) {
         ValidationHelper.beanValidate(paymentInfo, token);
 
-        CardAuthorizeRequest request = newCardAuthorizeRequest(paymentInfo, token.getDealingsType(),
-            token.getDivideTimes());
-
         // options
         CardAuthorizeOptions options = new CardAuthorizeOptions();
+        options.setCardbrandReturnFlg(returnCardBrand);
         options.setToken(token.getToken());
         options.setTokenKey(token.getTokenKey());
         options.setCustManageFlg(token.getSavingCreditCard());
-        options.setCardbrandReturnFlg(returnCardBrand);
+
+        // request
+        CardAuthorizeRequest request = newCardAuthorizeRequest(paymentInfo, token.getDealingsType(),
+            token.getDivideTimes());
         request.setPayOptions(options);
 
         return client.execute(request);
@@ -132,13 +133,14 @@ public class DefaultCreditCardPayment implements CreditCardPayment {
     public SpsResult<CardAuthorizeResponse> authorize(PaymentInfo paymentInfo, BySavedCard savedCard) {
         ValidationHelper.beanValidate(paymentInfo, savedCard);
 
-        CardAuthorizeRequest request = newCardAuthorizeRequest(paymentInfo, savedCard.getDealingsType(),
-            savedCard.getDivideTimes());
-
         // options
         CardAuthorizeOptions options = new CardAuthorizeOptions();
-        options.setCustManageFlg("0");
         options.setCardbrandReturnFlg(returnCardBrand);
+        options.setCustManageFlg("0");
+
+        // request
+        CardAuthorizeRequest request = newCardAuthorizeRequest(paymentInfo, savedCard.getDealingsType(),
+            savedCard.getDivideTimes());
         request.setPayOptions(options);
 
         return client.execute(request);

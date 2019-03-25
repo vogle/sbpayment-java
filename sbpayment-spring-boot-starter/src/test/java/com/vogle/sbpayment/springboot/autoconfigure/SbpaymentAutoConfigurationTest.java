@@ -93,6 +93,10 @@ public class SbpaymentAutoConfigurationTest {
         // check bean
         assertThat(this.context.getBeanNamesForType(SbpaymentProperties.class)).hasSize(1);
         assertThat(this.context.getBeanNamesForType(Sbpayment.class)).hasSize(1);
+
+        SbpaymentProperties.ClientProperties properties = this.context
+            .getBean(SbpaymentProperties.class).getClient();
+        assertThat(properties.getMerchantId()).isNotEmpty();
     }
 
 
@@ -120,6 +124,7 @@ public class SbpaymentAutoConfigurationTest {
 
     @Test
     public void checkCreditCardAddOptions() {
+        required.add("sbpayment.creditcard.token-url:http://token.vogle.com");
         required.add("sbpayment.creditcard.customerInfoReturn:true");
         required.add("sbpayment.creditcard.cardbrandReturn:true");
         required.add("sbpayment.creditcard.alternateClientEnabled:true");
@@ -133,6 +138,11 @@ public class SbpaymentAutoConfigurationTest {
 
         // check bean
         assertThat(this.context.getBeanNamesForType(CreditCardPayment.class)).hasSize(1);
+
+        SbpaymentProperties.CreditCardProperties properties = this.context
+            .getBean(SbpaymentProperties.class).getCreditcard();
+        assertThat(properties.isEnabled()).isTrue();
+        assertThat(properties.getTokenUrl()).isEqualTo("http://token.vogle.com");
     }
 
     @Test
@@ -161,6 +171,10 @@ public class SbpaymentAutoConfigurationTest {
 
         // check bean
         assertThat(this.context.getBeanNamesForType(CreditCardPayment.class)).hasSize(1);
+
+        SbpaymentProperties.PayEasyProperties properties = this.context
+            .getBean(SbpaymentProperties.class).getPayeasy();
+        assertThat(properties.isEnabled()).isTrue();
     }
 
 }

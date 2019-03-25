@@ -72,6 +72,9 @@ public class SampleController {
 
     private ObjectMapper mapper = new ObjectMapper();
 
+    /**
+     * Sample constructor
+     */
     public SampleController(SbpaymentProperties sbpaymentProperties) {
         this.sbpaymentProperties = sbpaymentProperties;
     }
@@ -86,6 +89,9 @@ public class SampleController {
         this.payEasyPayment = payEasyPayment;
     }
 
+    /**
+     * Checkout
+     */
     @GetMapping("/")
     public String checkout(ModelMap modelMap) {
         if (creditCardPayment != null) {
@@ -108,6 +114,9 @@ public class SampleController {
         return "checkout";
     }
 
+    /**
+     * Result
+     */
     @GetMapping("/result")
     public String result(ModelMap modelMap, HttpSession session) {
         SpsResult result = (SpsResult) session.getAttribute(SESSION_RESULT);

@@ -51,13 +51,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import static com.vogle.sbpayment.webapp.SamplePayment.SAMPLE_CUSTOMER_CODE;
-import static com.vogle.sbpayment.webapp.SamplePayment.SESSION_RESULT;
-import static com.vogle.sbpayment.webapp.SamplePayment.SESSION_TRACKING_ID;
-import static com.vogle.sbpayment.webapp.SamplePayment.TOKEN_URL;
-import static com.vogle.sbpayment.webapp.SamplePayment.getCreditCardPayment;
-import static com.vogle.sbpayment.webapp.SamplePayment.getPayEasyPayment;
-import static com.vogle.sbpayment.webapp.SamplePayment.getSpsInfo1;
+import static com.vogle.sbpayment.webapp.SamplePaymentHelper.SAMPLE_CUSTOMER_CODE;
+import static com.vogle.sbpayment.webapp.SamplePaymentHelper.SESSION_RESULT;
+import static com.vogle.sbpayment.webapp.SamplePaymentHelper.SESSION_TRACKING_ID;
+import static com.vogle.sbpayment.webapp.SamplePaymentHelper.TOKEN_URL;
+import static com.vogle.sbpayment.webapp.SamplePaymentHelper.getCreditCardPayment;
+import static com.vogle.sbpayment.webapp.SamplePaymentHelper.getPayEasyPayment;
+import static com.vogle.sbpayment.webapp.SamplePaymentHelper.getSpsInfo1;
 
 /**
  * Web App Sample
@@ -68,8 +68,17 @@ public class SampleServlet {
 
     private static ObjectMapper mapper = new ObjectMapper();
 
+    private SampleServlet() {
+    }
+
+    /**
+     * Checkout
+     */
     @WebServlet(name = "CheckoutServlet", urlPatterns = {""}, loadOnStartup = 1)
     public static class CheckoutServlet extends HttpServlet {
+        private static final long serialVersionUID = -8836634552026689449L;
+
+        @Override
         protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
@@ -90,8 +99,14 @@ public class SampleServlet {
         }
     }
 
+    /**
+     * Result
+     */
     @WebServlet(name = "ResultServlet", urlPatterns = {"result"})
     public static class ResultServlet extends HttpServlet {
+        private static final long serialVersionUID = 7208480300351246762L;
+
+        @Override
         protected void doGet(HttpServletRequest request, HttpServletResponse servletResponse)
             throws ServletException, IOException {
 
@@ -124,8 +139,14 @@ public class SampleServlet {
         }
     }
 
+    /**
+     * Payment
+     */
     @WebServlet(name = "PaymentServlet", urlPatterns = {"payment"})
     public static class PaymentServlet extends HttpServlet {
+        private static final long serialVersionUID = -5272486101980153775L;
+
+        @Override
         protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
             HttpSession session = request.getSession();
@@ -171,8 +192,14 @@ public class SampleServlet {
         }
     }
 
+    /**
+     * Cancel of Credit-Card Pay
+     */
     @WebServlet(name = "CancelServlet", urlPatterns = {"cancel"})
     public static class CancelServlet extends HttpServlet {
+        private static final long serialVersionUID = 3582649810313879996L;
+
+        @Override
         protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
             HttpSession session = request.getSession();
@@ -187,8 +214,14 @@ public class SampleServlet {
         }
     }
 
+    /**
+     * Capture of Credit-Card Pay
+     */
     @WebServlet(name = "CaptureServlet", urlPatterns = {"capture"})
     public static class CaptureServlet extends HttpServlet {
+        private static final long serialVersionUID = 4657167353274113344L;
+
+        @Override
         protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
             HttpSession session = request.getSession();
@@ -202,8 +235,14 @@ public class SampleServlet {
         }
     }
 
+    /**
+     * Delete of a saved card
+     */
     @WebServlet(name = "DeleteServlet", urlPatterns = {"delete"})
     public static class DeleteServlet extends HttpServlet {
+        private static final long serialVersionUID = 4055853635381702177L;
+
+        @Override
         protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
@@ -214,12 +253,18 @@ public class SampleServlet {
         }
     }
 
+    /**
+     * Receive a deposit of payeasy
+     */
     @WebServlet(name = "ReceiveDepositServlet", urlPatterns = {"deposit"})
     public static class ReceiveDepositServlet extends HttpServlet {
+        private static final long serialVersionUID = -557661427000989230L;
+
+        @Override
         protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-            PayEasyPayment payEasyPayment = SamplePayment.getPayEasyPayment();
+            PayEasyPayment payEasyPayment = getPayEasyPayment();
 
             String result;
             try {
@@ -249,11 +294,17 @@ public class SampleServlet {
         }
     }
 
+    /**
+     * Receive a expired cancel of payeasy
+     */
     @WebServlet(name = "ReceiveExpiredCancelServlet", urlPatterns = {"expired-cancel"})
     public static class ReceiveExpiredCancelServlet extends HttpServlet {
+        private static final long serialVersionUID = -5246945907521093358L;
+
+        @Override
         protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-            PayEasyPayment payEasyPayment = SamplePayment.getPayEasyPayment();
+            PayEasyPayment payEasyPayment = getPayEasyPayment();
 
             String result;
             try {
@@ -295,7 +346,7 @@ public class SampleServlet {
     }
 
     private static boolean isEmpty(Object str) {
-        return (str == null || "".equals(str));
+        return str == null || "".equals(str);
     }
 
     private static String saveCreditCardResult(HttpSession session, SpsResult result) {
