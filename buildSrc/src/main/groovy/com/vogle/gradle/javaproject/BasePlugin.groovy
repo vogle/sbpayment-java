@@ -1,10 +1,8 @@
 package com.vogle.gradle.javaproject
 
-
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.invocation.Gradle
-import org.gradle.api.plugins.ProjectReportsPlugin
 import org.gradle.plugins.ide.eclipse.EclipsePlugin
 import org.gradle.plugins.ide.idea.IdeaPlugin
 import org.gradle.tooling.UnsupportedVersionException
@@ -27,6 +25,9 @@ class BasePlugin implements Plugin<Project> {
 
     static int PLUGINS_IN_PROJECT = 0
 
+    static String ENV_LOCAL = "LOCAL"
+    static String ENV_CI = "CI"
+
     static boolean isFirstPlugin() {
         PLUGINS_IN_PROJECT == 1
     }
@@ -42,10 +43,16 @@ class BasePlugin implements Plugin<Project> {
         VersionNumber requiredVersion = new VersionNumber(2, 12, 0, null)
         if (version.baseVersion < requiredVersion) {
             throw new UnsupportedVersionException("Your gradle version ($version) is too old. " +
-                    "Plugin requires Gradle $requiredVersion+")
+                "Plugin requires Gradle $requiredVersion+")
         }
 
         updatePluginCount()
+
+        if (System.getenv('CI')) {
+            project.ext.env = ENV_CI
+        } else {
+            project.ext.env = ENV_LOCAL
+        }
 
         if (firstPlugin) {
             Package pkg = this.class.getPackage()
@@ -78,11 +85,13 @@ class BasePlugin implements Plugin<Project> {
         // Apply base
         project.plugins.apply(org.gradle.api.plugins.BasePlugin)
 
-        // Apply IDEA
-        project.plugins.apply(IdeaPlugin)
+        if (ENV_LOCAL == project.ext.env) {
+            // Apply IDEA
+            project.plugins.apply(IdeaPlugin)
 
-        // Apply Eclipse
-        project.plugins.apply(EclipsePlugin)
+            // Apply Eclipse
+            project.plugins.apply(EclipsePlugin)
+        }
 
     }
 

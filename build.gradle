@@ -20,7 +20,7 @@ buildScan {
 
     if (System.getenv('CI')) {
         tag 'CI'
-        
+
         if (System.getenv('TRAVIS')) {
             link "TRAVIS BUILD", System.getenv("TRAVIS_BUILD_WEB_URL")
         }
@@ -28,6 +28,20 @@ buildScan {
         tag 'Local'
     }
     tag System.getProperty('os.name')
+
+    if (project.hasProperty('gitter.url')) {
+        buildFinished { buildResult ->
+            buildScanPublished { scan ->
+                ['curl', '-s', '-d', "message=Build scan: ${scan.buildScanUri}", project.property('gitter.url')].execute()
+            }
+        }
+    }
+}
+
+task('aa') {
+    print("aaa")
+    print(project.hasProperty('gitter.url'))
+    print(project.property('gitter.url'))
 }
 
 // Configuration to apply to all the projects

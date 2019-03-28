@@ -4,7 +4,7 @@
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.vogle.sbpayment/sbpayment-client/badge.svg?service=github)](https://search.maven.org/search?q=g:com.vogle.sbpayment)
 [![Javadocs](http://javadoc.io/badge/com.vogle.sbpayment/sbpayment-client.svg)](http://javadoc.io/doc/com.vogle.sbpayment/sbpayment-client)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0)
-[![Join the chat at https://gitter.im/vogle/sbpayment](https://badges.gitter.im/vogle/sbpayment.svg)](https://gitter.im/vogle/sbpayment)
+[![Gitter](https://badges.gitter.im/vogle/sbpayment.svg)](https://gitter.im/vogle/sbpayment?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 [![Gradle Scan](https://img.shields.io/badge/Gradle-Scan-blue.svg)](https://vogle.page.link/scan)
 
 [![Build Status](https://travis-ci.org/vogle/sbpayment-java.svg?branch=master)](https://travis-ci.org/vogle/sbpayment-java)
@@ -106,8 +106,8 @@ If you want to integTest, You have to setup Sbpayment information
 
 ## Development Sample
 
-- **Use Spring-Boot:** See [sbpayment-sample-spring-boot](sbpayment-sample/sbpayment-sample-spring-boot)
-- **General Web Application:** See [sbpayment-sample-webapp](sbpayment-sample/sbpayment-sample-webapp)
+- **Use Spring-Boot:** See [sbpayment-sample-spring-boot](sbpayment-samples/sbpayment-sample-spring-boot)
+- **General Web Application:** See [sbpayment-sample-webapp](sbpayment-samples/sbpayment-sample-webapp)
 
 
 ## API
