@@ -37,6 +37,8 @@ import lombok.ToString;
 @JacksonXmlRootElement(localName = "sps-api-response")
 public class PayEasyPaymentResponse extends CommonElements {
 
+    private static final long serialVersionUID = 7851524074256559523L;
+
     @JacksonXmlProperty(localName = "res_tracking_id")
     private String trackingId;
 

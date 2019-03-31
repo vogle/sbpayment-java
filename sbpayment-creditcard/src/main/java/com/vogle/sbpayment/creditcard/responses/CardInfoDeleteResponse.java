@@ -31,4 +31,5 @@ import lombok.ToString;
 @ToString(callSuper = true)
 @JacksonXmlRootElement(localName = "sps-api-response")
 public class CardInfoDeleteResponse extends CardInfoElements {
+    private static final long serialVersionUID = 7071320761811913514L;
 }

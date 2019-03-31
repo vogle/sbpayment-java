@@ -50,6 +50,8 @@ import static com.vogle.sbpayment.client.requests.RequestHelper.mapItem;
 @JacksonXmlRootElement(localName = "sps-api-request")
 public class CardAuthorizeRequest implements SpsRequest<CardAuthorizeResponse> {
 
+    private static final long serialVersionUID = 465877331331363736L;
+
     @JacksonXmlProperty(isAttribute = true)
     private final String id = "ST01-00131-101";
 

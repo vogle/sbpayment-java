@@ -46,6 +46,8 @@ import javax.validation.constraints.Size;
 @JacksonXmlRootElement(localName = "sps-api-request")
 public class PayEasyPaymentRequest implements SpsRequest<PayEasyPaymentResponse> {
 
+    private static final long serialVersionUID = 7026446177780976327L;
+
     @JacksonXmlProperty(isAttribute = true)
     private final String id = "ST01-00101-703";
 

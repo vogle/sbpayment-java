@@ -34,6 +34,8 @@ import lombok.ToString;
 @ToString(callSuper = true)
 public class CardInfoElements extends CommonElements {
 
+    private static final long serialVersionUID = -3010164429046847823L;
+
     @JacksonXmlProperty(localName = "res_sps_info")
     private SpsInfo spsInfo;
 

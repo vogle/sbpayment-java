@@ -43,6 +43,8 @@ import javax.validation.constraints.Size;
 @JacksonXmlRootElement(localName = "sps-api-request")
 public class LegacyCardInfoUpdateRequest implements SpsRequest<LegacyCardInfoUpdateResponse> {
 
+    private static final long serialVersionUID = 1793929715634430616L;
+
     @JacksonXmlProperty(isAttribute = true)
     private final String id = "MG02-00102-101";
 

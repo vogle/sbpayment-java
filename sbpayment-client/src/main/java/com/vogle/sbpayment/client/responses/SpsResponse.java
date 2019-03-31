@@ -16,12 +16,14 @@
 
 package com.vogle.sbpayment.client.responses;
 
+import java.io.Serializable;
+
 /**
  * Response interface
  *
  * @author Allan Im
  **/
-public interface SpsResponse {
+public interface SpsResponse extends Serializable {
 
     /**
      * Features ID

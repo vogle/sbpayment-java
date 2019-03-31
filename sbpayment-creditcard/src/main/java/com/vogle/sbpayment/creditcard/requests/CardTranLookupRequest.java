@@ -39,6 +39,8 @@ import javax.validation.constraints.Size;
 @JacksonXmlRootElement(localName = "sps-api-request")
 public class CardTranLookupRequest implements SpsRequest<CardTranLookupResponse> {
 
+    private static final long serialVersionUID = 8189957339680131672L;
+
     @JacksonXmlProperty(isAttribute = true)
     private final String id = "MG01-00101-101";
 

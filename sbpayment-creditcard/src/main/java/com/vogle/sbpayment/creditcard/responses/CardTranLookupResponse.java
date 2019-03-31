@@ -36,6 +36,8 @@ import lombok.ToString;
 @JacksonXmlRootElement(localName = "sps-api-response")
 public class CardTranLookupResponse extends CommonElements {
 
+    private static final long serialVersionUID = 3751406957701860987L;
+
     @JacksonXmlProperty(localName = "res_status")
     private String resStatus;
 
