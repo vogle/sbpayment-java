@@ -5,7 +5,6 @@
 [![Javadocs](http://javadoc.io/badge/com.vogle.sbpayment/sbpayment-client.svg)](http://javadoc.io/doc/com.vogle.sbpayment/sbpayment-client)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0)
 [![Gitter](https://badges.gitter.im/vogle/sbpayment.svg)](https://gitter.im/vogle/sbpayment?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
-[![Gradle Scan](https://img.shields.io/badge/Gradle-Scan-blue.svg)](https://vogle.page.link/scan)
 
 [![Build Status](https://travis-ci.org/vogle/sbpayment-java.svg?branch=master)](https://travis-ci.org/vogle/sbpayment-java)
 [![Coveralls](https://img.shields.io/coveralls/github/vogle/sbpayment-java.svg)](https://coveralls.io/github/vogle/sbpayment-java?branch=master)
@@ -160,6 +159,7 @@ See Interface: [PayEasyPayment](sbpayment-payeasy/src/main/java/com/vogle/sbpaym
 
 ## ライセンス
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fvogle%2Fsbpayment-java.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fvogle%2Fsbpayment-java?ref=badge_shield)
 
 Copyright 2019 Vogle Labs.
 
