@@ -38,12 +38,6 @@ buildScan {
     }
 }
 
-task('aa') {
-    print("aaa")
-    print(project.hasProperty('gitter.url'))
-    print(project.property('gitter.url'))
-}
-
 // Configuration to apply to all the projects
 allprojects {
 
