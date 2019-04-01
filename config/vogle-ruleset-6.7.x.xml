@@ -95,7 +95,7 @@
     <rule ref="category/java/codestyle.xml/EmptyMethodInAbstractClassShouldBeAbstract"/>
     <rule ref="category/java/codestyle.xml/ExtendsObject"/>
     <rule ref="category/java/codestyle.xml/FieldDeclarationsShouldBeAtStartOfClass"/>
-    <rule ref="category/java/codestyle.xml/FieldNamingConventions"/>
+    <!--<rule ref="category/java/codestyle.xml/FieldNamingConventions"/>-->
     <rule ref="category/java/codestyle.xml/ForLoopShouldBeWhileLoop"/>
     <!--<rule ref="category/java/codestyle.xml/ForLoopsMustUseBraces"/>-->
     <rule ref="category/java/codestyle.xml/FormalParameterNamingConventions"/>
@@ -317,7 +317,7 @@
     <rule ref="category/java/errorprone.xml/MethodWithSameNameAsEnclosingClass"/>
     <rule ref="category/java/errorprone.xml/MisplacedNullCheck"/>
     <rule ref="category/java/errorprone.xml/MissingBreakInSwitch"/>
-    <rule ref="category/java/errorprone.xml/MissingSerialVersionUID"/>
+<!--    <rule ref="category/java/errorprone.xml/MissingSerialVersionUID"/>-->
     <rule ref="category/java/errorprone.xml/MissingStaticMethodInNonInstantiatableClass"/>
     <rule ref="category/java/errorprone.xml/MoreThanOneLogger"/>
     <rule ref="category/java/errorprone.xml/NonCaseLabelInSwitchStatement"/>
@@ -357,7 +357,7 @@
     <rule ref="category/java/multithreading.xml/DontCallThreadRun"/>
     <rule ref="category/java/multithreading.xml/DoubleCheckedLocking"/>
     <rule ref="category/java/multithreading.xml/NonThreadSafeSingleton"/>
-    <rule ref="category/java/multithreading.xml/UnsynchronizedStaticDateFormatter"/>
+<!--    <rule ref="category/java/multithreading.xml/UnsynchronizedStaticDateFormatter"/>-->
     <!--<rule ref="category/java/multithreading.xml/UseConcurrentHashMap"/>-->
     <rule ref="category/java/multithreading.xml/UseNotifyAllInsteadOfNotify"/>
 

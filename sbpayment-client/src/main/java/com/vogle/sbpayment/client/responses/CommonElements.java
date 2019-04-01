@@ -27,6 +27,8 @@ import lombok.Data;
 @Data
 public abstract class CommonElements implements SpsResponse {
 
+    private static final long serialVersionUID = 1550108062521728517L;
+
     @JacksonXmlProperty(isAttribute = true)
     private String id;
 

@@ -35,6 +35,8 @@ import lombok.ToString;
 @JacksonXmlRootElement(localName = "sps-api-response")
 public class LegacyCardInfoUpdateResponse extends CardInfoElements {
 
+    private static final long serialVersionUID = 3116793370283044407L;
+
     @CipherString
     @JacksonXmlProperty(localName = "res_pay_method_info")
     private LegacyCardInfoMethodInfo payMethodInfo;

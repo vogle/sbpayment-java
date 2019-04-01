@@ -21,6 +21,7 @@ import com.vogle.sbpayment.client.responses.SpsResponse;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.io.Serializable;
 import java.util.Map;
 
 /**
@@ -29,7 +30,9 @@ import java.util.Map;
  * @author Allan Im
  **/
 @ToString
-public class SpsResult<T extends SpsResponse> {
+public class SpsResult<T extends SpsResponse> implements Serializable {
+
+    private static final long serialVersionUID = 6757501412149715585L;
 
     /**
      * HTTP Status Code

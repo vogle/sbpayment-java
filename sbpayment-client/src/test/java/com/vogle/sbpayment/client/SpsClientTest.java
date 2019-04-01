@@ -240,6 +240,8 @@ public class SpsClientTest {
 
     public static class TestRequest implements SpsRequest<TestResponse> {
 
+        private static final long serialVersionUID = -5028610781660847972L;
+
         private String merchantId;
         private String serviceId;
         private Integer limitSecond;
@@ -307,6 +309,8 @@ public class SpsClientTest {
     }
 
     public static class TestResponse implements SpsResponse {
+
+        private static final long serialVersionUID = -2058777901329574348L;
 
         @Override
         public String getId() {

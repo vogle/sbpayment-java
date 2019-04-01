@@ -18,12 +18,14 @@ package com.vogle.sbpayment.client.requests;
 
 import com.vogle.sbpayment.client.responses.SpsResponse;
 
+import java.io.Serializable;
+
 /**
  * Request interface
  *
  * @author Allan Im
  **/
-public interface SpsRequest<T extends SpsResponse> {
+public interface SpsRequest<T extends SpsResponse> extends Serializable {
 
     /**
      * Gets a Features ID

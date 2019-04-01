@@ -34,6 +34,8 @@ import lombok.ToString;
 @JacksonXmlRootElement(localName = "sps-api-response")
 public class DefaultResponse extends CommonElements {
 
+    private static final long serialVersionUID = 8888111927719731206L;
+
     @Override
     public String getDescription() {
         return FeatureHelper.getDescription(this.getId());

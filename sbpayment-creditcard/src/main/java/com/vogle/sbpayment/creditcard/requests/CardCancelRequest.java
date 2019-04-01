@@ -38,6 +38,8 @@ import javax.validation.constraints.Size;
 @JacksonXmlRootElement(localName = "sps-api-request")
 public class CardCancelRequest implements SpsRequest<DefaultResponse> {
 
+    private static final long serialVersionUID = -543077522971686858L;
+
     @JacksonXmlProperty(isAttribute = true)
     private final String id = "ST02-00303-101";
 

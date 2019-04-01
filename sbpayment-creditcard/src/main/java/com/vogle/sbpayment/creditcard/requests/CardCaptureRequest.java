@@ -39,6 +39,8 @@ import javax.validation.constraints.Size;
 @JacksonXmlRootElement(localName = "sps-api-request")
 public class CardCaptureRequest implements SpsRequest<DefaultResponse> {
 
+    private static final long serialVersionUID = -2015573157616140480L;
+
     @JacksonXmlProperty(isAttribute = true)
     private final String id = "ST02-00201-101";
 

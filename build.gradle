@@ -38,12 +38,6 @@ buildScan {
     }
 }
 
-task('aa') {
-    print("aaa")
-    print(project.hasProperty('gitter.url'))
-    print(project.property('gitter.url'))
-}
-
 // Configuration to apply to all the projects
 allprojects {
 
@@ -120,36 +114,6 @@ configure(javaprojects) {
         }
     }
 
-    // Apply sonarqube
-    apply plugin: 'org.sonarqube'
-    sonarqube {
-        properties {
-            def hasIntegTest = new File(projectDir, 'src/integTest/java').directory
-
-            property "sonar.sourceEncoding", "UTF-8"
-            property "sonar.sources", "src/main/java"
-            property "sonar.scm.disabled ", "true"
-
-            if (hasIntegTest) {
-                property "sonar.tests", "src/test/java,src/integTest/java"
-            } else {
-                property "sonar.tests", "src/test/java"
-            }
-
-            property "sonar.java.coveragePlugin", "jacoco"
-            if (hasIntegTest) {
-                property "sonar.jacoco.reportPaths", "build/jacoco/test.exec,build/jacoco/integrationTest.exec"
-                property "sonar.junit.reportPaths", "build/test-results/test,build/test-results/integrationTest"
-            } else {
-                property "sonar.jacoco.reportPaths", "build/jacoco/test.exec"
-                property "sonar.junit.reportPaths", "build/test-results/test"
-            }
-
-            property "sonar.java.pmd.reportPaths", "build/reports/pmd/main.xml"
-            property "sonar.java.checkstyle.reportPaths", "build/reports/checkstyle/main.xml"
-        }
-    }
-
 }
 
 // Configuration to apply to JAVA Projects
@@ -214,6 +178,35 @@ configure(publishedprojects) {
         }
     }
 
+    // Apply sonarqube
+    apply plugin: 'org.sonarqube'
+    sonarqube {
+        properties {
+            def hasIntegTest = new File(projectDir, 'src/integTest/java').directory
+
+            property "sonar.sourceEncoding", "UTF-8"
+            property "sonar.sources", "src/main/java"
+            property "sonar.scm.disabled ", "true"
+
+            if (hasIntegTest) {
+                property "sonar.tests", "src/test/java,src/integTest/java"
+            } else {
+                property "sonar.tests", "src/test/java"
+            }
+
+            property "sonar.java.coveragePlugin", "jacoco"
+            if (hasIntegTest) {
+                property "sonar.jacoco.reportPaths", "build/jacoco/test.exec,build/jacoco/integrationTest.exec"
+                property "sonar.junit.reportPaths", "build/test-results/test,build/test-results/integrationTest"
+            } else {
+                property "sonar.jacoco.reportPaths", "build/jacoco/test.exec"
+                property "sonar.junit.reportPaths", "build/test-results/test"
+            }
+
+            property "sonar.java.pmd.reportPaths", "build/reports/pmd/main.xml"
+            property "sonar.java.checkstyle.reportPaths", "build/reports/checkstyle/main.xml"
+        }
+    }
 }
 
 // report tools
