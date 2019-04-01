@@ -357,7 +357,7 @@
     <rule ref="category/java/multithreading.xml/DontCallThreadRun"/>
     <rule ref="category/java/multithreading.xml/DoubleCheckedLocking"/>
     <rule ref="category/java/multithreading.xml/NonThreadSafeSingleton"/>
-    <rule ref="category/java/multithreading.xml/UnsynchronizedStaticDateFormatter"/>
+<!--    <rule ref="category/java/multithreading.xml/UnsynchronizedStaticDateFormatter"/>-->
     <!--<rule ref="category/java/multithreading.xml/UseConcurrentHashMap"/>-->
     <rule ref="category/java/multithreading.xml/UseNotifyAllInsteadOfNotify"/>
 
