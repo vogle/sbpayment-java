@@ -80,7 +80,7 @@ configure(javaprojects) {
             dependency 'org.springframework.boot:spring-boot-autoconfigure:2.1.3.RELEASE'
             dependency 'org.springframework.boot:spring-boot-configuration-processor:2.1.3.RELEASE'
             dependency 'org.springframework.boot:spring-boot-starter-test:2.1.3.RELEASE'
-            
+
         }
     }
 
@@ -114,6 +114,35 @@ configure(javaprojects) {
         }
     }
 
+    // Apply sonarqube
+    apply plugin: 'org.sonarqube'
+    sonarqube {
+        properties {
+            def hasIntegTest = file("$projectDir/src/integTest/java").directory
+
+            property "sonar.sourceEncoding", "UTF-8"
+            property "sonar.sources", "src/main/java"
+            property "sonar.scm.disabled ", "true"
+
+            if (hasIntegTest) {
+                property "sonar.tests", "src/test/java,src/integTest/java"
+            } else {
+                property "sonar.tests", "src/test/java"
+            }
+
+            property "sonar.java.coveragePlugin", "jacoco"
+            if (hasIntegTest) {
+                property "sonar.jacoco.reportPaths", "build/jacoco/test.exec,build/jacoco/integrationTest.exec"
+                property "sonar.junit.reportPaths", "build/test-results/test,build/test-results/integrationTest"
+            } else {
+                property "sonar.jacoco.reportPaths", "build/jacoco/test.exec"
+                property "sonar.junit.reportPaths", "build/test-results/test"
+            }
+
+            property "sonar.java.pmd.reportPaths", "build/reports/pmd/main.xml"
+            property "sonar.java.checkstyle.reportPaths", "build/reports/checkstyle/main.xml"
+        }
+    }
 }
 
 // Configuration to apply to JAVA Projects
@@ -173,39 +202,15 @@ configure(publishedprojects) {
         sbpayment {
             baseName = project.name
             contents {
-                from "$rootDir/LICENSE", jar, sourceJar, javadocJar
+                from "$rootDir/LICENSE", "$rootDir/README.md", "$rootDir/README_JA.md", jar, sourceJar, javadocJar
             }
         }
     }
-
-    // Apply sonarqube
-    apply plugin: 'org.sonarqube'
-    sonarqube {
-        properties {
-            def hasIntegTest = new File(projectDir, 'src/integTest/java').directory
-
-            property "sonar.sourceEncoding", "UTF-8"
-            property "sonar.sources", "src/main/java"
-            property "sonar.scm.disabled ", "true"
-
-            if (hasIntegTest) {
-                property "sonar.tests", "src/test/java,src/integTest/java"
-            } else {
-                property "sonar.tests", "src/test/java"
-            }
-
-            property "sonar.java.coveragePlugin", "jacoco"
-            if (hasIntegTest) {
-                property "sonar.jacoco.reportPaths", "build/jacoco/test.exec,build/jacoco/integrationTest.exec"
-                property "sonar.junit.reportPaths", "build/test-results/test,build/test-results/integrationTest"
-            } else {
-                property "sonar.jacoco.reportPaths", "build/jacoco/test.exec"
-                property "sonar.junit.reportPaths", "build/test-results/test"
-            }
-
-            property "sonar.java.pmd.reportPaths", "build/reports/pmd/main.xml"
-            property "sonar.java.checkstyle.reportPaths", "build/reports/checkstyle/main.xml"
-        }
+    sbpaymentDistZip {
+        destinationDirectory = file("$rootProject.buildDir/sbpayment")
+    }
+    sbpaymentDistTar {
+        destinationDirectory = file("$rootProject.buildDir/sbpayment")
     }
 }
 
