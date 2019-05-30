@@ -39,7 +39,6 @@ class NexusPublishPlugin implements Plugin<Project> {
         project.plugins.with {
             apply MavenNebulaPublishPlugin
             apply MavenBasePublishPlugin
-            apply MavenCompileOnlyPlugin
             apply MavenResolvedDependenciesPlugin
             apply MavenDeveloperPlugin
         }
@@ -79,8 +78,8 @@ class NexusPublishPlugin implements Plugin<Project> {
             doFirst {
                 if (!project.publishing.repositories.hasProperty('nexus')) {
                     throw new GradleException(
-                            String.format("You don't have NEXUS credentials('%s', '%s') in your gradle.properties",
-                                    USERNAME_KEY, PASSWORD_KEY))
+                        String.format("You don't have NEXUS credentials('%s', '%s') in your gradle.properties",
+                            USERNAME_KEY, PASSWORD_KEY))
                 }
             }
         }

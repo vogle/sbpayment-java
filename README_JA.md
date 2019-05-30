@@ -140,10 +140,10 @@ See Interface: [PayEasyPayment](sbpayment-payeasy/src/main/java/com/vogle/sbpaym
 |リクエストID|メッソド|説明|
 | --- | --- | --- |
 |ST01-00101-703|payment|決済要求|
-|NT01-00103-703|入金通知受信|
+|NT01-00103-703|receiveDeposit|入金通知受信|
 | |successDeposit|入金通知の成功結果を返す|
 | |failDeposit|入金通知の失敗結果を返す|
-|NT01-00104-703|支払期限切れキャンセル通知信|
+|NT01-00104-703|receiveExpiredCancel|支払期限切れキャンセル通知信|
 | |successExpiredCancel|支払期限切れキャンセル通の成功結果を返す|
 | |failExpiredCancel|支払期限切れキャンセル通の失敗結果を返す|
 
@@ -155,7 +155,7 @@ See Interface: [PayEasyPayment](sbpayment-payeasy/src/main/java/com/vogle/sbpaym
 サポートはGitHubの[Issueシステム](https://github.com/vogle/sbpayment-java/issues)と[Gitterチャット](https://gitter.im/vogle/sbpayment)を使用します
 
 ## 貢献
-このプロジェクトを手助けしたいですか？遠慮なくプルリクエストを送信してください。
+このプロジェクトを手助けしたいですか？プルリクエストを送信してください。
 
 ## ライセンス
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0)
