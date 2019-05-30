@@ -61,9 +61,7 @@ class BasePlugin implements Plugin<Project> {
             def logLine = "+----------------------------------------------------------+"
 
             project.logger.quiet "${logLine}"
-            project.logger.quiet " .-.-. .-.-. .-.-. .-.-. .-.-.          Java Project Plugin "
-            project.logger.quiet " '. V )'. O )'. G )'. L )'. E )               by vogle labs "
-            project.logger.quiet "   ).'   ).'   ).'   ).'   ).' ${new Date()} "
+            project.logger.quiet " ' V ' O ' G ' L ' E '                  Java Project Plugin "
             project.logger.quiet "${logLine}"
 
             if (System.getProperty('os.name')) {
@@ -77,7 +75,7 @@ class BasePlugin implements Plugin<Project> {
             }
             project.logger.quiet " Gradle : v${project.gradle.gradleVersion}"
             if (thisPluginVersion) {
-                project.logger.quiet " vogle-javaproject-plugin : v${thisPluginVersion}"
+                project.logger.quiet " Plugin : v${thisPluginVersion}"
             }
             project.logger.quiet "${logLine}"
         }
