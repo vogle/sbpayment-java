@@ -63,7 +63,7 @@ configure(javaprojects) {
         dependencies {
             dependency 'org.apache.httpcomponents:httpclient:4.5.8'
             dependency 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.9.8'
-            dependency 'org.hibernate.validator:hibernate-validator:6.0.15.Final'
+            dependency 'org.hibernate.validator:hibernate-validator:6.0.17.Final'
 
             dependency 'org.slf4j:slf4j-api:1.7.26'
             dependency 'ch.qos.logback:logback-classic:1.2.3'
