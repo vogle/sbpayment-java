@@ -24,6 +24,7 @@ before_install:
 jobs:
   include:
   - stage: Build
+    dist: trusty
     script: "./gradlew clean build -x integrationTest"
     if: type IN (pull_request) AND branch = master
   - stage: Test & Build
@@ -44,11 +45,13 @@ jobs:
       - bash <(curl -s https://codecov.io/bash)
     if: NOT type IN (pull_request) AND branch = master
   - stage: Publish to Maven Centeral
+    dist: trusty
     script: "./gradlew final publishToNexus -Prelease.useLastTag=true -PnexusUsername=${NEXUS_USERNAME}
       -PnexusPassword=${NEXUS_PASSWORD} -Psigning.keyId=${GPG_KEY_ID} -Psigning.password=${GPG_KEY_PASSPHRASE}
       -Psigning.secretKeyRingFile=${TRAVIS_BUILD_DIR}/config/allanim.gpg"
     if: NOT type IN (pull_request) AND tag IS present
   - stage: Publish to Nexus Snapshot
+    dist: trusty
     script: "./gradlew snapshot publishToNexus -Prelease.scope=patch -PnexusUsername=${NEXUS_USERNAME}
       -PnexusPassword=${NEXUS_PASSWORD} -Psigning.keyId=${GPG_KEY_ID} -Psigning.password=${GPG_KEY_PASSPHRASE}
       -Psigning.secretKeyRingFile=${TRAVIS_BUILD_DIR}/config/allanim.gpg"
