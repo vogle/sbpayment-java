@@ -61,7 +61,7 @@ configure(javaprojects) {
     // Provides spring dependency management functionality
     dependencyManagement {
         dependencies {
-            dependency 'org.apache.httpcomponents:httpclient:4.5.8'
+            dependency 'org.apache.httpcomponents:httpclient:4.5.12'
             dependency 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.9.8'
             dependency 'org.hibernate.validator:hibernate-validator:6.0.17.Final'
 
