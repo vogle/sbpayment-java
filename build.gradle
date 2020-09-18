@@ -79,7 +79,7 @@ configure(javaprojects) {
 
             dependency 'org.springframework.boot:spring-boot-autoconfigure:2.1.5.RELEASE'
             dependency 'org.springframework.boot:spring-boot-configuration-processor:2.1.5.RELEASE'
-            dependency 'org.springframework.boot:spring-boot-starter-test:2.1.5.RELEASE'
+            dependency 'org.springframework.boot:spring-boot-starter-test:2.3.4.RELEASE'
 
         }
     }
