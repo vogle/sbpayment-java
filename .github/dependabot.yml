@@ -1,0 +1,42 @@
+version: 2
+updates:
+- package-ecosystem: gradle
+  directory: "/"
+  schedule:
+    interval: daily
+    timezone: America/Toronto
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: com.diffplug.gradle.spotless
+    versions:
+    - 5.10.0
+    - 5.10.1
+    - 5.10.2
+    - 5.11.0
+    - 5.11.1
+    - 5.12.0
+    - 5.12.1
+    - 5.9.0
+  - dependency-name: com.fasterxml.jackson.dataformat:jackson-dataformat-xml
+    versions:
+    - 2.12.1
+    - 2.12.2
+  - dependency-name: com.gradle.build-scan
+    versions:
+    - 3.5.1
+    - 3.5.2
+    - "3.6"
+  - dependency-name: org.springframework.boot:spring-boot-starter-test
+    versions:
+    - 2.4.2
+    - 2.4.3
+    - 2.4.4
+  - dependency-name: org.springframework.boot
+    versions:
+    - 2.4.2
+    - 2.4.3
+    - 2.4.4
+  - dependency-name: org.mockito:mockito-core
+    versions:
+    - 3.7.7
+    - 3.8.0
