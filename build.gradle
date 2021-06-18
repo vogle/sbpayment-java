@@ -65,7 +65,7 @@ configure(javaprojects) {
             dependency 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.9.8'
             dependency 'org.hibernate.validator:hibernate-validator:6.0.17.Final'
 
-            dependency 'org.slf4j:slf4j-api:1.7.26'
+            dependency 'org.slf4j:slf4j-api:1.7.31'
             dependency 'ch.qos.logback:logback-classic:1.2.3'
 
             dependency 'org.glassfish:javax.el:3.0.1-b11'
